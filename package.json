@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "echo \"Not implemented!\"",
-    "dev": "echo \"Not implemented!\"",
+    "start": "node ./dist/index.js",
+    "dev": "nodemon ./src/index.ts",
     "build": "echo \"Not implemented!\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
