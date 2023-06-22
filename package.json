@@ -7,7 +7,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon ./src/index.ts",
     "build": "echo \"Not implemented!\"",
-    "test": "jest",
+    "test": "jest --silent",
     "test:watch": "jest -o --watch"
   },
   "keywords": [],
