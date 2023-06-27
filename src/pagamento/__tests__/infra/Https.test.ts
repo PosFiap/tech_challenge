@@ -2,7 +2,7 @@ import httpsMock from "node:https"
 import Stream from 'stream'
 
 import { HttpClient } from "../../adapters/infra/Http"
-import { IHttp } from "../../core/infra/IHttp"
+import { IHttp } from "../../core/ports/IHttp"
 
 jest.mock('https', () => ({
   request: {}
