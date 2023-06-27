@@ -1,5 +1,5 @@
 import https from 'node:https'
-import { HttpRequest, HttpResponse, HttpStatusCode, IHttp } from '../../core/infra/IHttp';
+import { HttpRequest, HttpResponse, HttpStatusCode, IHttp } from '../../core/ports/IHttp';
 
 export class HttpClient implements IHttp {
   request<T>(config: HttpRequest): Promise<HttpResponse<T>> {
