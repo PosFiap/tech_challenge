@@ -16,8 +16,12 @@ describe('CheckoutService', () => {
   describe('Contructor', () => {
     it('Espero receber erro na contrução do serviço por não enviar os argumentos necessarios', () => {
       // @ts-expect-error
-      const caller = () => new CheckoutService()
-      expect(caller).toThrowError(new Error("meioDePagamento e faturaRepository são requeridos!"))
+      const caller1 = () => new CheckoutService()
+      expect(caller1).toThrowError(new Error("meioDePagamento e faturaRepository são requeridos!"))
+
+      // @ts-expect-error
+      const caller2 = () => new CheckoutService({})
+      expect(caller2).toThrowError(new Error("meioDePagamento e faturaRepository são requeridos!"))
     })
   })
 
