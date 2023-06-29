@@ -25,8 +25,8 @@ export class CheckoutService {
   // TODO: implementar checkout
   async checkout(faturaId: number): Promise<any> {
     try {
-      const fatuara = await this._faturaRepository.obterFaturaPeloId(faturaId)
-      await this._meioDePagamento.checkoutQrCode(fatuara)
+      const fatura = await this._faturaRepository.obterFaturaPeloId(faturaId)
+      await this._meioDePagamento.checkoutQrCode(fatura)
     } catch (error) {
       throw error
     }
