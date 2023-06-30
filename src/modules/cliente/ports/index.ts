@@ -1,0 +1,1 @@
+export { IRegistraClienteUseCase } from "./IRegistraClienteUseCase";
