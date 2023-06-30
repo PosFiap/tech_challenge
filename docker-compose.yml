@@ -1,22 +1,26 @@
 version: '3'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: make
-    volumes:
-      - ./:/usr/src/app
-    container_name: app-ts
-    ports:
-      - '8080:8080'
-    command: npm run dev
-  postgresql:
-    image: postgres
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: make
+  #   volumes:
+  #     - ./:/usr/src/app
+  #   container_name: app-ts
+  #   ports:
+  #     - '8080:8080'
+  #   command: npm run dev
+  postgres:
+    image: postgres:latest
+    restart: always
     environment:
-      POSTGRES_PASSWORD: "12345678"
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: "posfiap"
+      POSTGRES_PASSWORD: "posfiap2"
     volumes:
-      - ./protgresql:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+volumes:
+  postgres:

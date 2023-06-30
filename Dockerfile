@@ -1,27 +1,27 @@
-from node as make
+FROM node as make
 
-workdir /usr/src/app
+WORKDIR /usr/src/app
 
-copy package*.json ./
+COPY package*.json ./
 
-run npm ci
+RUN npm ci
 
-copy . .
+COPY . .
 
-run npm run build
+RUN npm run build
 
-from node:slim
+FROM node:slim
 
-env NODE_ENV production
-user node
+ENV NODE_ENV production
+USER node
 
-workdir /usr/src/app
+WORKDIR /usr/src/app
 
-copy package*.json ./
+COPY package*.json ./
 
-run npm ci --production
+RUN npm ci --production
 
-copy --from=make /usr/src/app/dist ./dist
+COPY --from=make /usr/src/app/dist ./dist
 
-expose 8080
-cmd ["node", "dist/index.js"]
+EXPOSE 8080
+CMD ["node", "dist/index.js"]
