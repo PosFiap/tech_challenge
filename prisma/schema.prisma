@@ -36,7 +36,6 @@ model Pedido {
 }
 
 model ProdutoPedido {
-  codigo             Int     @id @default(autoincrement())
   quantidade_produto Int
   produto_codigo     Int     @unique
   pedido_codigo      Int @unique

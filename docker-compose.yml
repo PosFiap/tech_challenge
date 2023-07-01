@@ -1,17 +1,17 @@
 version: '3'
 
 services:
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: make
-  #   volumes:
-  #     - ./:/usr/src/app
-  #   container_name: app-ts
-  #   ports:
-  #     - '8080:8080'
-  #   command: npm run dev
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: make
+    volumes:
+      - ./:/usr/src/app
+    container_name: app-ts
+    ports:
+      - '8080:8080'
+    command: npm run dev
   postgresql:
     image: postgres
     environment:
