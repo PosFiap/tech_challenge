@@ -3,12 +3,12 @@ import { ClienteAdapter } from "../../adapter/controller/ClienteAdapter";
 
 const router: Router = Router();
 
-router.post('/', (req, res) => { 
-
+router.post('/', async (req, res) => {
     const adapter = new ClienteAdapter();
     const cliente = req.body;
-    const resultado = adapter.registraCliente(cliente);
-    res.status(201).json(JSON.stringify(resultado));
+    const resultado = await adapter.registraCliente(cliente);
+    console.log(resultado)
+    res.status(201).json(resultado);
 
 });
 

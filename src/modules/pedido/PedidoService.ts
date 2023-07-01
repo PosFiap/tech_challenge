@@ -14,7 +14,7 @@ export class PedidoService implements IRegistraPedidoUseCase {
         console.log('itens de pedido completos', itensDePedidoCompletos);
 
         const pedidoInserido = pedidoRegistry.registraPedido(new Pedido(
-            pedido.CPF,
+            pedido.cpf,
             EStatus["Aguardando Pagamento"],
             itensDePedidoCompletos
         ));
