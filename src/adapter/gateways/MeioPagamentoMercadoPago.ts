@@ -1,6 +1,7 @@
 import { IHttp } from '../../modules/pagamento/ports/IHttp'
 import { IMeioDePagamentoQR } from '../../modules/pagamento/ports/IMeioDePagamentoQR'
 import { CustomError } from '../../utils/customError'
+import { isErro, makeErro, makeSucesso } from '../../utils/either'
 
 interface ItemFatura {
   sku_number: string
@@ -13,7 +14,7 @@ interface ItemFatura {
   total_amount: number
 }
 
-interface Fatura {
+export interface Fatura {
   external_reference: string
   title: string
   total_amount: number
@@ -39,20 +40,22 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<Fatura, stri
     this._idExternoPontoDeVenda = process.env.ID_EXTERNO_CAIXA
     this._accessToken = process.env.ACCESS_TOKEN_MP
 
-    this.validaSeRecebeuOsParametros()
+    const valido = this.validaSeRecebeuOsParametros()
+    if (isErro(valido)) {
+      throw new Error(valido.erro)
+    }
   }
 
   private validaSeRecebeuOsParametros() {
     if (!this._http) {
-      throw new CustomError('Erro ao criar instancia de MeioPagamentoMercadoPago.', 'Client http é requerido.')
+      return makeErro('Cliente http é requerido.')
     }
 
     if (!this._idUsuarioMercadoPago || !this._idExternoPontoDeVenda || !this._accessToken) {
-      throw new CustomError(
-        'Erro ao criar instancia de MeioPagamentoMercadoPago.',
-        'Não encontrado variaveis de ambiente com os valores de id de usuario, access token e id externo do ponto de venda.'
-      )
+      return makeErro('Credenciais mercado pago são requeridas.')
     }
+
+    return makeSucesso(true)
   }
 
   async checkoutQrCode(pedido: Fatura): Promise<string> {
