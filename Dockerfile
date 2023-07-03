@@ -10,10 +10,9 @@ copy . .
 
 run npm run build
 
-from node:slim
+from node:slim as production
 
 env NODE_ENV production
-user node
 
 workdir /usr/src/app
 
