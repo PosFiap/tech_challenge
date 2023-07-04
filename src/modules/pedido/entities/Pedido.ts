@@ -2,10 +2,11 @@ import { EStatus } from "./EStatus";
 import { ItemDePedido } from "./ItemDePedido";
 
 export class Pedido {
-    public codigo: number | undefined;
+    
     constructor(
-        readonly CPF: string,
+        readonly CPF: string | null,
         readonly status: EStatus,
-        readonly itensDePedido: Array<ItemDePedido>
+        readonly itensDePedido: Array<ItemDePedido>,
+        readonly codigo: number | null
     ) {}
 }
