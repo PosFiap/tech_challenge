@@ -1,16 +1,46 @@
 import { IProdutoRegistry } from "../produto/ports/IProdutoRegistry";
+import { AtualizaStatusPedidoOutputDTO } from "./dto/AtualizaStatusPedidoOutputDTO";
 import { ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto/ListaPedidoOutputDTO";
 import { PedidoDTO } from "./dto/PedidoDTO";
 import { PedidoOutputDTO } from "./dto/PedidoOutputDTO";
-import { ECategoria } from "./entities/ECategoria";
-import { EStatus } from "./entities/EStatus";
+import { ECategoria } from "./value-objects/ECategoria";
+import { EStatus } from "./value-objects/EStatus";
 import { Pedido } from "./entities/Pedido";
-import { IPedidoRegistry, IRegistraPedidoUseCase } from "./ports";
+import { IAtualizaStatusPedidoUseCase, IPedidoRegistry, IRegistraPedidoUseCase } from "./ports";
 import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
+import { AtualizaStatusPedidoDTO } from "./dto";
+import { CustomError, CustomErrorType } from "../../utils/customError";
 
-export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase {
+export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase, IAtualizaStatusPedidoUseCase {
 
     constructor(readonly repository: IPedidoRegistry) {}
+
+    async atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
+        
+        const erros = data.validaDTO();
+        if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
+
+        const { codigoPedido, codigoStatus } = data;
+        let pedidoAtualizado;
+
+        try{
+            const statusAtualDoPedido = await this.repository.obtemStatusPedido(codigoPedido);
+            
+            //Um pedido só pode ser atualizado para um status posterior
+            if(statusAtualDoPedido >= codigoStatus)
+                throw new CustomError(CustomErrorType.BusinessRuleViolation, "O status indicado não é válido para esse pedido");
+            pedidoAtualizado = await this.repository.atualizaStatusPedido(codigoPedido, codigoStatus);    
+        } catch (err) {
+            if(err instanceof CustomError) throw err;
+            throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
+        }
+        
+        return new AtualizaStatusPedidoOutputDTO(
+            pedidoAtualizado.codigo!,
+            EStatus[pedidoAtualizado.status]
+        );
+    }
+
 
     async listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>> {
         const pedidosArmazenados = await this.repository.listaPedidos();

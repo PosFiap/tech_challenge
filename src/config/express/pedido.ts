@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { PedidoAdapter } from "../../adapter/controller/PedidoAdapter";
+import { CustomError } from "../../utils/customError";
+import { AtualizaStatusPedidoDTO } from "../../modules/pedido";
+import { customErrorToResponse } from "./error-parser";
 
 const router: Router = Router();
 
@@ -8,6 +11,30 @@ router.post('/', (req, res) => {
     const adapter = new PedidoAdapter();
     const resultado = adapter.registraPedido(pedido);
     res.status(201).json(JSON.stringify(resultado));
+});
+
+router.patch('/:codigoPedido', async (req, res) => {
+    const codigoPedido = parseInt(req.params['codigoPedido'] as string, 10);
+    const codigoStatus = parseInt(req.body.codigoStatus as string, 10);
+    const adapter = new PedidoAdapter();
+    const data = new AtualizaStatusPedidoDTO(
+        codigoPedido, codigoStatus
+    );
+    try {
+        const resultado = await adapter.atualizaStatusPedido(data);
+        res.status(200).json({
+            status: resultado.status,
+            codigoPedido: resultado.codigoPedido
+        });
+    } catch (err) {
+        if( err instanceof CustomError) {
+            customErrorToResponse(err, res);
+            return;
+        }
+        res.status(500).json({
+            mensagem: 'Falha ao atualizar o pedido'
+        });
+    }
 });
 
 router.get('/', async (req, res) => {
@@ -25,7 +52,7 @@ router.get('/', async (req, res) => {
             }
         }));
     } catch (err) {
-        res.sendStatus(500).json({
+        res.status(500).json({
             mensagem: 'Falha ao recuperar os pedidos'
         });
     }

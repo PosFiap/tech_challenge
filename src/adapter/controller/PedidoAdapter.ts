@@ -1,9 +1,21 @@
 import { PedidoOutputDTO } from "../../modules/pedido/dto/PedidoOutputDTO";
 import { PedidoRepository } from "../persistence/PedidoRepository";
 import { ProdutoRepository } from "../persistence/ProdutoRepository";
-import { ItemListaPedidoOutputDTO, PedidoDTO, PedidoService } from "./../../modules/pedido";
+import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, ItemListaPedidoOutputDTO, PedidoDTO, PedidoService } from "./../../modules/pedido";
 
 export class PedidoAdapter {
+
+    async atualizaStatusPedido(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
+        const pedidoRepository = new PedidoRepository();
+        const pedidoService = new PedidoService(pedidoRepository);
+        try {
+            const result = pedidoService.atualizaStatus(data);
+            return result;
+        } catch(err) {
+            throw err;
+        }
+    }
+
     listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>> {
         try{
             const pedidoRepository = new PedidoRepository();

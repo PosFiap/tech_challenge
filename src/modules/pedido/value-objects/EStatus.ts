@@ -1,4 +1,5 @@
 export enum EStatus {
     'Aguardando Pagamento',
-    'Em preparação'
+    'Em preparação',
+    '__LENGTH'
 }

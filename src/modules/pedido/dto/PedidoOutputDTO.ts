@@ -1,4 +1,4 @@
-import { EStatus } from "../entities/EStatus";
+import { EStatus } from "../value-objects/EStatus";
 
 export interface PedidoOutputDTO {
     status: EStatus,

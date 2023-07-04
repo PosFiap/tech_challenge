@@ -1,4 +1,4 @@
-import { EStatus } from "./EStatus";
+import { EStatus } from "../value-objects/EStatus";
 import { ItemDePedido } from "./ItemDePedido";
 
 export class Pedido {

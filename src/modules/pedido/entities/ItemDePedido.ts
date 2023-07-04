@@ -1,4 +1,4 @@
-import { ECategoria } from "./ECategoria";
+import { ECategoria } from "../value-objects/ECategoria";
 
 export class ItemDePedido {
     constructor(
