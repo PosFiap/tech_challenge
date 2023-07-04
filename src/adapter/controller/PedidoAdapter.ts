@@ -26,17 +26,16 @@ export class PedidoAdapter {
         }
     }
 
-    registraPedido(pedido: PedidoDTO): PedidoOutputDTO {
+    async registraPedido(pedido: PedidoDTO): Promise<PedidoOutputDTO> {
         const pedidoRegistry = new PedidoRepository();
         const produtoRegistry = new ProdutoRepository();
         const service = new PedidoService(pedidoRegistry);
 
-        console.log('pedido recebido', pedido);
-
-        const pedidoCompleto = service.registraPedido(pedido, pedidoRegistry, produtoRegistry);
-
-        console.log('pedido completo', pedidoCompleto);
-
-        return pedidoCompleto;
+        try{
+            const pedidoCompleto = await service.registraPedido(pedido, produtoRegistry);
+            return pedidoCompleto;
+        } catch(err) {
+            throw err;
+        }
     }
 }

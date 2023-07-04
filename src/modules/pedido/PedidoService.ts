@@ -10,6 +10,7 @@ import { IAtualizaStatusPedidoUseCase, IPedidoRegistry, IRegistraPedidoUseCase }
 import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
 import { AtualizaStatusPedidoDTO } from "./dto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
+import { ItemDePedido } from "./entities/ItemDePedido";
 
 export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase, IAtualizaStatusPedidoUseCase {
 
@@ -25,7 +26,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
 
         try{
             const statusAtualDoPedido = await this.repository.obtemStatusPedido(codigoPedido);
-            
+
             //Um pedido só pode ser atualizado para um status posterior
             if(statusAtualDoPedido >= codigoStatus)
                 throw new CustomError(CustomErrorType.BusinessRuleViolation, "O status indicado não é válido para esse pedido");
@@ -60,36 +61,44 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
                 
                 return new ItemListaPedidoOutputDTO(
                     EStatus[pedido.status],
-                    pedido.codigo as number,
+                    pedido.codigo!,
                     pedido.CPF,
                     itensDePedido
                 )
             });
-
-        console.log(listaPedidos);
-
         return listaPedidos;
     }
 
-    registraPedido(pedido: PedidoDTO, pedidoRegistry: IPedidoRegistry, produtoRegistry: IProdutoRegistry): PedidoOutputDTO {
-        const itensDePedidoCompletos = pedido.ItemDePedido.map(({codigo}) => {
-            return produtoRegistry.buscaProdutoPorCodigo(codigo);
-        });
+    async registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRegistry): Promise<PedidoOutputDTO> {
+        
+        const erros = data.validaDTO();
+        if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
+        
+        let pedidoInserido: Pedido;
 
-        const pedidoInserido = pedidoRegistry.registraPedido(new Pedido(
-            pedido.CPF,
-            EStatus["Aguardando Pagamento"],
-            itensDePedidoCompletos,
-            null
-        ));
+        try{
 
-        return {
-            codigo: pedidoInserido.codigo as number,
-            status: pedidoInserido.status,
-            valor: pedidoInserido.itensDePedido.reduce((soma, item) => soma + item.valor, 0)
+            const itensDePedidoCompletos = await Promise.all(data.itemDePedido.map(async ({codigo}) => {
+                const produto: ItemDePedido = await produtoRegistry.buscaProdutoPorCodigo(codigo);
+                if(!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado');
+                return produto;
+            }));
+    
+            pedidoInserido = await this.repository.registraPedido(new Pedido(
+                data.CPF,
+                EStatus["Aguardando Pagamento"],
+                itensDePedidoCompletos,
+                null
+            ));
+        } catch(err) {
+            if(err instanceof CustomError) throw err;
+            throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
         }
+
+        return new PedidoOutputDTO(
+            EStatus[pedidoInserido.status],
+            pedidoInserido.codigo!,
+            pedidoInserido.itensDePedido.reduce((soma, item) => soma + item.valor, 0)
+        )
     }
-
-     
-
 }

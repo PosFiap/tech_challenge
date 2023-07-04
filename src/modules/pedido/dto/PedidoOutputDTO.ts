@@ -1,7 +1,7 @@
-import { EStatus } from "../value-objects/EStatus";
-
-export interface PedidoOutputDTO {
-    status: EStatus,
-    codigo: number,
-    valor: number
+export class PedidoOutputDTO {
+    constructor(
+        readonly status: string,
+        readonly codigo: number,
+        readonly valor: number
+    ){}
 }

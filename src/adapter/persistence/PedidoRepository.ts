@@ -40,14 +40,16 @@ export class PedidoRepository implements IPedidoRegistry {
         return bancoDeDados;
     }
 
-    registraPedido(pedido: Pedido): Pedido {
-        const codigo = bancoDeDados.push(pedido) + 1000;
-        return new Pedido(
+    async registraPedido(pedido: Pedido): Promise<Pedido> {
+        const codigo = bancoDeDados.length + 1000;;
+        const novoPedido = new Pedido(
             pedido.CPF,
             pedido.status,
             pedido.itensDePedido,
             codigo
         );
+        bancoDeDados.push(novoPedido);
+        return novoPedido;
     }
 
 }

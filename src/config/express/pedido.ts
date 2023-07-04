@@ -1,16 +1,27 @@
 import { Router } from "express";
 import { PedidoAdapter } from "../../adapter/controller/PedidoAdapter";
 import { CustomError } from "../../utils/customError";
-import { AtualizaStatusPedidoDTO } from "../../modules/pedido";
+import { AtualizaStatusPedidoDTO, PedidoDTO } from "../../modules/pedido";
 import { customErrorToResponse } from "./error-parser";
 
 const router: Router = Router();
 
-router.post('/', (req, res) => { 
-    const pedido = req.body;
+router.post('/', async (req, res) => { 
+    const { CPF, itemDePedido} = req.body;
     const adapter = new PedidoAdapter();
-    const resultado = adapter.registraPedido(pedido);
-    res.status(201).json(JSON.stringify(resultado));
+    const data = new PedidoDTO(CPF, itemDePedido);
+    try{
+        const resultado = await adapter.registraPedido(data);
+        res.status(201).json(JSON.stringify(resultado));
+    } catch (err) {
+        if( err instanceof CustomError) {
+            customErrorToResponse(err, res);
+            return;
+        }
+        res.status(500).json({
+            mensagem: 'Falha ao registrar o pedido'
+        });
+    }
 });
 
 router.patch('/:codigoPedido', async (req, res) => {
