@@ -7,7 +7,8 @@ services:
       dockerfile: Dockerfile
       target: make
     volumes:
-      - ./:/usr/src/app
+      - ./src:/usr/src/app/src
+      - ./nodemon.json:/usr/src/app/nodemon.json
     container_name: app-ts
     ports:
       - '8080:8080'
@@ -19,4 +20,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./protgresql:/var/lib/postgresql/data
+      - postgresql:/var/lib/postgresql/data
+
+volumes:
+  postgresql:
