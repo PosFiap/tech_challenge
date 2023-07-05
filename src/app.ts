@@ -1,4 +1,5 @@
 import express, { Router } from "express"
+import logger from "./utils/LoggerFactory";
 
 export class App {
   public server: express.Application;
@@ -10,7 +11,10 @@ export class App {
 
   public listen(port: string | number): void {
     this.server.listen(port, () => {
-        console.log('Server listening at port', port);
+        // Apenas chamar o logger e utilizar info, warn, error dependendo do seu caso de uso
+        // usei a nomenclatura [Clqsse - Método] pois ajuda a identificar na hora de olhar log
+        // caso aprovem poderiamos padronizar em todas as chamadas
+        logger.info(`[App - listen] Server listening at port ${port}`);
     });
   }
 
