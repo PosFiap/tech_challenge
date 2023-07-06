@@ -1,15 +1,15 @@
 import { CheckoutService } from '../../modules/pagamento'
-import { PedidoService } from '../../modules/pedido/PedidoService'
-import { Fatura, MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
+import { Either } from '../../utils/either'
+import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
 import { HttpClientMock } from '../infra/HttpsMock'
+import { PagamentoPedidoRepository } from '../persistence/PagamendoPedidoRepository'
 
 export class PagamentoQrCodeAdapter {
-  async gerarPagamentoQrCode(pedidoId: string): Promise<string> {
-    const pedidoService = new PedidoService()
-    const pedido = {} as Fatura
+  async gerarPagamentoQrCode (codigoPedido: number): Promise<Either<string, string>> {
     const qrCode = new MeioPagamentoMercadoPago(new HttpClientMock())
-    const checkoutService = new CheckoutService(qrCode)
-    const result = await checkoutService.checkoutQrCode(pedido)
+    const checkoutService = new CheckoutService(qrCode, new PagamentoPedidoRepository())
+    const result = await checkoutService.checkoutQrCode(codigoPedido)
+
     return result
   }
 }
