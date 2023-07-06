@@ -20,8 +20,6 @@ services:
       POSTGRES_PASSWORD: "posfiap2"
     ports:
       - "5432:5432"
-    volumes:
-      - postgresql:/var/lib/postgresql/data
-
+      
 volumes:
   postgresql:

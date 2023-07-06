@@ -11,11 +11,9 @@ datasource db {
 }
 
 model Cliente {
-  codigo Int     @id @default(autoincrement())
-  cpf    String? @unique
+  cpf    String @unique @id
   email  String?
   nome   String?
-  Pedido Pedido?
 }
 
 model Produto {
@@ -28,17 +26,23 @@ model Produto {
 }
 
 model Pedido {
-  codigo Int    @id @default(autoincrement())
-  cliente    Cliente  @relation(fields: [cpf_cliente], references: [cpf])
-  cpf_cliente String @unique
-  status Int
-  ProdutoPedido ProdutoPedido?
+  codigo         Int            @id @default(autoincrement())
+  status         Int
+  cpf_cliente String?
+  ProdutoPedido  ProdutoPedido?
+}
+
+model Categoria {
+  codigo Int @id @default(autoincrement())
+  nome String
 }
 
 model ProdutoPedido {
-  quantidade_produto Int
+  codigo Int @id @default(autoincrement())
+  observacoes String
   produto_codigo     Int     @unique
-  pedido_codigo      Int @unique
+  pedido_codigo      Int     @unique
+  valor_produto      String
   produto            Produto @relation(fields: [produto_codigo], references: [codigo])
-  pedido Pedido @relation(fields: [pedido_codigo], references: [codigo])
+  pedido             Pedido  @relation(fields: [pedido_codigo], references: [codigo])
 }
