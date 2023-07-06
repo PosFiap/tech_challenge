@@ -28,6 +28,7 @@ model Produto {
 model Pedido {
   codigo         Int            @id @default(autoincrement())
   status         Int
+  cpf_cliente String?
   ProdutoPedido  ProdutoPedido?
 }
 
