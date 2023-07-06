@@ -1,8 +1,8 @@
 import https from 'node:https'
-import { HttpRequest, HttpResponse, HttpStatusCode, IHttp } from '../../modules/pagamento/ports/IHttp'
+import { HttpRequest, HttpResponse, HttpStatusCode, IHttp } from '../../modules/pagamento'
 
 export class HttpClient implements IHttp {
-  request<T>(config: HttpRequest): Promise<HttpResponse<T>> {
+  async request<T>(config: HttpRequest): Promise<HttpResponse<T>> {
     const options = {
       host: config.host,
       path: config.path,
