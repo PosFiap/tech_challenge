@@ -1,2 +1,2 @@
-export * from "./IPedidoRegistry";
-export * from "./IRegistraPedidoUseCase";
+export * from './IPedidoRegistry'
+export * from './IRegistraPedidoUseCase'

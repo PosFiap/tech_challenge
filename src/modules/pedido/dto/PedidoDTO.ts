@@ -1,4 +1,4 @@
 export interface PedidoDTO {
-    CPF: string,
-    ItemDePedido: Array<{codigo: number}>
+  CPF: string
+  ItemDePedido: Array<{ codigo: number }>
 }

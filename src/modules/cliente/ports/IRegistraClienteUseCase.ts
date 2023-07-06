@@ -1,6 +1,6 @@
-import { ClienteDTO } from "../dto";
-import { IClienteRepository } from "./IClienteRegistry";
+import { ClienteDTO } from '../dto'
+import { IClienteRepository } from './IClienteRegistry'
 
 export interface IRegistraClienteUseCase {
-    registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): number
+  registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): number
 }

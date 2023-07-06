@@ -1,7 +1,7 @@
-import { EStatus } from "../entities/EStatus";
+import { EStatus } from '../entities/EStatus'
 
 export interface PedidoOutputDTO {
-    status: EStatus,
-    codigo: number,
-    valor: number
+  status: EStatus
+  codigo: number
+  valor: number
 }

@@ -10,7 +10,8 @@
     "build": "tsc -p .",
     "test:watch": "jest -o --watch",
     "test:staged": "jest -o",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint 'src/**'"
   },
   "keywords": [],
   "author": "",

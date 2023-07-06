@@ -1,5 +1,5 @@
-import { Cliente } from "../entities/Cliente";
+import { Cliente } from '../entities/Cliente'
 
 export interface IClienteRepository {
-    insereCliente(cliente: Cliente): number
+  insereCliente(cliente: Cliente): number
 }

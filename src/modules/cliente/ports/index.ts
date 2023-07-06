@@ -1,1 +1,1 @@
-export { IRegistraClienteUseCase } from "./IRegistraClienteUseCase";
+export type { IRegistraClienteUseCase } from './IRegistraClienteUseCase'

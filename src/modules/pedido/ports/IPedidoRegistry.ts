@@ -1,5 +1,5 @@
-import { Pedido } from "../entities/Pedido";
+import { Pedido } from '../entities/Pedido'
 
 export interface IPedidoRegistry {
-    registraPedido(pedido: Pedido): Pedido;
+  registraPedido(pedido: Pedido): Pedido
 }

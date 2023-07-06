@@ -1,13 +1,32 @@
-import { Fatura } from "../../gateways/MeioPagamentoMercadoPago"
-import { PagamentoQrCodeAdapter } from "../PagamentoQrCodeAdapter"
+import { type CheckoutService } from '../../../modules/pagamento'
+import { Either, makeSucesso } from '../../../utils'
+import { PagamentoQrCodeAdapter } from '../PagamentoQrCodeAdapter'
 
 interface SutTypes {
   sut: PagamentoQrCodeAdapter
+  checkoutService: CheckoutService<string>
 }
 
-const makeSut = (): SutTypes => ({
-  sut: new PagamentoQrCodeAdapter()
-})
+// @ts-expect-error apenas implementando um mock sem todas propriedades
+class CheckotServiceMock<S> implements CheckoutService<S> {
+  async atualizaStatusPedidoPago (_codigo: number): Promise<Either<string, boolean>> {
+    throw new Error('Method not implemented.')
+  }
+
+  async checkoutQrCode (_codigoPedido: number): Promise<Either<string, S>> {
+    throw new Error('Method not implemented.')
+  }
+}
+
+const makeSut = (): SutTypes => {
+  const checkoutService = new CheckotServiceMock<string>()
+  return {
+    // @ts-expect-error apenas implementando um mock sem todas propriedades
+    sut: new PagamentoQrCodeAdapter(checkoutService),
+    // @ts-expect-error apenas implementando um mock sem todas propriedades
+    checkoutService
+  }
+}
 
 describe('PagamentoQeCodeAdapter', () => {
   beforeEach(() => {
@@ -18,9 +37,13 @@ describe('PagamentoQeCodeAdapter', () => {
 
   describe('gerarPagamentoQrCode', () => {
     it('Espero receber string para gerar qrcode do pagamento', async () => {
-      const { sut } = makeSut()
-      const result = await sut.gerarPagamentoQrCode({} as Fatura)
-      expect(result).toBe('valor para gerar QRCode')
+      const { sut, checkoutService } = makeSut()
+      const checkoutSpy = jest.spyOn(checkoutService, 'checkoutQrCode')
+        .mockResolvedValueOnce(makeSucesso('valor para gerar QrCode'))
+      const result = await sut.gerarPagamentoQrCode(0)
+      expect(checkoutSpy).toBeCalledTimes(1)
+      expect(checkoutSpy).toBeCalledWith(0)
+      expect(result.sucesso).toBe('valor para gerar QrCode')
     })
   })
 })

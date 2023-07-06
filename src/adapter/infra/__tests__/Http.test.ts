@@ -1,8 +1,8 @@
-import httpsMock from "node:https"
+import httpsMock from 'node:https'
 import Stream from 'stream'
 
-import { HttpClient } from "../Http"
-import { IHttp } from "../../../modules/pagamento/ports/IHttp"
+import { HttpClient } from '../Http'
+import { IHttp } from '../../../modules/pagamento/ports/IHttp'
 
 jest.mock('https', () => ({
   request: {}
@@ -15,17 +15,14 @@ interface SutTypes {
 const makeSut = (url?: string, method?: string, statusCode?: number, data?: any, error?: boolean): SutTypes => {
   const stream = new Stream()
   class Request extends Function {
-    events: { [key: string]: any } = {}
-    constructor() {
-      super()
-    }
+    events: Record<string, any> = {}
 
-    apply(...args: any) {
+    apply (...args: any): Request {
       if (!error) {
         expect(args[1][0].method).toBe(method)
         expect(args[1][0].host).toBe(url)
 
-        // @ts-expect-error
+        // @ts-expect-error adicionado campo não sendo parte do tipo inicial
         stream.statusCode = statusCode
         args[1][1](stream)
         stream.emit('data', data)
@@ -35,33 +32,32 @@ const makeSut = (url?: string, method?: string, statusCode?: number, data?: any,
       return this
     }
 
-    end() {
+    end (): void {
       if (error) {
         this.emit('error')
       }
     }
 
-    on(event: string, listener: Function) {
+    on (event: string, listener: Function): void {
       this.events[event] = listener
     }
 
-    emit(event: string) {
+    emit (event: string): void {
       this.events[event](new Error('Ferrou!'))
     }
   }
 
   const request = new Request()
 
-  // @ts-expect-error
+  // @ts-expect-error criando apenas o mock
   httpsMock.request = jest.fn().mockImplementation(request)
 
   return {
-    sut: new HttpClient(),
+    sut: new HttpClient()
   }
 }
 
 describe('HttpClient', () => {
-
   beforeEach(() => {
     jest.clearAllMocks()
   })

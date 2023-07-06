@@ -1,5 +1,5 @@
 export interface ClienteDTO {
-    CPF: string,
-    email: string,
-    nome: string
+  CPF: string
+  email: string
+  nome: string
 }
