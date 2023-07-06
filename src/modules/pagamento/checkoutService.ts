@@ -1,30 +1,47 @@
-import { CustomError } from '../../utils/customError'
-import { isErro, makeErro, makeSucesso } from '../../utils/either'
-import { IMeioDePagamentoQR } from './ports/IMeioDePagamentoQR'
+import { CustomError, CustomErrorType, Either, isErro, makeErro, makeSucesso } from '../../utils'
+import { EStatus, PedidoPagamentoDTO } from './dto'
+import { IMeioDePagamentoQR, IPagamentoPedidoRegistry } from './ports'
 
-export class CheckoutService<T, S> {
-  constructor(
-    private readonly meioDePagamento: IMeioDePagamentoQR<T, S>
+export class CheckoutService<S> {
+  constructor (
+    private readonly meioDePagamento: IMeioDePagamentoQR<PedidoPagamentoDTO, S>,
+    private readonly pedidoPagamentoRepository: IPagamentoPedidoRegistry
   ) {
     const valido = this.validaSeRecebeuOsParametros()
     if (isErro(valido)) {
-      throw new Error(valido.erro)
+      throw new CustomError(CustomErrorType.InstantiatingError, valido.erro)
     }
   }
 
-  private validaSeRecebeuOsParametros() {
+  private validaSeRecebeuOsParametros (): Either<string, boolean> {
     if (!this.meioDePagamento) {
       return makeErro('meioDePagamento é requerido.')
+    }
+
+    if (!this.pedidoPagamentoRepository) {
+      return makeErro('pedidoPagamentoRepository é requerido.')
     }
 
     return makeSucesso(true)
   }
 
-  async checkoutQrCode(pedido: T): Promise<S> {
+  async atualizaStatusPedidoPago (codigo: number): Promise<Either<string, boolean>> {
     try {
-      return this.meioDePagamento.checkoutQrCode(pedido)
+      await this.pedidoPagamentoRepository.atualizarStatusPedidoPago(codigo, EStatus['Pedido em preparação'])
+      return makeSucesso(true)
     } catch (error) {
-      throw error
+      return makeErro('Erro ao atulizar status do pedido como pago')
+    }
+  }
+
+  async checkoutQrCode (codigoPedido: number): Promise<Either<string, S>> {
+    try {
+      const pedido = await this.pedidoPagamentoRepository.obterPedidoPeloCodigo(codigoPedido)
+      const checkoutResult = await this.meioDePagamento.checkoutQrCode(pedido)
+      return makeSucesso(checkoutResult as S)
+    } catch (error) {
+      console.error(error)
+      return makeErro('Erro ao efetuar checkout')
     }
   }
 }
