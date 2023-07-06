@@ -1,19 +1,19 @@
-type Erro<T> = {
+export interface Erro<T> {
   erro: T
   sucesso?: never
 }
 
-type Sucesso<U> = {
+export interface Sucesso<U> {
   erro?: never
   sucesso: U
 }
 
-type Either<T, U> = NonNullable<Erro<T> | Sucesso<U>>
+export type Either<T, U> = NonNullable<Erro<T> | Sucesso<U>>
 type UnwrapEither = <T, U>(e: Either<T, U>) => NonNullable<T | U>
 
 export const unwrapEither: UnwrapEither = <T, U>({
   erro,
-  sucesso,
+  sucesso
 }: Either<T, U>) => {
   if (sucesso !== undefined && erro !== undefined) {
     throw new Error(
