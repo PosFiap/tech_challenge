@@ -9,7 +9,8 @@
     "test": "jest --silent",
     "build": "tsc -p .",
     "test:watch": "jest -o --watch",
-    "test:staged": "jest -o"
+    "test:staged": "jest -o",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
