@@ -10,8 +10,16 @@ const bancoDeDados: Array<Produto> = [{
     descricao: '',
     valor: 12.90,
     categoria_codigo: ECategoria.Lanche,
-},{
+},
+{
     codigo: 1,
+    nome: 'x-picanha',
+    descricao: '',
+    valor: 32.99,
+    categoria_codigo: ECategoria.Lanche,
+},
+{
+    codigo: 2,
     nome: 'sorvete de pistache',
     descricao: '',
     valor: 5.10,

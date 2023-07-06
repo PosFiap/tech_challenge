@@ -41,7 +41,7 @@ export class ProdutoService implements IProdutoCrudUseCase {
 
             const result: ProdutoOutputDTO = {
                 code: 200,
-                message: "Novo Produto inserido com sucesso!",
+                message: "Novo Produto atualizado com sucesso!",
                 produto: produto
             }
     
