@@ -1,7 +1,5 @@
-import { IHttp } from '../../modules/pagamento/ports/IHttp'
-import { IMeioDePagamentoQR } from '../../modules/pagamento/ports/IMeioDePagamentoQR'
-import { CustomError } from '../../utils/customError'
-import { isErro, makeErro, makeSucesso } from '../../utils/either'
+import { PedidoPagamentoDTO, IHttp, IMeioDePagamentoQR } from '../../modules/pagamento'
+import { CustomError, CustomErrorType, Either, isErro, makeErro, makeSucesso } from '../../utils'
 
 interface ItemFatura {
   sku_number: string
@@ -20,7 +18,7 @@ export interface Fatura {
   total_amount: number
   description: string
   items: ItemFatura[]
-  taxes: [
+  taxes?: [
     {
       value: number
       type: string
@@ -28,13 +26,13 @@ export interface Fatura {
   ]
 }
 
-export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<Fatura, string> {
+export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagamentoDTO, string> {
   private readonly _http: IHttp
   private readonly _idUsuarioMercadoPago: string | undefined
   private readonly _idExternoPontoDeVenda: string | undefined
   private readonly _accessToken: string | undefined
 
-  constructor(http: IHttp) {
+  constructor (http: IHttp) {
     this._http = http
     this._idUsuarioMercadoPago = process.env.ID_USUARIO_MP
     this._idExternoPontoDeVenda = process.env.ID_EXTERNO_CAIXA
@@ -42,11 +40,30 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<Fatura, stri
 
     const valido = this.validaSeRecebeuOsParametros()
     if (isErro(valido)) {
-      throw new Error(valido.erro)
+      throw new CustomError(CustomErrorType.InstantiatingError, valido.erro)
     }
   }
 
-  private validaSeRecebeuOsParametros() {
+  private mapPedidoPagamentoDTOParaFatura (pedido: PedidoPagamentoDTO): Fatura {
+    return {
+      external_reference: pedido.codigo.toString(),
+      total_amount: pedido.itensDePedido.map(item => item.valor).reduce((a, c) => a + c, 0),
+      items: pedido.itensDePedido.map(item => ({
+        title: item.nome,
+        unit_price: item.valor,
+        quantity: 1,
+        total_amount: item.valor,
+        category: item.categoria_codigo.toString(),
+        description: item.descricao,
+        unit_measure: 'unidade',
+        sku_number: `${item.codigo}`
+      })),
+      description: 'Pedido',
+      title: 'Combo'
+    }
+  }
+
+  private validaSeRecebeuOsParametros (): Either<string, boolean> {
     if (!this._http) {
       return makeErro('Cliente http é requerido.')
     }
@@ -58,24 +75,26 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<Fatura, stri
     return makeSucesso(true)
   }
 
-  async checkoutQrCode(pedido: Fatura): Promise<string> {
+  async checkoutQrCode (pedido: PedidoPagamentoDTO): Promise<Either<string, string>> {
     try {
+      const fatura = this.mapPedidoPagamentoDTOParaFatura(pedido)
       const response = await this._http.request<{ qr_data: string }>({
         host: 'https://api.mercadopago.com',
-        path: `/instore/orders/qr/seller/collectors/${this._idUsuarioMercadoPago}/pos/${this._idExternoPontoDeVenda}/qrs`,
+        path: `/instore/orders/qr/seller/collectors/${this._idUsuarioMercadoPago as string}/pos/${this._idExternoPontoDeVenda as string}/qrs`,
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this._accessToken}`
+          Authorization: `Bearer ${this._accessToken as string}`
         },
-        body: pedido
+        body: fatura
       })
 
       if (response.body) {
-        return response.body.qr_data
+        return makeSucesso(response.body.qr_data)
       } else {
-        throw new CustomError('Retorno de dados não esperado.', 'A request para criar um QRCode retornou um resultado sem o body contendo as informações.')
+        return makeErro('Resposta da requets sem conteudo de dados')
       }
     } catch (error) {
+      console.error(error)
       throw error
     }
   }
