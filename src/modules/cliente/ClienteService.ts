@@ -1,10 +1,10 @@
-import { ClienteDTO, ClienteRegistryDTO, ErrorDTO } from "./dto";
+import { ClienteDTO, ClienteRegistryDTO } from "./dto";
 import { IRegistraClienteUseCase, IAtualizaClienteUseCase, IListaClienteUseCase, IDeletaClienteUseCase, IListaClienteCPFUseCase } from "./ports";
 import { IClienteRepository } from "./ports/IClienteRegistry";
 
 export class ClienteService implements IRegistraClienteUseCase, IAtualizaClienteUseCase, IListaClienteUseCase, IDeletaClienteUseCase, IListaClienteCPFUseCase {
   
-    async registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO | ErrorDTO> {
+    async registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
         const result = await clienteRepository.insereCliente(cliente);
         return result
     }
@@ -20,8 +20,8 @@ export class ClienteService implements IRegistraClienteUseCase, IAtualizaCliente
         const result = await clienteRepository.listaClienteCPF(cpf);
         return result
     }
-    async deletaCliente(codigo: number, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
-        const result = await clienteRepository.deletaCliente(codigo);
+    async deletaCliente(cpf: string, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
+        const result = await clienteRepository.deletaCliente(cpf);
         return result
     }
 }

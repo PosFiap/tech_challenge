@@ -1,8 +1,8 @@
-import { ClienteDTO, ClienteRegistryDTO, ErrorDTO, ClienteService } from "../../modules/cliente";
+import { ClienteDTO, ClienteRegistryDTO, ClienteService } from "../../modules/cliente";
 import { ClienteRepository } from "../persistence/ClienteRepository";
 
 export class ClienteAdapter {
-    async registraCliente(cliente: ClienteDTO): Promise<ClienteRegistryDTO | ErrorDTO> {
+    async registraCliente(cliente: ClienteDTO): Promise<ClienteRegistryDTO> {
         const clienteService = new ClienteService();
         const clienteRepository = new ClienteRepository();
         const result = await clienteService.registraCliente(cliente, clienteRepository);
@@ -30,10 +30,10 @@ export class ClienteAdapter {
         return result;
     }
     
-    async deletaCliente(codigo: number): Promise<ClienteRegistryDTO> {
+    async deletaCliente(cpf: string): Promise<ClienteRegistryDTO> {
         const clienteService = new ClienteService();
         const clienteRepository = new ClienteRepository();
-        const result = await clienteService.deletaCliente(codigo, clienteRepository);
+        const result = await clienteService.deletaCliente(cpf, clienteRepository);
         return result;
     }
 }
