@@ -1,9 +1,14 @@
-export class CustomError extends Error {
-  name: string
+export enum CustomErrorType {
+  InvalidInputDTO = 'InvalidInputDTO',
+  BusinessRuleViolation = 'BusinessRuleViolation',
+  RepositoryUnknownError = 'RepositoryUnknownError',
+  RepositoryDataNotFound = 'RepositoryDataNotFound',
+  InstantiatingError = 'InstantiatingError'
+}
 
-  constructor(name: string, message: string) {
+export class CustomError extends Error {
+  constructor (readonly type: CustomErrorType, message: string) {
     super(message)
-    this.name = name
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, CustomError)
