@@ -1,5 +1,5 @@
-import express, { Router } from "express"
-import logger from "./utils/LoggerFactory";
+import express, { Router } from "express";
+import logger, { loggerExpress } from "./utils/LoggerFactory";
 
 export class App {
   public server: express.Application;
@@ -20,6 +20,11 @@ export class App {
 
   private middleware(){
     this.server.use(express.json());
+    this.loggerExpress();
+  }
+
+  private loggerExpress() {
+    this.server.use(loggerExpress());
   }
 
   private router(router: Router){

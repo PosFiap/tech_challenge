@@ -1,4 +1,6 @@
 import { createLogger, transports, format } from "winston";
+import expressWinston from "express-winston";
+
 
 const logger = createLogger({
   transports: [
@@ -21,5 +23,21 @@ const logger = createLogger({
       })
     ),
   });
+
+export const loggerExpress = () => {
+  return expressWinston.logger({
+    winstonInstance: logger,
+    meta: true, 
+    msg: (req, res) => { 
+      return `HTTP ${res.statusCode} - ${req.method} {{res.responseTime}}ms ${req.url} - Request Body: ${JSON.stringify(req.body)}`},
+    statusLevels: {
+      success: 'info',
+      warn: 'warn',
+      error: 'error'
+    }
+  })
+}
+
+
 
 export default logger;
