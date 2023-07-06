@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { PagamentoQrCodeAdapter } from '../../adapter/controller/PagamentoQrCodeAdapter'
 import { isErro } from '../../utils'
+import { Pagamento } from '../../factories/pagamento'
 
 const router: Router = Router()
 
@@ -12,8 +12,7 @@ router.post('/', async (req, res): Promise<void> => {
     return
   }
 
-  const pagamentoQrCode = new PagamentoQrCodeAdapter()
-  const result = await pagamentoQrCode.gerarPagamentoQrCode(pedidoId)
+  const result = await Pagamento.gerarPagamentoQrCode(pedidoId)
 
   if (isErro(result)) {
     console.error(result.erro)
