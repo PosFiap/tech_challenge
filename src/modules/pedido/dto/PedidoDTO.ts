@@ -18,4 +18,4 @@ export class PedidoDTO {
         if(!this.validaItemDePedido()) erros.push('Um ou mais itens do pedido é inválido');
         return erros;
     }
-}  
+}

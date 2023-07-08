@@ -21,6 +21,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/express-winston": "^4.0.0",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
@@ -31,13 +32,14 @@
     "prisma": "^4.16.2"
   },
   "dependencies": {
-      "@prisma/client": "^4.16.2",
-      "express": "^4.18.2",
-      "@prisma/client": "^4.16.2",
-      "module-alias": "^2.2.3"
+    "@prisma/client": "^4.16.2",
+    "express": "^4.18.2",
+    "express-winston": "^4.2.0",
+    "module-alias": "^2.2.3",
+    "winston": "^3.9.0",
   },
   "_moduleAliases": {
-      "@root": "src/",
-      "@client": "src/modules/cliente/ports"
+    "@root": "src/",
+    "@client": "src/modules/cliente/ports"
   }
 }
