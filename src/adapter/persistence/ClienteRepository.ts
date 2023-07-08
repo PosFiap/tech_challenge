@@ -1,11 +1,23 @@
 import { Cliente } from "../../modules/cliente/entities/Cliente";
+import { ClienteRegistryDTO } from '../../modules/cliente'
 import { IClienteRepository } from "../../modules/cliente/ports/IClienteRegistry";
 
-const bancoDeDados = [];
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 export class ClienteRepository implements IClienteRepository {
-    insereCliente(cliente: Cliente): number {
-        return bancoDeDados.push(cliente);
+    async insereCliente(cliente: Cliente): Promise<ClienteRegistryDTO> {
+        try {
+            const data = {
+                cpf: cliente.cpf,
+                email: cliente.email,
+                nome: cliente.nome
+            }
+            const register = await prisma.cliente.create({ data })
+            return register
+        } catch (err) {
+            throw(err)
+        }
     }
 
 }

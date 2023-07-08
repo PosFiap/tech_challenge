@@ -1,21 +1,41 @@
-import { PedidoService } from "../../modules/pedido/PedidoService";
-import { PedidoDTO } from "../../modules/pedido/dto/PedidoDTO";
 import { PedidoOutputDTO } from "../../modules/pedido/dto/PedidoOutputDTO";
 import { PedidoRepository } from "../persistence/PedidoRepository";
 import { ProdutoRepository } from "../persistence/ProdutoRepository";
+import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, ItemListaPedidoOutputDTO, PedidoDTO, PedidoService } from "./../../modules/pedido";
 
 export class PedidoAdapter {
-    registraPedido(pedido: PedidoDTO): PedidoOutputDTO {
+
+    async atualizaStatusPedido(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
+        const pedidoRepository = new PedidoRepository();
+        const pedidoService = new PedidoService(pedidoRepository);
+        try {
+            const result = pedidoService.atualizaStatus(data);
+            return result;
+        } catch(err) {
+            throw err;
+        }
+    }
+
+    listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>> {
+        try{
+            const pedidoRepository = new PedidoRepository();
+            const pedidoService = new PedidoService(pedidoRepository);
+            return pedidoService.listaPedidos();
+        } catch(err) {
+            throw err;
+        }
+    }
+
+    async registraPedido(pedido: PedidoDTO): Promise<PedidoOutputDTO> {
         const pedidoRegistry = new PedidoRepository();
         const produtoRegistry = new ProdutoRepository();
-        const service = new PedidoService();
+        const service = new PedidoService(pedidoRegistry);
 
-        console.log('pedido recebido', pedido);
-
-        const pedidoCompleto = service.registraPedido(pedido, pedidoRegistry, produtoRegistry);
-
-        console.log('pedido completo', pedidoCompleto);
-
-        return pedidoCompleto;
+        try{
+            const pedidoCompleto = await service.registraPedido(pedido, produtoRegistry);
+            return pedidoCompleto;
+        } catch(err) {
+            throw err;
+        }
     }
 }

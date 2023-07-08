@@ -1,3 +1,4 @@
+
 import { ProdutoDTO } from "../dto/ProdutoDTO"
 import { ECategoria } from "../entities/ECategoria"
 import { Produto } from "../entities/Produto"
@@ -9,4 +10,5 @@ export interface IProdutoRepository {
 
     registraProduto(produto: ProdutoDTO): number
     atualizaProduto(id: number, produto: ProdutoDTO): number
+
 }

@@ -26,6 +26,7 @@ const bancoDeDados: Array<Produto> = [{
     categoria_codigo: ECategoria.Sobremesa,
 }];
 
+
 export class ProdutoRepository implements IProdutoRepository {
     
 
@@ -67,6 +68,7 @@ export class ProdutoRepository implements IProdutoRepository {
     }
 
     buscaProdutoPorCodigo(codigo: number): Produto {
+
         return bancoDeDados[codigo];
     }
 
