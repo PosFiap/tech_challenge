@@ -8,7 +8,10 @@
     "dev": "nodemon ./src/index.ts",
     "build": "tsc -p .",
     "test": "jest",
-    "test:watch": "jest -o --watch"
+    "test:watch": "jest -o --watch",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -21,13 +24,15 @@
     "nodemon": "^2.0.22",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "prisma": "^4.16.2"
   },
   "dependencies": {
+    "@prisma/client": "^4.16.2",
     "express": "^4.18.2",
     "express-winston": "^4.2.0",
     "module-alias": "^2.2.3",
-    "winston": "^3.9.0"
+    "winston": "^3.9.0",
   },
   "_moduleAliases": {
     "@root": "src/",
