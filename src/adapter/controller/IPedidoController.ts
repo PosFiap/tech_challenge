@@ -1,4 +1,4 @@
-import { AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO, PedidoOutputDTO } from "../../modules/pedido";
+import { AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO, InserePedidoOutputDTO } from "../../modules/pedido";
 
 export interface IPedidoController {
     pedidoService: IPedidoService;
@@ -7,5 +7,5 @@ export interface IPedidoController {
 
     listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>>;
 
-    registraPedido(data: {cpf: string | null, produtoPedido: {codigo: number}[]}): Promise<PedidoOutputDTO>;
+    registraPedido(data: {cpf: string | null, produtoPedido: {codigo: number}[]}): Promise<InserePedidoOutputDTO>;
 }

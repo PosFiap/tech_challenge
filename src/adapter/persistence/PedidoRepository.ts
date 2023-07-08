@@ -1,55 +1,111 @@
+import { PrismaClient } from '@prisma/client';
 import { IPedidoRepository } from "../../modules/pedido";
-import { ItemDePedido } from "../../modules/pedido/entities/ItemDePedido";
-import { Pedido } from "../../modules/pedido/entities/Pedido";
-import { CustomError, CustomErrorType } from "../../utils/customError";
+import { Pedido } from "../../modules/pedido/model/Pedido";
+import { Produto } from '../../modules/pedido/model/Produto';
 
-const bancoDeDados: Array<Pedido> = [
-    new Pedido(null, 0, [], 1000),
-    new Pedido(null, 1, [], 1001),
-    new Pedido("1234", 0, [
-        new ItemDePedido("x-salada", "", 12.90, 0),
-        new ItemDePedido("coquinha", "", 6.10, 2)
-    ], 1002),
+export class PrismaPedidoRepository implements IPedidoRepository {
+    private prisma: PrismaClient;
 
-
-];
-
-export class PedidoRepository implements IPedidoRepository {
-
-    async obtemStatusPedido(codigoPedido: number): Promise<number> {
-        const pedido = bancoDeDados.filter((pedido) => pedido.codigo === codigoPedido)[0];
-        if(!pedido) throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Pedido não encontrado");
-        return pedido.status;
-    }
-
-    async atualizaStatusPedido(codigoPedido: number, codigoStatus: number): Promise<Pedido> {
-        const pedido = bancoDeDados.filter((pedido) => pedido.codigo === codigoPedido)[0];
-        if(!pedido) throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Pedido não encontrado");
-        const index = bancoDeDados.indexOf(pedido);
-        const pedidoAtualizado = new Pedido(
-            pedido.CPF,
-            codigoStatus,
-            pedido.itensDePedido,
-            pedido.codigo
-        );
-        bancoDeDados[index] = pedidoAtualizado;
-        return pedidoAtualizado;
-    }
-
-    async listaPedidos(): Promise<Pedido[]> {
-        return bancoDeDados;
+    constructor(){
+        this.prisma = new PrismaClient();
     }
 
     async registraPedido(pedido: Pedido): Promise<Pedido> {
-        const codigo = bancoDeDados.length + 1000;;
-        const novoPedido = new Pedido(
-            pedido.CPF,
-            pedido.status,
-            pedido.itensDePedido,
-            codigo
-        );
-        bancoDeDados.push(novoPedido);
-        return novoPedido;
+        console.log(pedido);
+
+        const pedidoInserido = await this.prisma.pedido.create({
+            data: {
+                status: pedido.status,
+                cpf_cliente: pedido.CPF,
+                ProdutoPedido: {
+                    createMany: {
+                        data: pedido.produtosPedido.map((produto) => ({
+                            valor_produto: produto.valor,
+                            produto_codigo: parseInt(produto.codigo),
+                            observacoes: null
+                        }))
+                    }
+                }
+            }
+        });
+        return new Pedido(pedidoInserido.cpf_cliente, pedidoInserido.status, [], pedidoInserido.codigo);
     }
 
+    async listaPedidos(config: { vinculaProdutos: boolean; }): Promise<Pedido[]> {
+        const options = { include: {}};
+        if(config.vinculaProdutos) {
+            options.include = {
+                ProdutoPedido: {
+                    include: {
+                        Produto: true
+                    }
+                }
+            }
+        }
+        const pedidos = await this.prisma.pedido.findMany(options);
+        
+        return pedidos.map((pedido) => (new Pedido(
+                pedido.cpf_cliente!,
+                pedido.status!,
+                //@ts-ignore
+                pedido.ProdutoPedido.map((produtoPedido: { Produto: Produto, valor: number}) => {
+                    const { Produto: produto } = produtoPedido;
+                    return new Produto(
+                            produto.codigo,
+                            produto.nome,
+                            produto.descricao,
+                            //@ts-ignore
+                            produtoPedido.valor_produto,
+                            produto.categoria_codigo
+                        )
+                }),
+                pedido.codigo
+            )));
+    }
+
+    async atualizaPedido(pedido: Pedido): Promise<Pedido> {
+        const pedidoAtualizado = await this.prisma.pedido.update({
+            data: {
+                status: pedido.status,
+            },
+            where: {
+                codigo: pedido.codigo!
+            }
+        });
+        return new Pedido(
+            pedidoAtualizado.cpf_cliente!,
+            pedidoAtualizado.status!,
+            [],
+            pedidoAtualizado.codigo
+        );
+    }
+
+    async obtemPedido(codigoPedido: number): Promise<Pedido> {
+        const pedido = await this.prisma.pedido.findUnique({
+            where: {
+                codigo: codigoPedido
+            }
+        });
+        return new Pedido(
+            pedido?.cpf_cliente || null,
+            pedido?.status!,
+            [],
+            pedido?.codigo!
+        )
+    }
+
+    async buscaProdutoPorCodigo(codigoProduto: number): Promise<Produto> {
+        const produto = await this.prisma.produto.findUnique({
+            where: {
+                codigo: codigoProduto
+            }
+        });
+        return new Produto(
+            produto?.codigo!.toString()!,
+            produto?.nome!,
+            produto?.descricao!,
+            produto?.valor!,
+            produto?.categoria_codigo!
+        );
+    }
 }

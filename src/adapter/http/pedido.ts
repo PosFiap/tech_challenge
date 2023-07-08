@@ -18,7 +18,7 @@ export class PedidoHTTP {
             const { CPF, itemDePedido} = req.body;
             try{
                 const resultado = await this.pedidoController.registraPedido({
-                    cpf: CPF,
+                    cpf: CPF || null,
                     produtoPedido: itemDePedido
                 });
                 res.status(201).json(JSON.stringify(resultado));
@@ -65,8 +65,8 @@ export class PedidoHTTP {
                         codigo: pedido.codigo,
                         status: pedido.status,
                         valorTotal: pedido.valorTotal,
-                        quantidadeItens: pedido.quantidadeItensPedido,
-                        itens: pedido.itensPedido
+                        quantidadeItens: pedido.quantidadeProdutosPedido,
+                        itens: pedido.produtosPedido
                     }
                 }));
             } catch (err) {

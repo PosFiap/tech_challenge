@@ -1,8 +1,10 @@
-import { Pedido } from "../entities/Pedido";
+import { Pedido } from "../model/Pedido";
+import { Produto } from "../model/Produto";
 
 export interface IPedidoRepository {
-    obtemStatusPedido(codigoPedido: number): Promise<number>;
-    atualizaStatusPedido(codigoPedido: number, codigoStatus: number): Promise<Pedido>;
+    atualizaPedido(pedido: Pedido): Promise<Pedido>;
     registraPedido(pedido: Pedido): Promise<Pedido>;
-    listaPedidos(): Promise<Array<Pedido>>;
+    listaPedidos(config: {vinculaProdutos: boolean}): Promise<Array<Pedido>>;
+    obtemPedido(codigoPedido: number): Promise<Pedido>;
+    buscaProdutoPorCodigo(codigo: number): Promise<Produto>
 }

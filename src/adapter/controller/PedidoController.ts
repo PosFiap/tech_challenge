@@ -1,7 +1,7 @@
-import { PedidoOutputDTO } from "../../modules/pedido/dto/PedidoOutputDTO";
-import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO, PedidoDTO, PedidoService } from "../../modules/pedido";
-import { PedidoRepository } from "../persistence/PedidoRepository";
+import { InserePedidoOutputDTO } from "../../modules/pedido/dto/InserePedidoOutputDTO";
+import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO, InserePedidoDTO, PedidoService } from "../../modules/pedido";
 import { IPedidoController } from "./IPedidoController";
+import { PrismaPedidoRepository } from "../persistence/PedidoRepository";
 
 export class PedidoController implements IPedidoController {
 
@@ -11,7 +11,7 @@ export class PedidoController implements IPedidoController {
 
     static create(configuration:string = 'default'): PedidoController {
         if(configuration === 'default') {
-            const repository = new PedidoRepository();
+            const repository = new PrismaPedidoRepository();
             const service = new PedidoService(repository);
             return new PedidoController(service);
         }
@@ -31,9 +31,9 @@ export class PedidoController implements IPedidoController {
         }
     }
 
-    async registraPedido(data: { cpf: string | null; produtoPedido: {codigo: number}[]; }): Promise<PedidoOutputDTO> {
+    async registraPedido(data: { cpf: string | null; produtoPedido: {codigo: number}[]; }): Promise<InserePedidoOutputDTO> {
         try{
-            const inputDTO = new PedidoDTO(data.cpf, data.produtoPedido);
+            const inputDTO = new InserePedidoDTO(data.cpf, data.produtoPedido);
             const pedidoCompleto = await this.pedidoService.registraPedido(inputDTO);
             return pedidoCompleto;
         } catch(err) {
