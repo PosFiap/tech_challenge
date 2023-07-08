@@ -1,9 +1,9 @@
 export enum CustomErrorType {
-  InvalidInputDTO = 'InvalidInputDTO',
-  BusinessRuleViolation = 'BusinessRuleViolation',
-  RepositoryUnknownError = 'RepositoryUnknownError',
-  RepositoryDataNotFound = 'RepositoryDataNotFound',
-  InstantiatingError = 'InstantiatingError'
+  'InvalidInputDTO',
+  'BusinessRuleViolation',
+  'RepositoryUnknownError',
+  'RepositoryDataNotFound',
+  'InstantiatingError'
 }
 
 export class CustomError extends Error {

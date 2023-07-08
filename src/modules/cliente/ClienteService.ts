@@ -1,10 +1,10 @@
-import { ClienteDTO } from './dto'
+import { ClienteDTO, ClienteRegistryDTO } from './dto'
 import { IRegistraClienteUseCase } from './ports'
 import { IClienteRepository } from './ports/IClienteRegistry'
 
 export class ClienteService implements IRegistraClienteUseCase {
-  registraCliente (cliente: ClienteDTO, clienteRepository: IClienteRepository): number {
-    console.log('cliente', cliente)
-    return clienteRepository.insereCliente(cliente)
+  async registraCliente (cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
+    const result = await clienteRepository.insereCliente(cliente)
+    return result
   }
 }

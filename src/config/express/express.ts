@@ -4,7 +4,7 @@ import { router as pedidoRouter } from './pedido'
 
 const router: Router = Router()
 
-router.use('/health', (req, res) => res.sendStatus(200))
+router.use('/health', (_req, res) => res.sendStatus(200))
 router.use('/cliente', clienteRouter)
 router.use('/pedido', pedidoRouter)
 

@@ -1,8 +1,7 @@
-import { ECategoria } from './ECategoria'
+import { ECategoria } from '../value-objects/ECategoria'
 
 export class ItemDePedido {
   constructor (
-    readonly codigo: number,
     readonly nome: string,
     readonly descricao: string,
     readonly valor: number,

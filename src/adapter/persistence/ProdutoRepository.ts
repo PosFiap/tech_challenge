@@ -23,7 +23,7 @@ const bancoDeDados: Data[] = [{
 }]
 
 export class ProdutoRepository implements IProdutoRegistry {
-  buscaProdutoPorCodigo (codigo: number): Data {
+  async buscaProdutoPorCodigo (codigo: number): Promise<Data> {
     return bancoDeDados[codigo]
   }
 }

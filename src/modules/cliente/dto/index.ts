@@ -1,1 +1,1 @@
-export type { ClienteDTO } from './ClienteDTO'
+export type { ClienteDTO, ClienteRegistryDTO } from './ClienteDTO'

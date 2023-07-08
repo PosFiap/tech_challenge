@@ -10,6 +10,7 @@
       "@typescript-eslint/consistent-type-imports": "off",
       "@typescript-eslint/return-await": "off",
       "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "promise/param-names": "off",
       "no-case-declarations": "off",
       "@typescript-eslint/no-misused-promises": [

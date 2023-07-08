@@ -2,5 +2,6 @@ export enum ECategoria {
   'Lanche',
   'Sobremesa',
   'Bebida',
-  'Acompanhamento'
+  'Acompanhamento',
+  '__LENGTH'
 }
