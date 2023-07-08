@@ -1,6 +1,5 @@
-import { IProdutoRegistry } from "../produto/ports/IProdutoRegistry";
-import { AtualizaStatusPedidoOutputDTO } from "./dto/AtualizaStatusPedidoOutputDTO";
-import { ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto/ListaPedidoOutputDTO";
+
+import { IProdutoRepository } from "../produto/ports/IProdutoRegistry";
 import { PedidoDTO } from "./dto/PedidoDTO";
 import { PedidoOutputDTO } from "./dto/PedidoOutputDTO";
 import { ECategoria } from "./value-objects/ECategoria";
@@ -34,6 +33,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         } catch (err) {
             if(err instanceof CustomError) throw err;
             throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
+
         }
         
         return new AtualizaStatusPedidoOutputDTO(
