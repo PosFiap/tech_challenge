@@ -15,7 +15,7 @@ const bancoDeDados = [{
 }];
 
 export class ProdutoRepository implements IProdutoRegistry {
-    buscaProdutoPorCodigo(codigo: number) {
+    async buscaProdutoPorCodigo(codigo: number) {
         return bancoDeDados[codigo];
     }
 
