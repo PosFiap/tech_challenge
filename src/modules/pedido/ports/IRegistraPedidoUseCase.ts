@@ -4,5 +4,5 @@ import { PedidoOutputDTO } from "../dto/PedidoOutputDTO";
 import { IPedidoRepository } from "./IPedidoRepository";
 
 export interface IRegistraPedidoUseCase {
-    registraPedido(data: PedidoDTO, produtoRepository: IProdutoRepository): Promise<PedidoOutputDTO>;
+    registraPedido(data: PedidoDTO): Promise<PedidoOutputDTO>;
 }

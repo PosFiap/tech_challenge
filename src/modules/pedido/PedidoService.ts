@@ -6,15 +6,14 @@ import { PedidoOutputDTO } from "./dto/PedidoOutputDTO";
 import { ECategoria } from "./value-objects/ECategoria";
 import { EStatus } from "./value-objects/EStatus";
 import { Pedido } from "./entities/Pedido";
-import { IAtualizaStatusPedidoUseCase, IPedidoRepository, IRegistraPedidoUseCase } from "./ports";
-import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
 import { AtualizaStatusPedidoDTO } from "./dto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 import { ItemDePedido } from "./entities/ItemDePedido";
+import { IPedidoRepository, IPedidoService } from "./ports";
 
-export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase, IAtualizaStatusPedidoUseCase {
+export class PedidoService implements IPedidoService {
 
-    constructor(readonly repository: IPedidoRepository) {}
+    constructor(readonly pedidoRepository: IPedidoRepository) {}
 
     async atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
         
@@ -25,12 +24,12 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         let pedidoAtualizado;
 
         try{
-            const statusAtualDoPedido = await this.repository.obtemStatusPedido(codigoPedido);
+            const statusAtualDoPedido = await this.pedidoRepository.obtemStatusPedido(codigoPedido);
 
             //Um pedido só pode ser atualizado para um status posterior
             if(statusAtualDoPedido >= codigoStatus)
                 throw new CustomError(CustomErrorType.BusinessRuleViolation, "O status indicado não é válido para esse pedido");
-            pedidoAtualizado = await this.repository.atualizaStatusPedido(codigoPedido, codigoStatus);    
+            pedidoAtualizado = await this.pedidoRepository.atualizaStatusPedido(codigoPedido, codigoStatus);    
         } catch (err) {
             if(err instanceof CustomError) throw err;
             throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
@@ -44,7 +43,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
 
 
     async listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>> {
-        const pedidosArmazenados = await this.repository.listaPedidos();
+        const pedidosArmazenados = await this.pedidoRepository.listaPedidos();
 
         //map Entity to DTO
         const listaPedidos: Array<ItemListaPedidoOutputDTO> =
@@ -69,7 +68,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         return listaPedidos;
     }
 
-    async registraPedido(data: PedidoDTO, produtoRepository: IProdutoRepository): Promise<PedidoOutputDTO> {
+    async registraPedido(data: PedidoDTO): Promise<PedidoOutputDTO> {
         
         const erros = data.validaDTO();
         if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
@@ -84,7 +83,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
                 return produto;
             }));
     
-            pedidoInserido = await this.repository.registraPedido(new Pedido(
+            pedidoInserido = await this.pedidoRepository.registraPedido(new Pedido(
                 data.CPF,
                 EStatus["Aguardando Pagamento"],
                 itensDePedidoCompletos,
