@@ -1,11 +1,12 @@
-import { EStatus } from "./EStatus";
+import { EStatus } from "../value-objects/EStatus";
 import { ItemDePedido } from "./ItemDePedido";
 
 export class Pedido {
-    public codigo: number | undefined;
+    
     constructor(
-        readonly cpf: string,
+        readonly CPF: string | null,
         readonly status: EStatus,
-        readonly itensDePedido: Array<ItemDePedido>
+        readonly itensDePedido: Array<ItemDePedido>,
+        readonly codigo: number | null
     ) {}
 }
