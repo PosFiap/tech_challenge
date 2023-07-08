@@ -1,4 +1,4 @@
-import { IProdutoRegistry } from "../produto/ports/IProdutoRegistry";
+import { IProdutoRepository } from "../produto/ports/IProdutoRepository";
 import { AtualizaStatusPedidoOutputDTO } from "./dto/AtualizaStatusPedidoOutputDTO";
 import { ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto/ListaPedidoOutputDTO";
 import { PedidoDTO } from "./dto/PedidoDTO";
@@ -6,7 +6,7 @@ import { PedidoOutputDTO } from "./dto/PedidoOutputDTO";
 import { ECategoria } from "./value-objects/ECategoria";
 import { EStatus } from "./value-objects/EStatus";
 import { Pedido } from "./entities/Pedido";
-import { IAtualizaStatusPedidoUseCase, IPedidoRegistry, IRegistraPedidoUseCase } from "./ports";
+import { IAtualizaStatusPedidoUseCase, IPedidoRepository, IRegistraPedidoUseCase } from "./ports";
 import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
 import { AtualizaStatusPedidoDTO } from "./dto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
@@ -14,7 +14,7 @@ import { ItemDePedido } from "./entities/ItemDePedido";
 
 export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase, IAtualizaStatusPedidoUseCase {
 
-    constructor(readonly repository: IPedidoRegistry) {}
+    constructor(readonly repository: IPedidoRepository) {}
 
     async atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
         
@@ -69,7 +69,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         return listaPedidos;
     }
 
-    async registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRegistry): Promise<PedidoOutputDTO> {
+    async registraPedido(data: PedidoDTO, produtoRepository: IProdutoRepository): Promise<PedidoOutputDTO> {
         
         const erros = data.validaDTO();
         if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
@@ -79,7 +79,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         try{
 
             const itensDePedidoCompletos = await Promise.all(data.itemDePedido.map(async ({codigo}) => {
-                const produto: ItemDePedido = await produtoRegistry.buscaProdutoPorCodigo(codigo);
+                const produto: ItemDePedido = await produtoRepository.buscaProdutoPorCodigo(codigo);
                 if(!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado');
                 return produto;
             }));

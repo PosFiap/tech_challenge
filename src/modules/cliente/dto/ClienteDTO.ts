@@ -4,7 +4,7 @@ export interface ClienteDTO {
     nome: string
 }
 
-export interface ClienteRegistryDTO {
+export interface ClienteRepositoryDTO {
     codigo: number,
     cpf: string | null,
     email: string | null,

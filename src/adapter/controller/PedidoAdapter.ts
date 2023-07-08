@@ -27,12 +27,12 @@ export class PedidoAdapter {
     }
 
     async registraPedido(pedido: PedidoDTO): Promise<PedidoOutputDTO> {
-        const pedidoRegistry = new PedidoRepository();
-        const produtoRegistry = new ProdutoRepository();
-        const service = new PedidoService(pedidoRegistry);
+        const pedidoRepository = new PedidoRepository();
+        const produtoRepository = new ProdutoRepository();
+        const service = new PedidoService(pedidoRepository);
 
         try{
-            const pedidoCompleto = await service.registraPedido(pedido, produtoRegistry);
+            const pedidoCompleto = await service.registraPedido(pedido, produtoRepository);
             return pedidoCompleto;
         } catch(err) {
             throw err;

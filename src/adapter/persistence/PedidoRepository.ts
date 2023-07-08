@@ -1,4 +1,4 @@
-import { IPedidoRegistry } from "../../modules/pedido";
+import { IPedidoRepository } from "../../modules/pedido";
 import { ItemDePedido } from "../../modules/pedido/entities/ItemDePedido";
 import { Pedido } from "../../modules/pedido/entities/Pedido";
 import { CustomError, CustomErrorType } from "../../utils/customError";
@@ -14,7 +14,7 @@ const bancoDeDados: Array<Pedido> = [
 
 ];
 
-export class PedidoRepository implements IPedidoRegistry {
+export class PedidoRepository implements IPedidoRepository {
 
     async obtemStatusPedido(codigoPedido: number): Promise<number> {
         const pedido = bancoDeDados.filter((pedido) => pedido.codigo === codigoPedido)[0];

@@ -1,3 +1,3 @@
-export interface IProdutoRegistry {
+export interface IProdutoRepository {
     buscaProdutoPorCodigo(codigo: number): Promise<any>
 }

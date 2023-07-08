@@ -1,1 +1,1 @@
-export { ClienteDTO, ClienteRegistryDTO } from "./ClienteDTO";
+export { ClienteDTO, ClienteRepositoryDTO } from "./ClienteDTO";
