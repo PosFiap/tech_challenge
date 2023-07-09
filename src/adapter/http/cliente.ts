@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { ClienteController } from "../controller/ClienteController";
 import { CustomError } from "../../utils/customError";
 import { customErrorToResponse } from "./error-parser";
 import { IClienteController } from "../controller/IClienteController";
@@ -33,19 +32,28 @@ export class ClienteHTTP {
         }
       });
 
-      /*// Read
-      router.get('/', async (_req, res) => {
-        const adapter = new ClienteController();
-        const resultado = await adapter.listaCliente();
-        res.status(200).json(resultado);
+      // Read
+      this.router.get('/', async (_req, res) => {
+        try {
+          const resultado = await this.clienteController.listaCliente();
+          
+          res.status(200).json(resultado);
+        } catch (err) {
+          if( err instanceof CustomError) {
+              customErrorToResponse(err, res);
+              return;
+          }
+          res.status(500).json({
+              mensagem: 'Falha ao listar os clientes'
+          });
+        }
       });
 
-      // Read Only CPF
-      router.get('/:cpf', async (req, res) => {
-        const adapter = new ClienteController();
-        const {cpf} = req.params;
+      // // Read Only CPF
+      this.router.get('/:cpf', async (req, res) => {
+        const { cpf } = req.params;
         try {
-          const resultado = await adapter.listaClienteCPF(cpf);
+          const resultado = await this.clienteController.listaClienteCPF(cpf);
           res.status(200).json(resultado);
           
         } catch (err) {
@@ -60,12 +68,11 @@ export class ClienteHTTP {
       });
 
       // Update
-      router.put('/', async (req, res) => {
-          const adapter = new ClienteController();
+      this.router.put('/', async (req, res) => {
           const cliente = req.body;
           
           try {
-            const resultado = await adapter.atualizaCliente(cliente);
+            const resultado = await this.clienteController.atualizaCliente(cliente);
             res.status(200).json(resultado);
           } catch (err) {
             if( err instanceof CustomError) {
@@ -79,14 +86,12 @@ export class ClienteHTTP {
       });
 
       // Delete
-      router.delete('/:cpf', async (req, res) => {
-        const adapter = new ClienteController();
+      this.router.delete('/:cpf', async (req, res) => {
         const {cpf} = req.params;
         
         try {
-          const resultado = await adapter.deletaCliente(cpf);
+          const resultado = await this.clienteController.deletaCliente(cpf);
           res.status(200).json(resultado);
-          
         }catch (err) {
           if( err instanceof CustomError) {
               customErrorToResponse(err, res);
@@ -96,7 +101,7 @@ export class ClienteHTTP {
               mensagem: 'Falha ao encontrar usuário'
           });
         }
-      });*/
+      });
   }
 
   getRouter() {
