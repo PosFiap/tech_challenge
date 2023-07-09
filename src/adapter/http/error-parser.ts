@@ -31,4 +31,3 @@ export const customErrorToResponse = (err: CustomError, res: Response): void => 
 
   res.status(statusCode).json(body)
 }
-

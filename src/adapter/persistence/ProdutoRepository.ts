@@ -1,14 +1,6 @@
-import { IProdutoRegistry } from '../../modules/produto/ports/IProdutoRegistry'
+import { IProdutoRepository } from '../../modules/produto/ports/IProdutoRepository'
 
-interface Data {
-  codigo: number
-  nome: string
-  descricao: string
-  valor: number
-  categoria_codigo: number
-}
-
-const bancoDeDados: Data[] = [{
+const bancoDeDados = [{
   codigo: 0,
   nome: 'x-salsicha',
   descricao: '',
@@ -22,8 +14,8 @@ const bancoDeDados: Data[] = [{
   categoria_codigo: 1
 }]
 
-export class ProdutoRepository implements IProdutoRegistry {
-  async buscaProdutoPorCodigo (codigo: number): Promise<Data> {
+export class ProdutoRepository implements IProdutoRepository {
+  async buscaProdutoPorCodigo (codigo: number) {
     return bancoDeDados[codigo]
   }
 }

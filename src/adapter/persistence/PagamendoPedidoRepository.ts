@@ -1,4 +1,5 @@
-import { EStatus, PedidoPagamentoDTO } from '../../modules/pagamento/dto/PedidoPagamentoDTO'
+import { EStatus } from '../../modules/common/value-objects/EStatus'
+import { PedidoPagamentoDTO } from '../../modules/pagamento/dto/PedidoPagamentoDTO'
 import { IPagamentoPedidoRegistry } from '../../modules/pagamento/ports/IPedidoRegistry'
 
 const bancoDeDados: Array<Record<string, any>> = []

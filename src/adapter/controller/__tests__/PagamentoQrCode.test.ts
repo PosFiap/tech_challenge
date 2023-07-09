@@ -1,10 +1,11 @@
-import { type CheckoutService } from '../../../modules/pagamento'
+import { ICheckoutService, type CheckoutService } from '../../../modules/pagamento'
 import { Either, makeSucesso } from '../../../utils'
-import { PagamentoQrCodeAdapter } from '../PagamentoQrCodeAdapter'
+import { IPagamentoQrCodeController } from '../IPagamentoQrCodeController'
+import { PagamentoQrCodeController } from '../PagamentoQrCodeController'
 
 interface SutTypes {
-  sut: PagamentoQrCodeAdapter
-  checkoutService: CheckoutService<string>
+  sut: IPagamentoQrCodeController
+  checkoutService: ICheckoutService<string>
 }
 
 // @ts-expect-error apenas implementando um mock sem todas propriedades
@@ -21,9 +22,7 @@ class CheckotServiceMock<S> implements CheckoutService<S> {
 const makeSut = (): SutTypes => {
   const checkoutService = new CheckotServiceMock<string>()
   return {
-    // @ts-expect-error apenas implementando um mock sem todas propriedades
-    sut: new PagamentoQrCodeAdapter(checkoutService),
-    // @ts-expect-error apenas implementando um mock sem todas propriedades
+    sut: PagamentoQrCodeController.create(checkoutService),
     checkoutService
   }
 }

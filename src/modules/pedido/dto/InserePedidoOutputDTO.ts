@@ -1,4 +1,4 @@
-export class PedidoOutputDTO {
+export class InserePedidoOutputDTO {
   constructor (
     readonly status: string,
     readonly codigo: number,

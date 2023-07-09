@@ -1,4 +1,5 @@
-import { EStatus, PedidoPagamentoDTO } from '../dto'
+import { EStatus } from '../../common/value-objects/EStatus'
+import { PedidoPagamentoDTO } from '../dto'
 
 export interface IPagamentoPedidoRegistry {
   obterPedidoPeloCodigo(codigo: number): Promise<PedidoPagamentoDTO>

@@ -1,7 +1,8 @@
-import { ECategoria } from '../value-objects/ECategoria'
+import { ECategoria } from '../../common/value-objects/ECategoria'
 
-export class ItemDePedido {
+export class Produto {
   constructor (
+    readonly codigo: string,
     readonly nome: string,
     readonly descricao: string,
     readonly valor: number,

@@ -1,8 +1,10 @@
 import { CustomError, CustomErrorType, Either, isErro, makeErro, makeSucesso } from '../../utils'
-import { EStatus, PedidoPagamentoDTO } from './dto'
+import { EStatus } from '../common/value-objects/EStatus'
+import { PedidoPagamentoDTO } from './dto'
 import { IMeioDePagamentoQR, IPagamentoPedidoRegistry } from './ports'
+import { ICheckoutService } from './ports/ICheckoutService'
 
-export class CheckoutService<S> {
+export class CheckoutService<S> implements ICheckoutService<S> {
   constructor (
     private readonly meioDePagamento: IMeioDePagamentoQR<PedidoPagamentoDTO, S>,
     private readonly pedidoPagamentoRepository: IPagamentoPedidoRegistry
@@ -27,7 +29,7 @@ export class CheckoutService<S> {
 
   async atualizaStatusPedidoPago (codigo: number): Promise<Either<string, boolean>> {
     try {
-      await this.pedidoPagamentoRepository.atualizarStatusPedidoPago(codigo, EStatus['Pedido em preparação'])
+      await this.pedidoPagamentoRepository.atualizarStatusPedidoPago(codigo, EStatus.Recebido)
       return makeSucesso(true)
     } catch (error) {
       return makeErro('Erro ao atulizar status do pedido como pago')

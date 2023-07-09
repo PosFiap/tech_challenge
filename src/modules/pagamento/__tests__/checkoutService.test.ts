@@ -1,9 +1,10 @@
-import { CheckoutService } from '../checkoutService'
-import { PedidoPagamentoDTO, EStatus } from '../dto'
-import { IMeioDePagamentoQR, IPagamentoPedidoRegistry } from '../ports'
+import { EStatus } from '../../common/value-objects/EStatus'
+import { CheckoutService } from '../CheckoutService'
+import { PedidoPagamentoDTO } from '../dto'
+import { ICheckoutService, IMeioDePagamentoQR, IPagamentoPedidoRegistry } from '../ports'
 
 interface SutTypes {
-  sut: CheckoutService<any>
+  sut: ICheckoutService<any>
   meioDePagamento: IMeioDePagamentoQR<any, any>
   pagamentoPedidoRepository: IPagamentoPedidoRegistry
 }
@@ -15,11 +16,11 @@ class MeioDePagamentoMock implements IMeioDePagamentoQR<any, any> {
 }
 
 class PedidoPagamentoRepository implements IPagamentoPedidoRegistry {
-  async obterPedidoPeloCodigo (codigo: number): Promise<PedidoPagamentoDTO> {
+  async obterPedidoPeloCodigo (_codigo: number): Promise<PedidoPagamentoDTO> {
     throw new Error('Method not implemented.')
   }
 
-  async atualizarStatusPedidoPago (codigo: number, status: EStatus): Promise<boolean> {
+  async atualizarStatusPedidoPago (_codigo: number, _status: EStatus): Promise<boolean> {
     throw new Error('Method not implemented.')
   }
 }
@@ -38,8 +39,8 @@ const makeSut = (): SutTypes => {
 describe('CheckoutService', () => {
   describe('Contructor', () => {
     it('Espero receber erro na contrução do serviço por não enviar os argumentos necessarios', () => {
-      // @ts-expect-error test error in constructor
-      const caller1 = (): CheckoutService => new CheckoutService()
+      // @ts-expect-error
+      const caller1 = (): ICheckoutService<string> => new CheckoutService<string>()
       expect(caller1).toThrowError(new Error('meioDePagamento é requerido.'))
     })
   })
