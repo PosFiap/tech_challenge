@@ -2,6 +2,8 @@ import { ProdutoDTO } from "../../modules/produto/dto/ProdutoDTO";
 import { ProdutoOutputDTO } from "../../modules/produto/dto/ProdutoOutputDTO";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
 import { ProdutoService } from "../../modules/produto/services/ProdutoService";
+import { CustomError, CustomErrorType } from "../../utils/customError";
+import { GenericOutputErrorDTO } from "../../utils/dto/GenericOutputDTO";
 import { ProdutoRepository } from "../persistence/ProdutoRepository";
 
 
@@ -29,11 +31,17 @@ export class ProdutoAdapter {
         return result;
     }
 
-    atualizaProduto(id: number, produto: ProdutoDTO): ProdutoOutputDTO {
+    atualizaProduto(id: number, produto: ProdutoDTO): ProdutoOutputDTO | GenericOutputErrorDTO {
 
-        const result = this.service.atualizaProduto(id, produto, this.repository);
+        try {
+            const result = this.service.atualizaProduto(id, produto, this.repository);
 
-        return result;
+            return result;
+        } catch (CustomError: any) {
+            return new GenericOutputErrorDTO(CustomError.type, CustomErrorType[CustomError.type], CustomError.message)
+        }
+
+        
     }
 
     deletaProduto(id:number) {

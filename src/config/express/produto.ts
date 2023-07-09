@@ -3,6 +3,7 @@ import { ProdutoAdapter } from "../../adapter/controller/ProdutoAdapter";
 import { ProdutoService } from "../../modules/produto/services/ProdutoService";
 import { ProdutoRepository } from "../../adapter/persistence/ProdutoRepository";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
+import { GenericOutputErrorDTO } from "../../utils/dto/GenericOutputDTO";
 
 
 const router: Router = Router();
@@ -17,7 +18,7 @@ router.get('/:id', (req, res) => {
 
     const resultado = adapter.buscaProdutoPorId(+produtoId);
 
-    res.json(resultado).status(200);
+    res.status(200).json(resultado);
 
 });
 
@@ -28,7 +29,7 @@ router.get('/', (req, res) => {
 
     const resultado = adapter.buscaProdutoPorCategoria(+tipoCategoria);
 
-    res.json(resultado).status(200);
+    res.status(200).json(resultado);
 });
 
 router.post('/', (req, res) => {
@@ -38,7 +39,7 @@ router.post('/', (req, res) => {
 
     const resultado = adapter.registraProduto(produto);
 
-    res.send(resultado).status(201);
+    res.status(201).send(resultado);
 });
 
 router.put('/:id', (req, res) => {
@@ -46,10 +47,15 @@ router.put('/:id', (req, res) => {
     const idProduto = req.params.id;
     const produto = req.body;
 
-
     const resultado = adapter.atualizaProduto(+idProduto, produto);
 
-    res.json(resultado).status(200);
+    let statusCode = 200;
+
+    if (resultado instanceof GenericOutputErrorDTO) {
+        statusCode = 500;
+    }
+
+    res.status(statusCode).json(resultado);
 });
 
 router.delete('/:id', (req, res) => {
@@ -58,7 +64,7 @@ router.delete('/:id', (req, res) => {
 
     const resultado = adapter.deletaProduto(+idProduto);
 
-    res.json(resultado).status(200);
+    res.status(200).json(resultado);
 });
 
 
