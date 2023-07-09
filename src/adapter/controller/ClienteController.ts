@@ -1,5 +1,11 @@
 import { ClienteService } from "../../modules/cliente";
+
+import { AtualizaClienteDTO, AtualizaClienteOutputDTO } from "../../modules/cliente/dto/AtualizaClienteDTO";
 import { RegistraClienteDTO, RegistraClienteOutputDTO } from "../../modules/cliente/dto/RegistraClienteDTO";
+import { ListaClientesOutputDTO } from "../../modules/cliente/dto/ListaClientesDTO";
+import { ListaClienteDTO, ListaClienteOutputDTO } from "../../modules/cliente/dto/ListaClienteDTO";
+import { DeletaClienteDTO, DeletaClienteOutputDTO } from "../../modules/cliente/dto/DeletaClienteDTO";
+
 import { IClienteService } from "../../modules/cliente/ports/IClienteService";
 import { PrismaClienteRepository } from "../persistence/ClienteRepository";
 import { IClienteController } from "./IClienteController";
@@ -32,31 +38,44 @@ export class ClienteController implements IClienteController {
         }
     }
     
-    /*async atualizaCliente(cliente: ClienteDTO): Promise<ClienteRegistryDTO> {
-        const clienteService = new ClienteService();
-        const clienteRepository = new PrismaClienteRepository();
-        const result = await clienteService.atualizaCliente(cliente, clienteRepository);
-        return result;
+    async atualizaCliente(data: {CPF: string, nome: string, email: string}): Promise<AtualizaClienteOutputDTO> {
+        try {
+            const clienteDTO = new AtualizaClienteDTO(data.CPF, data.email, data.nome)
+            return this.clienteService.atualizaCliente(clienteDTO)
+        } catch (err) {
+            console.error(err);
+            throw err;            
+        }
     }
 
-    async listaCliente(): Promise<Array<ClienteRegistryDTO>> {
-        const clienteService = new ClienteService();
-        const clienteRepository = new PrismaClienteRepository();
-        const result = await clienteService.listaCliente(clienteRepository);
-        return result;
+    async listaCliente(): Promise<ListaClientesOutputDTO> {
+        try {
+            return this.clienteService.listaCliente()
+        } catch (err) {
+            console.error(err)
+            throw err
+        }
     }
     
-    async listaClienteCPF(cpf: string): Promise<ClienteRegistryDTO | null> {
-        const clienteService = new ClienteService();
-        const clienteRepository = new PrismaClienteRepository();
-        const result = await clienteService.listaClienteCPF(cpf, clienteRepository);        
-        return result;
+    async listaClienteCPF(cpf: string): Promise<ListaClienteOutputDTO> {
+       try {
+            const cliente = new ListaClienteDTO(cpf)
+            const result = await this.clienteService.listaClienteCPF(cliente);        
+            return result;
+       } catch (err) {
+            console.error(err)
+            throw err
+       }
     }
     
-    async deletaCliente(cpf: string): Promise<ClienteRegistryDTO> {
-        const clienteService = new ClienteService();
-        const clienteRepository = new PrismaClienteRepository();
-        const result = await clienteService.deletaCliente(cpf, clienteRepository);
-        return result;
-    }*/
+    async deletaCliente(cpf: string): Promise<DeletaClienteOutputDTO> {
+        try {
+            const cliente = new DeletaClienteDTO(cpf)
+            const result = await this.clienteService.deletaCliente(cliente);
+            return result;
+        } catch (err) {
+            console.error(err)
+            throw err            
+        }
+    }
 }

@@ -1,19 +1,22 @@
-import { ClienteDTO } from "../dto";
-import { RegistraClienteOutputDTO } from "../dto/RegistraClienteDTO";
-import { IClienteRepository } from "./IClienteRepository";
+import { RegistraClienteDTO, RegistraClienteOutputDTO } from "../dto/RegistraClienteDTO";
+import { AtualizaClienteDTO, AtualizaClienteOutputDTO } from "../dto/AtualizaClienteDTO";
+import { ListaClientesOutputDTO } from '../dto/ListaClientesDTO'
+import { ListaClienteDTO, ListaClienteOutputDTO } from "../dto/ListaClienteDTO";
+import { DeletaClienteDTO, DeletaClienteOutputDTO } from "../dto/DeletaClienteDTO";
 
 export interface IRegistraClienteUseCase {
-    registraCliente(cliente: ClienteDTO): Promise<RegistraClienteOutputDTO>
+    registraCliente(cliente: RegistraClienteDTO): Promise<RegistraClienteOutputDTO>
 }
-/*export interface IAtualizaClienteUseCase {
-    atualizaCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
+export interface IAtualizaClienteUseCase {
+    atualizaCliente(cliente: AtualizaClienteDTO): Promise<AtualizaClienteOutputDTO>
 }
-export interface IListaClienteUseCase {
-    listaCliente(clienteRepository: IClienteRepository): Promise<Array<ClienteRegistryDTO>>
+export interface IListaClientesUseCase {
+    listaCliente(): Promise<ListaClientesOutputDTO>
 }
 export interface IListaClienteCPFUseCase {
-    listaClienteCPF(cpf:string, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO | null>
+    listaClienteCPF(data: ListaClienteDTO): Promise<ListaClienteOutputDTO>
 }
+
 export interface IDeletaClienteUseCase {
-    deletaCliente(cpf: string, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
-} */
+    deletaCliente(data: DeletaClienteDTO): Promise<DeletaClienteOutputDTO> //DTO-DELETE
+}
