@@ -1,58 +1,35 @@
 import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRepository";
-import { ProdutoDTO } from "../../modules/produto/dto/ProdutoDTO";
-import { ECategoria } from "../../modules/produto/entities/ECategoria";
-import { EErrorRepository } from "../../modules/produto/entities/EErrorRepository";
-import { Produto } from "../../modules/produto/entities/Produto";
-import { CustomError, CustomErrorType } from "../../utils/customError";
 import { PrismaClient } from "@prisma/client";
+import { IProdutoEntity } from "../../modules/produto/entity/IProdutoEntity";
+import { CustomError, CustomErrorType } from "../../utils/customError";
 
-const bancoDeDados: Array<Produto> = [{
-    codigo: 0,
-    nome: 'x-salsicha',
-    descricao: '',
-    valor: 12.90,
-    categoria_codigo: ECategoria.Lanche,
-},
-{
-    codigo: 1,
-    nome: 'x-picanha',
-    descricao: '',
-    valor: 32.99,
-    categoria_codigo: ECategoria.Lanche,
-},
-{
-    codigo: 2,
-    nome: 'sorvete de pistache',
-    descricao: '',
-    valor: 5.10,
-    categoria_codigo: ECategoria.Sobremesa,
-}];
+export class PrismaProdutoRepository implements IProdutoRepository {
+    private prisma: PrismaClient;
 
-
-
-export class ProdutoRepository implements IProdutoRepository {
-    
-    constructor(private prisma: PrismaClient){
-
+    constructor(){
+        this.prisma = new PrismaClient();
     }
 
-    async registraProduto(produto: ProdutoDTO): Promise<Produto> {
+    async registraProduto(produto: IProdutoEntity): Promise<IProdutoEntity> {
 
-        const product = await this.prisma.produto.create({
-            data: {
-                nome: produto.nome,
-                descricao: produto.descricao,
-                categoria_codigo: produto.categoria_codigo,
-                valor: produto.valor
+        const produtoJaExiste = (await this.prisma.produto.count({
+            where: {
+                nome: produto.nome
             }
+        })) > 0;
+
+        if(produtoJaExiste) throw new CustomError(
+            CustomErrorType.DuplicatedItem,
+            "Um produto cadastrado com esse nome já existe"
+        );
+        
+        const produtoInserido = await this.prisma.produto.create({
+            data: produto
         });
 
-
-        return new Produto(product.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
+        return produtoInserido;
     }
-
-
-
+    /*
     async atualizaProduto(id: number, produto: ProdutoDTO): Promise<Produto> {
         
         const produtoParaComparar = await this.buscaProdutoPorCodigo(id);
@@ -126,5 +103,5 @@ export class ProdutoRepository implements IProdutoRepository {
         return a.nome === b.nome && a.descricao === b.descricao && a.categoria_codigo === b.categoria_codigo && a.valor === b.valor;
 
     }
-
+*/
 }

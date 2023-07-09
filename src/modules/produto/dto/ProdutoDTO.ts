@@ -1,4 +1,4 @@
-import { ECategoria } from "../entities/ECategoria";
+import { ECategoria } from "../model/ECategoria";
 
 export class ProdutoDTO {
     constructor(

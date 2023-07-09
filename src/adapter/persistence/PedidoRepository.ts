@@ -27,7 +27,7 @@ export class PrismaPedidoRepository implements IPedidoRepository {
                 }
             }
         });
-        console.log(pedidoInserido);
+
         return new Pedido(
             pedidoInserido.cpf_cliente,
             pedidoInserido.status,
