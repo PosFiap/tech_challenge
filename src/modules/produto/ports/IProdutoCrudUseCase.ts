@@ -2,7 +2,7 @@ import { ProdutoDTO } from "../dto/ProdutoDTO";
 import { ProdutoOutputDTO } from "../dto/ProdutoOutputDTO";
 import { ECategoria } from "../entities/ECategoria";
 import { Produto } from "../entities/Produto";
-import { IProdutoRepository } from "./IProdutoRegistry";
+import { IProdutoRepository } from "./IProdutoRepository";
 
 export interface IProdutoCrudUseCase {
     registraProduto(newProduto: ProdutoDTO, repository: IProdutoRepository): ProdutoOutputDTO;

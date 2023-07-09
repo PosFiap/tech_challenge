@@ -3,7 +3,7 @@ import { ProdutoOutputDTO } from "../dto/ProdutoOutputDTO";
 import { ECategoria } from "../entities/ECategoria";
 import { Produto } from "../entities/Produto";
 import { IProdutoCrudUseCase } from "../ports/IProdutoCrudUseCase";
-import { IProdutoRepository } from "../ports/IProdutoRegistry";
+import { IProdutoRepository } from "../ports/IProdutoRepository";
 
 export class ProdutoService implements IProdutoCrudUseCase {
 

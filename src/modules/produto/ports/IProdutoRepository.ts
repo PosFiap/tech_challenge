@@ -1,5 +1,14 @@
-import { Produto } from "../../pedido/model/Produto";
+
+import { ProdutoDTO } from "../dto/ProdutoDTO"
+import { ECategoria } from "../entities/ECategoria"
+import { Produto } from "../entities/Produto"
 
 export interface IProdutoRepository {
-    buscaProdutoPorCodigo(codigo: number): Promise<Produto>
+    deletaProduto(id: number): Produto
+    buscaProdutoPorCategoria(categoria: ECategoria): Array<Produto>
+    buscaProdutoPorCodigo(codigo: number): Produto
+
+    registraProduto(produto: ProdutoDTO): number
+    atualizaProduto(id: number, produto: ProdutoDTO): number
+
 }
