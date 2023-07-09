@@ -4,9 +4,11 @@ export interface ClienteDTO {
     nome: string
 }
 
-export interface ClienteRegistryDTO {
-    codigo: number,
-    cpf: string | null,
-    email: string | null,
-    nome: string | null
+export class ClienteOuputDTO {
+
+    constructor(
+        readonly cpf: string,
+        readonly email: string,
+        readonly nome: string
+    ){}
 }

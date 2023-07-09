@@ -4,16 +4,16 @@ export class ItemListaPedidoOutputDTO {
         readonly status: string,
         readonly codigo: number,
         readonly CPF: string | null,
-        readonly itensPedido: Array<ItemPedidoListaPedidoOutputDTO>
+        readonly produtosPedido: Array<ItemPedidoListaPedidoOutputDTO>
     ) {}
 
     get valorTotal() {
-        const valorTotal = this.itensPedido.reduce((valorSoma, item) => item.valor + valorSoma, 0);
+        const valorTotal = this.produtosPedido.reduce((valorSoma, item) => item.valor + valorSoma, 0);
         return valorTotal.toFixed(2);
     }
 
-    get quantidadeItensPedido() {
-        return this.itensPedido.length;
+    get quantidadeProdutosPedido() {
+        return this.produtosPedido.length;
     }
 }
 
