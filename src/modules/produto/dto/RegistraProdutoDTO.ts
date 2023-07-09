@@ -1,11 +1,11 @@
-import { ECategoria } from "../model/ECategoria";
+import { ECategoria } from "../../common/value-objects/ECategoria";
 
 export class RegistraProdutoDTO {
     constructor(
          readonly nome: string,
          readonly descricao: string,
          readonly valor: number,
-         readonly categoria_codigo: ECategoria,
+         readonly categoriaCodigo: ECategoria,
     ){}
 }
 
@@ -15,7 +15,7 @@ export class RegistraProdutoOutputDTO {
         readonly nome: string,
         readonly descricao: string,
         readonly valor: number,
-        readonly categoria_codigo: ECategoria,
+        readonly categoriaCodigo: ECategoria,
    ){}
 
    toJSON() {
@@ -24,8 +24,8 @@ export class RegistraProdutoOutputDTO {
             nome: this.nome,
             descricao: this.descricao,
             valor: this.valor,
-            categoria_codigo: this.categoria_codigo,
-            categoria: ECategoria[this.categoria_codigo]
+            categoria_codigo: this.categoriaCodigo,
+            categoria: ECategoria[this.categoriaCodigo]
         }
    }
 }

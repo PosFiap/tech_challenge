@@ -1,10 +1,8 @@
-import { ProdutoDTO } from "../dto/ProdutoDTO";
-import { ProdutoOutputDTO } from "../dto/ProdutoOutputDTO";
+import { validaCategoria } from "../../common/value-objects/ECategoria";
+import { ItemListaProdutoCategoriaDTO, ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
 import { IProdutoEntity } from "../entity/IProdutoEntity";
-import { ECategoria } from "../model/ECategoria";
 import { Produto } from "../model/Produto";
-import { IProdutoCrudUseCase } from "../ports/IProdutoCrudUseCase";
 import { IProdutoRepository } from "../ports/IProdutoRepository";
 import { IProdutoService } from "../ports/IProdutoService";
 
@@ -14,6 +12,23 @@ export class ProdutoService implements IProdutoService {
         readonly produtoRepository: IProdutoRepository
     ){}
 
+    async buscaProdutoPorCategoria(data: ListaProdutoCategoriaDTO): Promise<ListaProdutoCategoriaOutputDTO> {
+        const { codigoCategoria } = data;
+        validaCategoria(codigoCategoria);
+        const produtos = await this.produtoRepository.buscaProdutoPorCategoria(codigoCategoria);
+        return new ListaProdutoCategoriaOutputDTO(
+            produtos.map((produto) => {
+                return new ItemListaProdutoCategoriaDTO(
+                    produto.codigo!,
+                    produto.nome,
+                    produto.descricao,
+                    produto.valor,
+                    produto.categoria_codigo
+                )
+            })
+        );
+    }
+
     async registraProduto(data: RegistraProdutoDTO): Promise<RegistraProdutoOutputDTO> {
 
         const produto = new Produto(
@@ -21,7 +36,7 @@ export class ProdutoService implements IProdutoService {
             data.nome,
             data.descricao,
             data.valor,
-            data.categoria_codigo
+            data.categoriaCodigo
         );
 
         const produtoEntity: IProdutoEntity = {
@@ -44,7 +59,6 @@ export class ProdutoService implements IProdutoService {
 
     /*
     async buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Promise<Produto[]> {
-        return await repository.buscaProdutoPorCategoria(categoria);
     }
 
     async buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO> {

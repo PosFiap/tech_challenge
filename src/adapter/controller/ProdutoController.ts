@@ -1,3 +1,4 @@
+import { ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../../modules/produto/dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../../modules/produto/dto/RegistraProdutoDTO";
 import { IProdutoService } from "../../modules/produto/ports/IProdutoService";
 import { ProdutoService } from "../../modules/produto/services/ProdutoService";
@@ -21,6 +22,15 @@ export class ProdutoController implements IProdutoController {
 
         return pedidoInserido;
     }
+
+    async listaProdutoPorCategoria(data: {
+        codigoCategoria: number
+    }): Promise<ListaProdutoCategoriaOutputDTO> {
+        const inputDTO = new ListaProdutoCategoriaDTO( data.codigoCategoria );
+        const listaProdutos = await this.produtoService.buscaProdutoPorCategoria(inputDTO);
+        return listaProdutos;
+    }
+
 
     static create(configuration:string = 'default'): ProdutoController {
         if(configuration === 'default') {

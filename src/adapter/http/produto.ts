@@ -22,14 +22,37 @@ export class ProdutoHTTP {
                 const resultado = await this.produtoController.registraProduto(produto);
                 res.status(201).send(resultado);
             } catch (err) {
+                console.error(err);
+
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);
                     return;
                 }
                 res.status(500).json({
-                    mensagem: 'Falha ao registrar o cliente'
+                    mensagem: 'Falha ao registrar o produto'
                 });
               }
+        });
+
+        this.router.get('/', async (req, res) => {
+            
+            try{
+                const codigoCategoria = parseInt(req.query.codigo_categoria as string, 10);
+                const produtos = await this.produtoController.listaProdutoPorCategoria({
+                    codigoCategoria
+                });
+                res.status(200).send(produtos);
+
+            } catch (err) {
+                console.error(err);
+                if( err instanceof CustomError) {
+                    customErrorToResponse(err, res);
+                    return;
+                }
+                res.status(500).json({
+                    mensagem: 'Falha ao buscar os produtos'
+                });
+            }
         });
 
         /*
@@ -44,15 +67,7 @@ export class ProdutoHTTP {
         
         });
         
-        this.router.get('/', async (req, res) => {
-            const tipoCategoria = req.query.categoria as string;
-            const resultado = await this.produtoController.buscaProdutoPorCategoria(+tipoCategoria);
         
-            let statusCode = 200;
-            if (resultado.length < 1) statusCode = 404;
-            
-            res.status(statusCode).json(resultado);
-        });
         
         this.router.put('/:id', async(req, res) => {
         

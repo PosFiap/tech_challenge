@@ -2,12 +2,22 @@ import { IProdutoRepository } from "../../modules/produto/ports/IProdutoReposito
 import { PrismaClient } from "@prisma/client";
 import { IProdutoEntity } from "../../modules/produto/entity/IProdutoEntity";
 import { CustomError, CustomErrorType } from "../../utils/customError";
+import { ECategoria } from "../../modules/common/value-objects/ECategoria";
 
 export class PrismaProdutoRepository implements IProdutoRepository {
     private prisma: PrismaClient;
 
     constructor(){
         this.prisma = new PrismaClient();
+    }
+    buscaProdutoPorCategoria(categoriaCodigo: ECategoria): Promise<IProdutoEntity[]> {
+        const produtos = this.prisma.produto.findMany({
+            where: {
+                categoria_codigo: categoriaCodigo
+            }
+        });
+
+        return produtos;
     }
 
     async registraProduto(produto: IProdutoEntity): Promise<IProdutoEntity> {

@@ -1,5 +1,5 @@
 import { CustomError, CustomErrorType } from "../../../utils/customError";
-import { ECategoria } from "./ECategoria";
+import { ECategoria } from "../../common/value-objects/ECategoria";
 
 export class Produto {
     constructor(
@@ -30,7 +30,7 @@ export class Produto {
     }
 
     private validaCategoriaCodigo() {
-        if(this.categoria_codigo >= 4 || this.categoria_codigo < 0) throw new CustomError(
+        if(this.categoria_codigo == null || this.categoria_codigo >= 4 || this.categoria_codigo < 0) throw new CustomError(
             CustomErrorType.BusinessRuleViolation,
             "Código de categoria inválida"
         )
