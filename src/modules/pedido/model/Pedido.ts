@@ -4,14 +4,14 @@ import { EStatus } from "../../common/value-objects/EStatus";
 import { Produto } from "./Produto";
 
 export class Pedido {
-    private _CPF: CPFVO;
+    private _CPF: CPFVO | null;
     constructor(
         CPF: string | null,
         private _status: EStatus,
         readonly produtosPedido: Array<Produto>,
         readonly codigo: number | null
     ) {
-        this._CPF = new CPFVO(CPF);
+        this._CPF = CPF ? new CPFVO(CPF) : null;
     }
 
     get status() {
@@ -19,7 +19,11 @@ export class Pedido {
     }
 
     get CPF() {
-        return this._CPF.valor;
+        return this._CPF?.valor;
+    }
+
+    get valorTotal(): number {
+        return this.produtosPedido.reduce((soma, item) => soma + item.valor, 0)
     }
 
     atualizaStatus(novoStatus: EStatus) {

@@ -1,10 +1,11 @@
 import logger from "./LoggerFactory";
 
 export enum CustomErrorType {
-    "InvalidInputDTO",
+    "InvalidInput",
     "BusinessRuleViolation",
     "RepositoryUnknownError",
     "RepositoryDataNotFound",
+    "EntityViolation",
     "DuplicatedItem"
 }
 

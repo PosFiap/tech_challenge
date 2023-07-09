@@ -11,7 +11,6 @@ export class PrismaPedidoRepository implements IPedidoRepository {
     }
 
     async registraPedido(pedido: Pedido): Promise<Pedido> {
-        console.log(pedido);
 
         const pedidoInserido = await this.prisma.pedido.create({
             data: {
@@ -28,7 +27,12 @@ export class PrismaPedidoRepository implements IPedidoRepository {
                 }
             }
         });
-        return new Pedido(pedidoInserido.cpf_cliente, pedidoInserido.status, [], pedidoInserido.codigo);
+        console.log(pedidoInserido);
+        return new Pedido(
+            pedidoInserido.cpf_cliente,
+            pedidoInserido.status,
+            pedido.produtosPedido,
+            pedidoInserido.codigo);
     }
 
     async listaPedidos(config: { vinculaProdutos: boolean; }): Promise<Pedido[]> {
