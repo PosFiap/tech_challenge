@@ -8,7 +8,7 @@ export const customErrorToResponse = (err: CustomError, res: Response) => {
     };
 
     switch(err.type) {
-        case CustomErrorType.InvalidInputDTO:
+        case CustomErrorType.InvalidInput:
         case CustomErrorType.BusinessRuleViolation:
             statusCode = 400;
             body = {
