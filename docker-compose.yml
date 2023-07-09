@@ -18,6 +18,8 @@ services:
     environment:
       POSTGRES_USER: "posfiap"
       POSTGRES_PASSWORD: "posfiap2"
+    volumes:
+      - postgresql:/var/lib/postgresql/data
     ports:
       - "5432:5432"
       

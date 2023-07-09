@@ -1,4 +1,4 @@
-import { IProdutoRegistry } from "../../modules/produto/ports/IProdutoRegistry";
+import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRepository";
 
 const bancoDeDados = [{
     codigo: 0,
@@ -14,7 +14,7 @@ const bancoDeDados = [{
     categoria_codigo: 1,
 }];
 
-export class ProdutoRepository implements IProdutoRegistry {
+export class ProdutoRepository implements IProdutoRepository {
     async buscaProdutoPorCodigo(codigo: number) {
         return bancoDeDados[codigo];
     }

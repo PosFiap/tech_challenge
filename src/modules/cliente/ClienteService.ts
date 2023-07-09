@@ -6,7 +6,7 @@ export class ClienteService implements IRegistraClienteUseCase, IAtualizaCliente
   
     async registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
         const result = await clienteRepository.insereCliente(cliente);
-        return result
+        return new ClienteOuputDTO(cliente.cpf, cliente.email, cliente.nome);
     }
     async atualizaCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO> {
         const result = await clienteRepository.atualizaCliente(cliente);

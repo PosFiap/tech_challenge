@@ -1,5 +1,2 @@
-export * from "./IPedidoRegistry";
-export * from "./IRegistraPedidoUseCase";
-export * from "./IListaPedidosUseCase";
-export * from "./IPedidoRegistry";
-export * from "./IAtualizaStatusPedidoUseCase";
+export * from "./IPedidoRepository";
+export * from "./IPedidoService";

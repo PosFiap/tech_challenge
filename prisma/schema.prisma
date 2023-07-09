@@ -11,38 +11,40 @@ datasource db {
 }
 
 model Cliente {
-  cpf    String @unique @id
-  email  String?
-  nome   String?
+  cpf    String   @id @unique
+  email  String
+  nome   String
+  Pedido Pedido[]
 }
 
 model Produto {
-  codigo           Int            @id @default(autoincrement())
-  nome             String         @unique
+  codigo           Int             @id @default(autoincrement())
+  nome             String          @unique
   descricao        String
   valor            Float
   categoria_codigo Int
-  ProdutoPedido    ProdutoPedido?
+  ProdutoPedido    ProdutoPedido[]
 }
 
 model Pedido {
-  codigo         Int            @id @default(autoincrement())
-  status         Int
-  cpf_cliente String?
-  ProdutoPedido  ProdutoPedido?
+  codigo        Int             @id @default(autoincrement())
+  status        Int             @default(0)
+  cpf_cliente   String?
+  Cliente       Cliente?        @relation(fields: [cpf_cliente], references: [cpf])
+  ProdutoPedido ProdutoPedido[]
 }
 
 model Categoria {
-  codigo Int @id @default(autoincrement())
-  nome String
+  codigo Int    @id @default(autoincrement())
+  nome   String
 }
 
 model ProdutoPedido {
-  codigo Int @id @default(autoincrement())
-  observacoes String
-  produto_codigo     Int     @unique
-  pedido_codigo      Int     @unique
-  valor_produto      String
-  produto            Produto @relation(fields: [produto_codigo], references: [codigo])
-  pedido             Pedido  @relation(fields: [pedido_codigo], references: [codigo])
+  codigo         Int     @id @default(autoincrement())
+  observacoes    String?
+  produto_codigo Int     
+  pedido_codigo  Int     
+  valor_produto  Float
+  Produto        Produto @relation(fields: [produto_codigo], references: [codigo])
+  Pedido         Pedido  @relation(fields: [pedido_codigo], references: [codigo])
 }
