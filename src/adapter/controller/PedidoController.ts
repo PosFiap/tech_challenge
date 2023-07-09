@@ -6,7 +6,7 @@ import { EStatus } from "../../modules/common/value-objects/EStatus";
 
 export class PedidoController implements IPedidoController {
 
-    constructor(
+    private constructor(
         readonly pedidoService: IPedidoService
     ) {}
 

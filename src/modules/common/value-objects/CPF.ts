@@ -1,8 +1,13 @@
-export class CPF {
-    constructor(readonly valor:string | null) {}
+import { CustomError, CustomErrorType } from "../../../utils/customError";
 
-    validaCPF() {
-        if(this.valor === null) return true;
+export class CPF {
+    constructor(readonly valor:string) {
+        if(!this.validaCPF())
+            throw new CustomError(CustomErrorType.InvalidInput, "CPF inválido");
+    }
+
+    private validaCPF() {
+        if(!this.valor) return false;
         if(this.valor.length != 11 )
             return false;
 
