@@ -1,4 +1,5 @@
 import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from "../../modules/produto/dto/AlteraProdutoDTO";
+import { BuscarProdutoDTO, BuscarProdutoOutputDTO } from "../../modules/produto/dto/BuscarProdutoDTO";
 import { ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../../modules/produto/dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../../modules/produto/dto/RegistraProdutoDTO";
 import { IProdutoService } from "../../modules/produto/ports/IProdutoService";
@@ -11,6 +12,12 @@ export class ProdutoController implements IProdutoController {
     private constructor(
         readonly produtoService: IProdutoService
     ) {}
+
+    async buscaProdutoPorCodigo(data: { codigoProduto: number; }): Promise<BuscarProdutoOutputDTO> {
+        const inputDTO = new BuscarProdutoDTO(data.codigoProduto);
+        const produto = await this.produtoService.buscaProduto(inputDTO);
+        return produto;
+    }
 
     async alteraProduto(data: { codigo: number; nome: string; descricao: string; valor: number; categoria_codigo: number; }): Promise<AlteraProdutoOutputDTO> {
         const inputDTO = new AlteraProdutoDTO(

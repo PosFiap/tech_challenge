@@ -9,10 +9,15 @@ export class AlteraProdutoDTO {
         readonly valor: number,
         readonly categoriaCodigo: ECategoria,
     ){
+        this.validaCodigo();
         this.validaCodigoCategoria();
         this.validaDescricao();
         this.validaNome();
         this.validaValor();
+    }
+
+    validaCodigo() {
+        if(!this.codigo || isNaN(this.codigo)) throw new CustomError(CustomErrorType.InvalidInput, "Código inválido");
     }
 
     validaDescricao() {

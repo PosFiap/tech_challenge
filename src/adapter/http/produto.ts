@@ -54,6 +54,27 @@ export class ProdutoHTTP {
             }
         });
 
+        this.router.get('/:codigo', async (req, res) => {
+            
+            try{
+                const codigoProduto = parseInt(req.params.codigo, 10);
+                const produtos = await this.produtoController.buscaProdutoPorCodigo({
+                    codigoProduto 
+                });
+                res.status(200).send(produtos);
+
+            } catch (err) {
+                console.error(err);
+                if( err instanceof CustomError) {
+                    customErrorToResponse(err, res);
+                    return;
+                }
+                res.status(500).json({
+                    mensagem: 'Falha ao busca os produto'
+                });
+            }
+        });
+
         this.router.put('/:id', async(req, res) => {
         
             try {

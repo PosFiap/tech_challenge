@@ -1,4 +1,5 @@
 import { AlteraProdutoOutputDTO } from "../../modules/produto/dto/AlteraProdutoDTO";
+import { BuscarProdutoOutputDTO } from "../../modules/produto/dto/BuscarProdutoDTO";
 import { ListaProdutoCategoriaOutputDTO } from "../../modules/produto/dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoOutputDTO } from "../../modules/produto/dto/RegistraProdutoDTO";
 import { IProdutoService } from "../../modules/produto/ports/IProdutoService";
@@ -24,4 +25,8 @@ export interface IProdutoController {
     listaProdutoPorCategoria(data: {
         codigoCategoria: number
     }): Promise<ListaProdutoCategoriaOutputDTO>
+
+    buscaProdutoPorCodigo(data: {
+        codigoProduto: number
+    }): Promise<BuscarProdutoOutputDTO>
 }
