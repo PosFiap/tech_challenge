@@ -1,6 +1,5 @@
-import { Cliente } from "../entities/Cliente";
-import { ClienteRepositoryDTO } from '../index'
+import { ClienteEntity } from "../entity/ClienteEntity";
 
 export interface IClienteRepository {
-    insereCliente(cliente: Cliente): Promise<Cliente>
+    insereCliente(cliente: ClienteEntity): Promise<ClienteEntity>
 }

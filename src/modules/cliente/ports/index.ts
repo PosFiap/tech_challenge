@@ -1,1 +1,1 @@
-export { IRegistraClienteUseCase, IAtualizaClienteUseCase, IListaClienteUseCase, IDeletaClienteUseCase, IListaClienteCPFUseCase } from "./IRegistraClienteUseCase";
+export { IRegistraClienteUseCase } from "./IRegistraClienteUseCase";

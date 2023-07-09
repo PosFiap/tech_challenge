@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { router as clienteRouter } from "../../adapter/http/cliente";
 import { PedidoHTTP } from "../../adapter/http/pedido";
 import { PedidoController } from "../../adapter/controller/PedidoController";
+import { ClienteController } from "../../adapter/controller/ClienteController";
+import { ClienteHTTP } from "../../adapter/http/cliente";
 
 const router: Router = Router();
 
@@ -9,8 +10,12 @@ const pedidoHTTP = new PedidoHTTP(
     PedidoController.create()
 );
 
+const clienteHTTP = new ClienteHTTP(
+    ClienteController.create()
+)
+
 router.use('/health', (req, res) => res.sendStatus(200));
-router.use('/cliente', clienteRouter);
+router.use('/cliente', clienteHTTP.getRouter());
 router.use('/pedido', pedidoHTTP.getRouter());
 
 export { router };

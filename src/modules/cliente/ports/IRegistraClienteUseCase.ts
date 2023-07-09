@@ -1,10 +1,11 @@
 import { ClienteDTO } from "../dto";
+import { RegistraClienteOutputDTO } from "../dto/RegistraClienteDTO";
 import { IClienteRepository } from "./IClienteRepository";
 
 export interface IRegistraClienteUseCase {
-    registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
+    registraCliente(cliente: ClienteDTO): Promise<RegistraClienteOutputDTO>
 }
-export interface IAtualizaClienteUseCase {
+/*export interface IAtualizaClienteUseCase {
     atualizaCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
 }
 export interface IListaClienteUseCase {
@@ -15,4 +16,4 @@ export interface IListaClienteCPFUseCase {
 }
 export interface IDeletaClienteUseCase {
     deletaCliente(cpf: string, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
-}
+} */

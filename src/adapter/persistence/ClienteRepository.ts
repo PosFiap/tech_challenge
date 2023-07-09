@@ -1,29 +1,39 @@
-import { Cliente } from "../../modules/cliente/entities/Cliente";
+import { Cliente } from "../../modules/cliente/model/Cliente";
 import { ClienteRegistryDTO } from '../../modules/cliente'
-import { IClienteRepository } from "../../modules/cliente/ports/IClienteRegistry";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 import { isValidCPF } from "../../utils/isValidCPF";
 
 import { PrismaClient } from '@prisma/client'
+import { IClienteRepository } from "../../modules/cliente/ports/IClienteRepository";
+import { ClienteEntity } from "../../modules/cliente/entity/ClienteEntity";
 const prisma = new PrismaClient()
 
-export class ClienteRepository implements IClienteRepository {
-    async insereCliente(cliente: Cliente): Promise<ClienteRegistryDTO> {
-      if(!isValidCPF(cliente.cpf)) throw new CustomError(CustomErrorType.BusinessRuleViolation, "CPF inválido");
-      const user = await prisma.cliente.findUnique({ where: {cpf: cliente.cpf}})
+export class PrismaClienteRepository implements IClienteRepository {
+
+    async insereCliente(cliente: ClienteEntity): Promise<ClienteEntity> {
+
+      if(!cliente.cpf) throw new CustomError(CustomErrorType.EntityViolation, "CPF obrigatório");
+
+      const user = await prisma.cliente.findUnique({ where: {cpf: cliente.cpf}});
+      
       if(user) throw new CustomError(CustomErrorType.BusinessRuleViolation, "Usuário já cadastrado");
-      if(!cliente.cpf) throw new CustomError(CustomErrorType.BusinessRuleViolation, "CPF obrigatório")
       
       const data = {
           cpf: cliente.cpf,
           email: cliente.email,
           nome: cliente.nome
+      };
+
+      const register = await prisma.cliente.create({ data });
+
+      return {
+        cpf: register.cpf,
+        email: register.email!,
+        nome: register.nome!
       }
-      const register = await prisma.cliente.create({ data })
-      return register
     }
     
-    async atualizaCliente(cliente: Cliente): Promise<ClienteRegistryDTO> {
+    /*async atualizaCliente(cliente: Cliente): Promise<ClienteRegistryDTO> {
       const data = cliente
       if(!isValidCPF(cliente.cpf)) throw new CustomError(CustomErrorType.BusinessRuleViolation, "CPF inválido");
       const user = await this.listaClienteCPF(cliente.cpf)      
@@ -54,6 +64,5 @@ export class ClienteRepository implements IClienteRepository {
       if(!user) throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Usuário não encontrado");
       const deleted = await prisma.cliente.delete({ where: { cpf }})
       return deleted
-    }
-
+    }*/
 }
