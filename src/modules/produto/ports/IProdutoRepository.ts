@@ -5,7 +5,7 @@ import { Produto } from "../entities/Produto"
 
 export interface IProdutoRepository {
     deletaProduto(id: number): Produto
-    buscaProdutoPorCategoria(categoria: ECategoria): Array<Produto>
+    buscaProdutoPorCategoria(categoria: ECategoria): Promise<Produto[]>
     buscaProdutoPorCodigo(codigo: number): Promise<Produto>
 
     registraProduto(produto: ProdutoDTO): Promise<Produto>

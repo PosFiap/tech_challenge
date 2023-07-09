@@ -9,5 +9,5 @@ export interface IProdutoCrudUseCase {
     atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO>;
     deletaProduto(id: number, repository: IProdutoRepository): Produto;
     buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO>
-    buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Array<Produto>
+    buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Promise<Produto[]>
 }

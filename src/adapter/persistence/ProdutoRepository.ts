@@ -94,17 +94,15 @@ export class ProdutoRepository implements IProdutoRepository {
         
     }
 
-    buscaProdutoPorCategoria(categoria: ECategoria): Array<Produto> {
+    async buscaProdutoPorCategoria(categoria: ECategoria): Promise<Produto[]> {
 
-        let buscaFeita: Array<Produto> = [];
-
-        bancoDeDados.forEach(elemento => {
-            if (elemento.categoria_codigo == categoria) {
-                buscaFeita.push(elemento);
+        const produto = await this.prisma.produto.findMany({
+            where: {
+                categoria_codigo: categoria
             }
         });
         
-        return buscaFeita;
+        return produto;
     }
 
     deletaProduto(id: number): Produto {

@@ -25,8 +25,8 @@ export class ProdutoAdapter {
        
     }
 
-    buscaProdutoPorCategoria(categoria: number) {
-        const result = this.service.buscaProdutoPorCategoria(categoria, this.repository);
+    async buscaProdutoPorCategoria(categoria: number) {
+        const result = await this.service.buscaProdutoPorCategoria(categoria, this.repository);
 
         return result;
     }

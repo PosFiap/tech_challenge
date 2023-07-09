@@ -9,8 +9,8 @@ export class ProdutoService implements IProdutoCrudUseCase {
 
 
 
-    buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Array<Produto> {
-        return repository.buscaProdutoPorCategoria(categoria);
+    async buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Promise<Produto[]> {
+        return await repository.buscaProdutoPorCategoria(categoria);
     }
 
     async buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO> {
