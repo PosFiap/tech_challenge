@@ -3,6 +3,7 @@ import { ECategoria } from "../../modules/produto/entities/ECategoria";
 import { EErrorRepository } from "../../modules/produto/entities/EErrorRepository";
 import { Produto } from "../../modules/produto/entities/Produto";
 import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRegistry";
+import { CustomError, CustomErrorType } from "../../utils/customError";
 
 const bancoDeDados: Array<Produto> = [{
     codigo: 0,
@@ -58,9 +59,11 @@ export class ProdutoRepository implements IProdutoRepository {
                     bancoDeDados.splice(id, 1, temporaryProduct);
                 return id;
             } else {
+                throw new CustomError(CustomErrorType.InvalidInputDTO, "Mesmos Valores Inseridos, por favor tente novamente.");
                 return EErrorRepository.MesmosValores;
             }
         } else {
+            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Não foi Encontrado um produto com esse id, tente novamente");
             return EErrorRepository.NadaEncontrado;
         }
 

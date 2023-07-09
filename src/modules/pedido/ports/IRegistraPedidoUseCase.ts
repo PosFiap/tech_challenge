@@ -5,6 +5,6 @@ import { IPedidoRegistry } from "./IPedidoRegistry";
 
 export interface IRegistraPedidoUseCase {
 
-    registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRegistry): Promise<PedidoOutputDTO>;
+    registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRepository): Promise<PedidoOutputDTO>;
 
 }

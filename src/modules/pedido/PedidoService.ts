@@ -7,7 +7,7 @@ import { EStatus } from "./value-objects/EStatus";
 import { Pedido } from "./entities/Pedido";
 import { IAtualizaStatusPedidoUseCase, IPedidoRegistry, IRegistraPedidoUseCase } from "./ports";
 import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
-import { AtualizaStatusPedidoDTO } from "./dto";
+import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 import { ItemDePedido } from "./entities/ItemDePedido";
 
@@ -69,7 +69,7 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         return listaPedidos;
     }
 
-    async registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRegistry): Promise<PedidoOutputDTO> {
+    async registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRepository): Promise<PedidoOutputDTO> {
         
         const erros = data.validaDTO();
         if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
