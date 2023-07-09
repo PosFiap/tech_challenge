@@ -28,6 +28,7 @@ export class PedidoService implements IPedidoService {
         } catch (err) {
             if(err instanceof CustomError) throw err;
             throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
+
         }
         
         return new AtualizaStatusPedidoOutputDTO(
