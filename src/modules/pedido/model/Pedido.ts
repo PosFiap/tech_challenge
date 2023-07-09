@@ -23,7 +23,8 @@ export class Pedido {
     }
 
     atualizaStatus(novoStatus: EStatus) {
-        if(novoStatus <= this._status) {
+        // o status só pode ser atualizado de forma incremental e ser diferente de Aguardando pagamento
+        if(novoStatus != this._status + 1 || this._status === EStatus["Aguardando Pagamento"]) {
             throw new CustomError(CustomErrorType.BusinessRuleViolation, "O status indicado não é válido para esse pedido");
         }
         this._status =  novoStatus;
