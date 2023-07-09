@@ -34,27 +34,10 @@ export class ProdutoService implements IProdutoCrudUseCase {
         
     }
 
-    async atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO> {
-        const produtoAtualizado = repository.atualizaProduto(id, produto);
+    async atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<Produto> {
+        const produtoAtualizado = await repository.atualizaProduto(id, produto);
 
-        if (produtoAtualizado > 0) {
-            const produto = await repository.buscaProdutoPorCodigo(produtoAtualizado);
-
-            const result: ProdutoOutputDTO = {
-                code: 200,
-                message: "Novo Produto atualizado com sucesso!",
-                produto: produto
-            }
-    
-            return result;
-        } else {
-            const result: ProdutoOutputDTO = {
-                code: 503,
-                message: "Erro Generico",
-                produto: undefined
-            }
-            return result;
-        }
+        return produtoAtualizado;        
     }
 
     deletaProduto(id: number, repository: IProdutoRepository): Produto {

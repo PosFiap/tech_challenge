@@ -1,3 +1,4 @@
+import { Produto } from "@prisma/client";
 import { ProdutoDTO } from "../../modules/produto/dto/ProdutoDTO";
 import { ProdutoOutputDTO } from "../../modules/produto/dto/ProdutoOutputDTO";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
@@ -37,11 +38,10 @@ export class ProdutoAdapter {
         return result;
     }
 
-    atualizaProduto(id: number, produto: ProdutoDTO): Promise<ProdutoOutputDTO> | GenericOutputErrorDTO {
+    async atualizaProduto(id: number, produto: ProdutoDTO) {
 
         try {
-            const result = this.service.atualizaProduto(id, produto, this.repository);
-
+            const result = await this.service.atualizaProduto(id, produto, this.repository);
             return result;
         } catch (CustomError: any) {
             return new GenericOutputErrorDTO(CustomError.type, CustomErrorType[CustomError.type], CustomError.message)

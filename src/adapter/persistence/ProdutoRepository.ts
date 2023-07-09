@@ -51,29 +51,29 @@ export class ProdutoRepository implements IProdutoRepository {
         return new Produto(product.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
     }
 
-    atualizaProduto(id: number, produto: ProdutoDTO): number {
 
-        const buscaDoId = bancoDeDados[id];
 
-        if (buscaDoId) {
-            if (buscaDoId !== produto) {
-                const temporaryProduct = new Produto(
-                    bancoDeDados.length + 1, 
-                    produto.nome, 
-                    produto.descricao, 
-                    produto.valor, 
-                    produto.categoria_codigo)
-                    bancoDeDados.splice(id, 1, temporaryProduct);
-                return id;
-            } else {
-                throw new CustomError(CustomErrorType.InvalidInputDTO, "Mesmos Valores Inseridos, por favor tente novamente.");
-                return EErrorRepository.MesmosValores;
-            }
-        } else {
-            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Não foi Encontrado um produto com esse id, tente novamente");
-            return EErrorRepository.NadaEncontrado;
+    async atualizaProduto(id: number, produto: ProdutoDTO): Promise<Produto> {
+        
+        const produtoParaComparar = await this.buscaProdutoPorCodigo(id);
+
+        if (this.compareProducts(produto, produtoParaComparar)) {
+            throw new CustomError(CustomErrorType.DuplicatedItem, "Mesmos Valores Inseridos, por favor tente novamente.");
         }
 
+        const product = await this.prisma.produto.update({
+            data: {
+                nome: produto.nome,
+                descricao: produto.descricao,
+                valor: produto.valor,
+                categoria_codigo: produto.categoria_codigo
+            },
+            where: {
+                codigo : id!
+            }
+        })
+        
+        return product;
        
     }
 
@@ -110,6 +110,11 @@ export class ProdutoRepository implements IProdutoRepository {
         const deletado = bancoDeDados.splice(id, 1);
         return deletado[0];
 
+
+    }
+
+    compareProducts(a: ProdutoDTO, b: Produto) {
+        return a.nome === b.nome && a.descricao === b.descricao && a.categoria_codigo === b.categoria_codigo && a.valor === b.valor;
 
     }
 

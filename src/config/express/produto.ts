@@ -41,17 +41,21 @@ router.post('/', async (req, res) => {
     res.status(201).send(resultado);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async(req, res) => {
 
     const idProduto = req.params.id;
     const produto = req.body;
-
-    const resultado = adapter.atualizaProduto(+idProduto, produto);
+    const resultado = await adapter.atualizaProduto(+idProduto, produto);
 
     let statusCode = 200;
-
-    if (resultado instanceof GenericOutputErrorDTO) statusCode = 500;
-
+    if (resultado instanceof GenericOutputErrorDTO) {
+        if (resultado.code === 4) {
+            statusCode = 304;
+        } else {
+            statusCode = 500;
+        }
+        
+    }
     res.status(statusCode).json(resultado);
 });
 
