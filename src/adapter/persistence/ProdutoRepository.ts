@@ -36,7 +36,6 @@ export class ProdutoRepository implements IProdutoRepository {
 
     }
 
-    
     async registraProduto(produto: ProdutoDTO): Promise<Produto> {
 
         const product = await this.prisma.produto.create({
@@ -78,9 +77,21 @@ export class ProdutoRepository implements IProdutoRepository {
        
     }
 
-    buscaProdutoPorCodigo(codigo: number):  Produto {
+    async buscaProdutoPorCodigo(codigo: number):  Promise<Produto> {
 
-        return bancoDeDados[codigo];
+        const produto = await this.prisma.produto.findUnique({
+            where: {
+                codigo: codigo
+            }
+        });
+
+        if (produto) {
+            return new Produto(produto.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
+        } else {
+            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
+        }
+
+        
     }
 
     buscaProdutoPorCategoria(categoria: ECategoria): Array<Produto> {

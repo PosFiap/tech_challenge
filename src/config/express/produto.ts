@@ -12,14 +12,20 @@ const router: Router = Router();
 const adapter = new ProdutoAdapter(new ProdutoService(), new ProdutoRepository(new PrismaClient()));
 
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
 
 
     const produtoId = req.params.id;
 
-    const resultado = adapter.buscaProdutoPorId(+produtoId);
+    const resultado = await adapter.buscaProdutoPorId(+produtoId);
 
-    res.status(200).json(resultado);
+    let statusCode = 200;
+
+    if (resultado instanceof GenericOutputErrorDTO) {
+        statusCode = 404;
+    }
+
+    res.status(statusCode).json(resultado);
 
 });
 

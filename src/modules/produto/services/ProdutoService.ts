@@ -13,8 +13,11 @@ export class ProdutoService implements IProdutoCrudUseCase {
         return repository.buscaProdutoPorCategoria(categoria);
     }
 
-    buscaProdutoPorId(id: number, repository: IProdutoRepository): Produto {
-        return repository.buscaProdutoPorCodigo(id);
+    async buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO> {
+
+        const produto = await repository.buscaProdutoPorCodigo(id);
+
+        return produto;
     }
 
     async registraProduto(newProduto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO> {
@@ -31,11 +34,11 @@ export class ProdutoService implements IProdutoCrudUseCase {
         
     }
 
-    atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): ProdutoOutputDTO {
+    async atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO> {
         const produtoAtualizado = repository.atualizaProduto(id, produto);
 
         if (produtoAtualizado > 0) {
-            const produto = repository.buscaProdutoPorCodigo(produtoAtualizado);
+            const produto = await repository.buscaProdutoPorCodigo(produtoAtualizado);
 
             const result: ProdutoOutputDTO = {
                 code: 200,

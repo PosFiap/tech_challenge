@@ -6,8 +6,8 @@ import { IProdutoRepository } from "./IProdutoRepository";
 
 export interface IProdutoCrudUseCase {
     registraProduto(newProduto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO>;
-    atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): ProdutoOutputDTO;
+    atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO>;
     deletaProduto(id: number, repository: IProdutoRepository): Produto;
-    buscaProdutoPorId(id: number, repository: IProdutoRepository): Produto
+    buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO>
     buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Array<Produto>
 }

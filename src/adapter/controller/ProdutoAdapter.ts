@@ -13,10 +13,16 @@ export class ProdutoAdapter {
         private service: ProdutoService, 
         private repository: ProdutoRepository) {}
 
-    buscaProdutoPorId(id: number) {
-        const result = this.service.buscaProdutoPorId(id, this.repository);
+    async buscaProdutoPorId(id: number) {
 
-        return result;
+        try {
+            const result = await this.service.buscaProdutoPorId(id, this.repository);
+            return result;
+        } catch (CustomError: any) {
+            return new GenericOutputErrorDTO(CustomError.type, CustomErrorType[CustomError.type], CustomError.message)
+        }
+
+       
     }
 
     buscaProdutoPorCategoria(categoria: number) {
@@ -31,7 +37,7 @@ export class ProdutoAdapter {
         return result;
     }
 
-    atualizaProduto(id: number, produto: ProdutoDTO): ProdutoOutputDTO | GenericOutputErrorDTO {
+    atualizaProduto(id: number, produto: ProdutoDTO): Promise<ProdutoOutputDTO> | GenericOutputErrorDTO {
 
         try {
             const result = this.service.atualizaProduto(id, produto, this.repository);
