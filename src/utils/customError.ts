@@ -5,8 +5,8 @@ export enum CustomErrorType {
     "BusinessRuleViolation",
     "RepositoryUnknownError",
     "RepositoryDataNotFound",
-    "EntityViolation",
-    "DuplicatedItem"
+    "DuplicatedItem",
+    "EntityViolation"
 }
 
 export class CustomError extends Error {

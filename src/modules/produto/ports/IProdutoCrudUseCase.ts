@@ -1,6 +1,6 @@
 import { ProdutoDTO } from "../dto/ProdutoDTO";
 import { ProdutoOutputDTO } from "../dto/ProdutoOutputDTO";
-import { ECategoria } from "../entities/ECategoria";
+import { ECategoria } from "../model/ECategoria";
 import { Produto } from "../entities/Produto";
 import { IProdutoRepository } from "./IProdutoRepository";
 
