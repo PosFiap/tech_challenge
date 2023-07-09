@@ -50,9 +50,15 @@ export class ProdutoAdapter {
         
     }
 
-    deletaProduto(id:number) {
-        const result = this.service.deletaProduto(id, this.repository);
+    async deletaProduto(id:number) {
 
-        return result;
+        try {
+            const result = await this.service.deletaProduto(id, this.repository);
+            return result;
+        } catch (CustomError: any) {
+            return new GenericOutputErrorDTO(CustomError.type, CustomErrorType[CustomError.type], CustomError.message)
+        }
+
+       
     }
 }

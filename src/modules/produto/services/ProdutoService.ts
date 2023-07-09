@@ -40,8 +40,8 @@ export class ProdutoService implements IProdutoCrudUseCase {
         return produtoAtualizado;        
     }
 
-    deletaProduto(id: number, repository: IProdutoRepository): Produto {
-        return repository.deletaProduto(id);
+    async deletaProduto(id: number, repository: IProdutoRepository): Promise<Produto> {
+        return await repository.deletaProduto(id);
         
     }
 

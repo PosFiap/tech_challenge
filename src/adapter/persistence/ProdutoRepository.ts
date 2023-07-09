@@ -105,10 +105,19 @@ export class ProdutoRepository implements IProdutoRepository {
         return produto;
     }
 
-    deletaProduto(id: number): Produto {
+    async deletaProduto(id: number): Promise<Produto> {
 
-        const deletado = bancoDeDados.splice(id, 1);
-        return deletado[0];
+        const existe = this.buscaProdutoPorCodigo(id);
+
+        if (!existe) {
+            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
+        }
+
+        const deletado = await this.prisma.produto.delete({
+            where: {codigo: id!}
+        })
+
+        return deletado;
 
 
     }

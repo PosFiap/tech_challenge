@@ -59,13 +59,17 @@ router.put('/:id', async(req, res) => {
     res.status(statusCode).json(resultado);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async(req, res) => {
 
     const idProduto = req.params.id;
 
-    const resultado = adapter.deletaProduto(+idProduto);
+    const resultado = await adapter.deletaProduto(+idProduto);
 
-    res.status(200).json(resultado);
+    let statusCode = 200;
+    if (resultado instanceof GenericOutputErrorDTO) {
+            statusCode = 500;
+    }
+    res.status(statusCode).json(resultado);
 });
 
 
