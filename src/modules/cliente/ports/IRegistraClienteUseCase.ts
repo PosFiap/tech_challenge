@@ -1,6 +1,6 @@
-import { ClienteDTO, ClienteRegistryDTO} from "../dto";
-import { IClienteRepository } from "./IClienteRegistry";
+import { ClienteDTO, ClienteRepositoryDTO} from "../dto";
+import { IClienteRepository } from "./IClienteRepository";
 
 export interface IRegistraClienteUseCase {
-    registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRegistryDTO>
+    registraCliente(cliente: ClienteDTO, clienteRepository: IClienteRepository): Promise<ClienteRepositoryDTO>
 }

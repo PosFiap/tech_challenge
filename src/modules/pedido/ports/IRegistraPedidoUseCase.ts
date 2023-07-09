@@ -1,10 +1,8 @@
-import { IProdutoRepository } from "../../produto/ports/IProdutoRegistry";
-import { PedidoDTO } from "../dto/PedidoDTO";
-import { PedidoOutputDTO } from "../dto/PedidoOutputDTO";
-import { IPedidoRegistry } from "./IPedidoRegistry";
+import { IProdutoRepository } from "../../produto/ports/IProdutoRepository";
+import { InserePedidoDTO } from "../dto/InserePedidoDTO";
+import { InserePedidoOutputDTO } from "../dto/InserePedidoOutputDTO";
+import { IPedidoRepository } from "./IPedidoRepository";
 
 export interface IRegistraPedidoUseCase {
-
-    registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRepository): Promise<PedidoOutputDTO>;
-
+    registraPedido(data: InserePedidoDTO): Promise<InserePedidoOutputDTO>;
 }

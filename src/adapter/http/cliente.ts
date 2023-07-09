@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ClienteAdapter } from "../../adapter/controller/ClienteAdapter";
+import { ClienteAdapter } from "../controller/ClienteAdapter";
 
 const router: Router = Router();
 

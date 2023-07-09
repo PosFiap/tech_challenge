@@ -1,35 +1,30 @@
-
-import { IProdutoRepository } from "../produto/ports/IProdutoRegistry";
-import { PedidoDTO } from "./dto/PedidoDTO";
-import { PedidoOutputDTO } from "./dto/PedidoOutputDTO";
-import { ECategoria } from "./value-objects/ECategoria";
-import { EStatus } from "./value-objects/EStatus";
-import { Pedido } from "./entities/Pedido";
-import { IAtualizaStatusPedidoUseCase, IPedidoRegistry, IRegistraPedidoUseCase } from "./ports";
-import { IListaPedidosUseCase } from "./ports/IListaPedidosUseCase";
-import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto";
+import { AtualizaStatusPedidoOutputDTO } from "./dto/AtualizaStatusPedidoOutputDTO";
+import { ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from "./dto/ListaPedidoOutputDTO";
+import { InserePedidoDTO } from "./dto/InserePedidoDTO";
+import { InserePedidoOutputDTO } from "./dto/InserePedidoOutputDTO";
+import { ECategoria } from "../common/value-objects/ECategoria";
+import { EStatus } from "../common/value-objects/EStatus";
+import { Pedido } from "./model/Pedido";
+import { AtualizaStatusPedidoDTO } from "./dto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
-import { ItemDePedido } from "./entities/ItemDePedido";
+import { Produto } from "./model/Produto";
+import { IPedidoRepository, IPedidoService } from "./ports";
 
-export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCase, IAtualizaStatusPedidoUseCase {
+export class PedidoService implements IPedidoService {
 
-    constructor(readonly repository: IPedidoRegistry) {}
+    constructor(readonly pedidoRepository: IPedidoRepository) {}
 
     async atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
         
-        const erros = data.validaDTO();
-        if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
+        data.validaDTO();
 
         const { codigoPedido, codigoStatus } = data;
         let pedidoAtualizado;
 
         try{
-            const statusAtualDoPedido = await this.repository.obtemStatusPedido(codigoPedido);
-
-            //Um pedido só pode ser atualizado para um status posterior
-            if(statusAtualDoPedido >= codigoStatus)
-                throw new CustomError(CustomErrorType.BusinessRuleViolation, "O status indicado não é válido para esse pedido");
-            pedidoAtualizado = await this.repository.atualizaStatusPedido(codigoPedido, codigoStatus);    
+            const pedido = await this.pedidoRepository.obtemPedido(codigoPedido);
+            pedido.atualizaStatus(codigoStatus);
+            pedidoAtualizado = await this.pedidoRepository.atualizaPedido(pedido);
         } catch (err) {
             if(err instanceof CustomError) throw err;
             throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
@@ -38,23 +33,24 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
         
         return new AtualizaStatusPedidoOutputDTO(
             pedidoAtualizado.codigo!,
-            EStatus[pedidoAtualizado.status]
+            EStatus[pedidoAtualizado.status],
+            pedidoAtualizado.status
         );
     }
 
-
     async listaPedidos(): Promise<Array<ItemListaPedidoOutputDTO>> {
-        const pedidosArmazenados = await this.repository.listaPedidos();
-
-        //map Entity to DTO
+        const pedidosArmazenados = await this.pedidoRepository.listaPedidos({
+            vinculaProdutos: true
+        });
+        
         const listaPedidos: Array<ItemListaPedidoOutputDTO> =
             pedidosArmazenados.map((pedido: Pedido) => {
-                const itensDePedido: Array<ItemPedidoListaPedidoOutputDTO> =
-                    pedido.itensDePedido.map(itemDePedido => {
+                const produtosPedido: Array<ItemPedidoListaPedidoOutputDTO> =
+                    pedido.produtosPedido.map(produtosPedido => {
                         return new ItemPedidoListaPedidoOutputDTO(
-                            itemDePedido.nome,
-                            itemDePedido.valor,
-                            ECategoria[itemDePedido.categoria_codigo]
+                            produtosPedido.nome,
+                            produtosPedido.valor,
+                            ECategoria[produtosPedido.categoria_codigo]
                         )
                     });
                 
@@ -63,28 +59,29 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
                     EStatus[pedido.status],
                     pedido.codigo!,
                     pedido.CPF,
-                    itensDePedido
+                    produtosPedido
                 )
             });
         return listaPedidos;
     }
 
-    async registraPedido(data: PedidoDTO, produtoRegistry: IProdutoRepository): Promise<PedidoOutputDTO> {
+    async registraPedido(data: InserePedidoDTO): Promise<InserePedidoOutputDTO> {
         
-        const erros = data.validaDTO();
-        if(erros.length) throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join("\n"));
+        data.validaDTO();
         
         let pedidoInserido: Pedido;
 
         try{
 
-            const itensDePedidoCompletos = await Promise.all(data.itemDePedido.map(async ({codigo}) => {
-                const produto: ItemDePedido = await produtoRegistry.buscaProdutoPorCodigo(codigo);
-                if(!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado');
-                return produto;
-            }));
+            const itensDePedidoCompletos = await Promise.all(
+                data.produtosPedidoCodigo.map(async ({codigo}) => {
+                    const produto: Produto = await this.pedidoRepository.buscaProdutoPorCodigo(codigo);
+                    if(!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado');
+                    return produto;
+                })
+            );
     
-            pedidoInserido = await this.repository.registraPedido(new Pedido(
+            pedidoInserido = await this.pedidoRepository.registraPedido(new Pedido(
                 data.CPF,
                 EStatus["Aguardando Pagamento"],
                 itensDePedidoCompletos,
@@ -95,10 +92,10 @@ export class PedidoService implements IRegistraPedidoUseCase, IListaPedidosUseCa
             throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message);
         }
 
-        return new PedidoOutputDTO(
+        return new InserePedidoOutputDTO(
             EStatus[pedidoInserido.status],
             pedidoInserido.codigo!,
-            pedidoInserido.itensDePedido.reduce((soma, item) => soma + item.valor, 0)
+            pedidoInserido.produtosPedido.reduce((soma, item) => soma + item.valor, 0)
         )
     }
 }

@@ -1,8 +1,8 @@
+import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRepository";
 import { ProdutoDTO } from "../../modules/produto/dto/ProdutoDTO";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
 import { EErrorRepository } from "../../modules/produto/entities/EErrorRepository";
 import { Produto } from "../../modules/produto/entities/Produto";
-import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRegistry";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 
 const bancoDeDados: Array<Produto> = [{
@@ -26,6 +26,7 @@ const bancoDeDados: Array<Produto> = [{
     valor: 5.10,
     categoria_codigo: ECategoria.Sobremesa,
 }];
+
 
 
 export class ProdutoRepository implements IProdutoRepository {
@@ -70,7 +71,7 @@ export class ProdutoRepository implements IProdutoRepository {
        
     }
 
-    buscaProdutoPorCodigo(codigo: number): Produto {
+    buscaProdutoPorCodigo(codigo: number):  Produto {
 
         return bancoDeDados[codigo];
     }
