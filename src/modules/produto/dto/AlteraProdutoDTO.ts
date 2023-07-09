@@ -1,12 +1,13 @@
 import { CustomError, CustomErrorType } from "../../../utils/customError";
 import { ECategoria } from "../../common/value-objects/ECategoria";
 
-export class RegistraProdutoDTO {
+export class AlteraProdutoDTO {
     constructor(
-         readonly nome: string,
-         readonly descricao: string,
-         readonly valor: number,
-         readonly categoriaCodigo: ECategoria,
+        readonly codigo: number,
+        readonly nome: string,
+        readonly descricao: string,
+        readonly valor: number,
+        readonly categoriaCodigo: ECategoria,
     ){
         this.validaCodigoCategoria();
         this.validaDescricao();
@@ -35,7 +36,7 @@ export class RegistraProdutoDTO {
     }
 }
 
-export class RegistraProdutoOutputDTO {
+export class AlteraProdutoOutputDTO {
     constructor(
         readonly codigo: number,
         readonly nome: string,

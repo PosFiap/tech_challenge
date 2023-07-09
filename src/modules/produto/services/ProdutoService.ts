@@ -1,4 +1,5 @@
 import { validaCategoria } from "../../common/value-objects/ECategoria";
+import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from "../dto/AlteraProdutoDTO";
 import { ItemListaProdutoCategoriaDTO, ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
 import { IProdutoEntity } from "../entity/IProdutoEntity";
@@ -11,6 +12,34 @@ export class ProdutoService implements IProdutoService {
     constructor(
         readonly produtoRepository: IProdutoRepository
     ){}
+
+    async alteraProduto(data: AlteraProdutoDTO): Promise<AlteraProdutoOutputDTO> {
+        const produto = new Produto(
+            data.codigo,
+            data.nome,
+            data.descricao,
+            data.valor,
+            data.categoriaCodigo
+        );
+
+        const produtoEntity: IProdutoEntity = {
+            categoria_codigo: produto.categoria_codigo,
+            descricao: produto.descricao,
+            nome: produto.nome,
+            valor: produto.valor,
+            codigo: produto.codigo!
+        }
+        
+        const produtoInserido = await this.produtoRepository.alteraProduto(produtoEntity);
+
+        return new AlteraProdutoOutputDTO(
+            produtoInserido.codigo!,
+            produtoInserido.nome,
+            produtoInserido.descricao,
+            produtoInserido.valor,
+            produtoInserido.categoria_codigo
+        )
+    }
 
     async buscaProdutoPorCategoria(data: ListaProdutoCategoriaDTO): Promise<ListaProdutoCategoriaOutputDTO> {
         const { codigoCategoria } = data;

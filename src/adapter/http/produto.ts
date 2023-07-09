@@ -31,7 +31,7 @@ export class ProdutoHTTP {
                 res.status(500).json({
                     mensagem: 'Falha ao registrar o produto'
                 });
-              }
+            }
         });
 
         this.router.get('/', async (req, res) => {
@@ -44,13 +44,38 @@ export class ProdutoHTTP {
                 res.status(200).send(produtos);
 
             } catch (err) {
-                console.error(err);
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);
                     return;
                 }
                 res.status(500).json({
                     mensagem: 'Falha ao buscar os produtos'
+                });
+            }
+        });
+
+        this.router.put('/:id', async(req, res) => {
+        
+            try {
+                const codigoProduto = parseInt(req.params.id, 10);
+                const produto = req.body;
+                const resultado = await this.produtoController.alteraProduto(
+                    {
+                        categoria_codigo: produto.categoria_codigo,
+                        codigo: codigoProduto,
+                        descricao: produto.descricao,
+                        nome: produto.nome,
+                        valor: produto.valor
+                    } 
+                );
+                res.status(200).send(resultado);
+            } catch (err) {
+                if( err instanceof CustomError) {
+                    customErrorToResponse(err, res);
+                    return;
+                }
+                res.status(500).json({
+                    mensagem: 'Falha ao alterar o produto'
                 });
             }
         });
@@ -65,26 +90,6 @@ export class ProdutoHTTP {
         
             res.status(statusCode).json(resultado);
         
-        });
-        
-        
-        
-        this.router.put('/:id', async(req, res) => {
-        
-            const idProduto = req.params.id;
-            const produto = req.body;
-            const resultado = await this.produtoController.atualizaProduto(+idProduto, produto);
-        
-            let statusCode = 200;
-            if (resultado instanceof GenericOutputErrorDTO) {
-                if (resultado.code === 4) {
-                    statusCode = 304;
-                } else {
-                    statusCode = 500;
-                }
-                
-            }
-            res.status(statusCode).json(resultado);
         });
         
         this.router.delete('/:id', async(req, res) => {

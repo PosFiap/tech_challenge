@@ -10,6 +10,36 @@ export class PrismaProdutoRepository implements IProdutoRepository {
     constructor(){
         this.prisma = new PrismaClient();
     }
+
+    async alteraProduto(produto: IProdutoEntity): Promise<IProdutoEntity> {
+        
+        const existeProduto = !!(await this.prisma.produto.findUnique({
+            where: {
+                codigo: produto.codigo
+            }
+        }));
+        
+        if(!existeProduto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "O produto não existe"
+        );
+
+        const produtoAtualizado = await this.prisma.produto.update({
+            data: {
+                nome: produto.nome,
+                descricao: produto.descricao,
+                valor: produto.valor,
+                categoria_codigo: produto.categoria_codigo
+            },
+            where: {
+                codigo : produto.codigo!
+            }
+        })
+        
+        return produtoAtualizado;
+
+    }
+
     buscaProdutoPorCategoria(categoriaCodigo: ECategoria): Promise<IProdutoEntity[]> {
         const produtos = this.prisma.produto.findMany({
             where: {

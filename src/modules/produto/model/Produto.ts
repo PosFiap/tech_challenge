@@ -30,7 +30,7 @@ export class Produto {
     }
 
     private validaCategoriaCodigo() {
-        if(this.categoria_codigo == null || this.categoria_codigo >= 4 || this.categoria_codigo < 0) throw new CustomError(
+        if(this.categoria_codigo == null || !ECategoria[this.categoria_codigo]) throw new CustomError(
             CustomErrorType.BusinessRuleViolation,
             "Código de categoria inválida"
         )

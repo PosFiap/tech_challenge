@@ -7,4 +7,10 @@ export class ProdutoDTO {
          public valor: number,
          public categoria_codigo: ECategoria,
     ){}
+
+    validaCodigoCategoria() {
+        if(this.codigoCategoria == null || isNaN(this.codigoCategoria)) {
+            throw new CustomError(CustomErrorType.InvalidInput, "Código de categoria inválido");
+        }
+    }
 }
