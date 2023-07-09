@@ -2,7 +2,7 @@ import { CPF as CPFVO } from "../../common/value-objects/CPF";
 
 export class ItemListaPedidoOutputDTO {
 
-    private _CPF: CPFVO;
+    private _CPF: CPFVO | null;
 
     constructor(
         readonly status: string,
@@ -10,11 +10,11 @@ export class ItemListaPedidoOutputDTO {
         CPF: string | null,
         readonly produtosPedido: Array<ItemPedidoListaPedidoOutputDTO>
     ) {
-        this._CPF = new CPFVO(CPF);
+        this._CPF = CPF ? new CPFVO(CPF) : null;
     }
 
     get CPF() {
-        return this._CPF.valor;
+        return this._CPF?.valor;
     }
 
     get valorTotal() {
