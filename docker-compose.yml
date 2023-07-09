@@ -12,7 +12,12 @@ services:
     container_name: app-ts
     ports:
       - '8080:8080'
-    command: npm run dev
+    depends_on:
+      - postgresql
+    command: sh -c "npm run setup && npm run dev"
+    environment:
+      - DB_HOST=postgresql://posfiap:posfiap2@postgresql:5432/posfiap
+      - PORT=8080
   postgresql:
     image: postgres
     environment:
@@ -22,6 +27,7 @@ services:
       - postgresql:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-      
+  
+
 volumes:
   postgresql:

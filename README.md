@@ -38,6 +38,9 @@ Para desenvolvimento, para obter facilidades como autocomplete das ferramentas d
 # instalar as dependencias de desenvolvimento e produção localmente
 $ npm i
 
+# setup do banco de dados
+$ npm run prisma:migrate
+
 # rodar o projeto com o node local e não o do container
 $ npm run dev
 

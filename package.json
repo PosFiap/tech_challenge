@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "setup": "npm ci && npm run prisma:generate && npm run prisma:migrate",
     "start": "node ./dist/index.js",
     "dev": "nodemon ./src/index.ts",
     "build": "tsc -p .",
@@ -37,5 +38,8 @@
   "_moduleAliases": {
     "@root": "src/",
     "@client": "src/modules/cliente/ports"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   }
 }

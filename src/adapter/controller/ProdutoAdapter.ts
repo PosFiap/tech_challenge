@@ -1,4 +1,3 @@
-import { Produto } from "@prisma/client";
 import { ProdutoDTO } from "../../modules/produto/dto/ProdutoDTO";
 import { ProdutoOutputDTO } from "../../modules/produto/dto/ProdutoOutputDTO";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
