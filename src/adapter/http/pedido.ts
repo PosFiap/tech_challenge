@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { CustomError } from "../../utils/customError";
+import { CustomError, CustomErrorType } from "../../utils/customError";
 import { customErrorToResponse } from "./error-parser";
 import { IPedidoController } from "../controller/IPedidoController";
+import { AtualizaStatusPedidoOutputDTO } from "../../modules/pedido";
 
 export class PedidoHTTP {
     private router: Router;
@@ -18,10 +19,10 @@ export class PedidoHTTP {
             const { CPF, itemDePedido} = req.body;
             try{
                 const resultado = await this.pedidoController.registraPedido({
-                    cpf: CPF || null,
+                    cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
                     produtoPedido: itemDePedido
                 });
-                res.status(201).json(JSON.stringify(resultado));
+                res.status(201).json(resultado);
             } catch (err) {
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);
@@ -33,14 +34,22 @@ export class PedidoHTTP {
             }
         });
         
-        this.router.patch('/:codigoPedido', async (req, res) => {
+        this.router.patch('/:codigoPedido/:status', async (req, res) => {
             const codigoPedido = parseInt(req.params['codigoPedido'] as string, 10);
-            const codigoStatus = parseInt(req.body.codigoStatus as string, 10);
+            const status = req.params['status'] as string;
+            const moveStatus = (codigoPedido:number, status: string): Promise<AtualizaStatusPedidoOutputDTO> => {
+                switch(status){
+                    case "em-preparacao":
+                        return this.pedidoController.moveStatusEmPreparacao({codigoPedido})
+                    case "pronto":
+                        return this.pedidoController.moveStatusPronto({codigoPedido})
+                    case "finalizado":
+                        return this.pedidoController.moveStatusFinalizado({codigoPedido})
+                }
+                throw new CustomError(CustomErrorType.BusinessRuleViolation, "Status inválido");
+            }
             try {
-                const resultado = await this.pedidoController.atualizaStatusPedido({
-                    codigoPedido,
-                    codigoStatus
-                });
+                const resultado = await moveStatus(codigoPedido, status);
                 res.status(200).json({
                     status: resultado.status,
                     codigoPedido: resultado.codigoPedido

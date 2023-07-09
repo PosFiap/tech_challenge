@@ -12,8 +12,8 @@ datasource db {
 
 model Cliente {
   cpf    String   @id @unique
-  email  String?
-  nome   String?
+  email  String
+  nome   String
   Pedido Pedido[]
 }
 
