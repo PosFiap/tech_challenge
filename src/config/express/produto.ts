@@ -4,11 +4,12 @@ import { ProdutoService } from "../../modules/produto/services/ProdutoService";
 import { ProdutoRepository } from "../../adapter/persistence/ProdutoRepository";
 import { ECategoria } from "../../modules/produto/entities/ECategoria";
 import { GenericOutputErrorDTO } from "../../utils/dto/GenericOutputDTO";
+import { PrismaClient } from "@prisma/client";
 
 
 const router: Router = Router();
 
-const adapter = new ProdutoAdapter(new ProdutoService(), new ProdutoRepository());
+const adapter = new ProdutoAdapter(new ProdutoService(), new ProdutoRepository(new PrismaClient()));
 
 
 router.get('/:id', (req, res) => {
@@ -32,12 +33,12 @@ router.get('/', (req, res) => {
     res.status(200).json(resultado);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
     const produto = req.body;
 
 
-    const resultado = adapter.registraProduto(produto);
+    const resultado = await adapter.registraProduto(produto);
 
     res.status(201).send(resultado);
 });

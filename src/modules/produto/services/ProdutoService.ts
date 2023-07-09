@@ -17,16 +17,14 @@ export class ProdutoService implements IProdutoCrudUseCase {
         return repository.buscaProdutoPorCodigo(id);
     }
 
-    registraProduto(newProduto: ProdutoDTO, repository: IProdutoRepository) {
+    async registraProduto(newProduto: ProdutoDTO, repository: IProdutoRepository): Promise<ProdutoOutputDTO> {
 
-        const produtoInserido = repository.registraProduto(newProduto);
-
-        const novoProduto = repository.buscaProdutoPorCodigo(produtoInserido);
+        const produtoInserido = await repository.registraProduto(newProduto);
 
         const result: ProdutoOutputDTO = {
             code: 201,
             message: "Novo Produto inserido com sucesso!",
-            produto: novoProduto
+            produto: produtoInserido
         }
 
         return result;

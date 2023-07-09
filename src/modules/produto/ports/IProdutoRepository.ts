@@ -8,7 +8,7 @@ export interface IProdutoRepository {
     buscaProdutoPorCategoria(categoria: ECategoria): Array<Produto>
     buscaProdutoPorCodigo(codigo: number): Produto
 
-    registraProduto(produto: ProdutoDTO): number
+    registraProduto(produto: ProdutoDTO): Promise<Produto>
     atualizaProduto(id: number, produto: ProdutoDTO): number
 
 }

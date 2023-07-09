@@ -4,6 +4,7 @@ import { ECategoria } from "../../modules/produto/entities/ECategoria";
 import { EErrorRepository } from "../../modules/produto/entities/EErrorRepository";
 import { Produto } from "../../modules/produto/entities/Produto";
 import { CustomError, CustomErrorType } from "../../utils/customError";
+import { PrismaClient } from "@prisma/client";
 
 const bancoDeDados: Array<Produto> = [{
     codigo: 0,
@@ -31,18 +32,24 @@ const bancoDeDados: Array<Produto> = [{
 
 export class ProdutoRepository implements IProdutoRepository {
     
+    constructor(private prisma: PrismaClient){
+
+    }
 
     
-    registraProduto(produto: ProdutoDTO): number {
+    async registraProduto(produto: ProdutoDTO): Promise<Produto> {
 
-        const temporaryProduct = new Produto(
-            bancoDeDados.length + 1, 
-            produto.nome, 
-            produto.descricao, 
-            produto.valor, 
-            produto.categoria_codigo)
+        const product = await this.prisma.produto.create({
+            data: {
+                nome: produto.nome,
+                descricao: produto.descricao,
+                categoria_codigo: produto.categoria_codigo,
+                valor: produto.valor
+            }
+        });
 
-        return bancoDeDados.push(temporaryProduct);
+
+        return new Produto(product.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
     }
 
     atualizaProduto(id: number, produto: ProdutoDTO): number {

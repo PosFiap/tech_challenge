@@ -25,8 +25,8 @@ export class ProdutoAdapter {
         return result;
     }
 
-    registraProduto(produtoDTO: ProdutoDTO): ProdutoOutputDTO {
-        const result = this.service.registraProduto(produtoDTO, this.repository);
+    async registraProduto(produtoDTO: ProdutoDTO): Promise<ProdutoOutputDTO> {
+        const result = await this.service.registraProduto(produtoDTO, this.repository);
 
         return result;
     }
