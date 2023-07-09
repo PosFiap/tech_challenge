@@ -1,3 +1,5 @@
+import logger from "./LoggerFactory";
+
 export enum CustomErrorType {
     "InvalidInputDTO",
     "BusinessRuleViolation",
@@ -11,6 +13,7 @@ export class CustomError extends Error {
       super(message);
   
       if (Error.captureStackTrace) {
+        logger.error(`Error type: ${CustomErrorType[type]} - message: ${message}`);
         Error.captureStackTrace(this, CustomError)
       }
     }
