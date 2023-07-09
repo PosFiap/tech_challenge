@@ -1,11 +1,21 @@
+import { CPF as CPFVO } from "../../common/value-objects/CPF";
+
 export class ItemListaPedidoOutputDTO {
+
+    private _CPF: CPFVO;
 
     constructor(
         readonly status: string,
         readonly codigo: number,
-        readonly CPF: string | null,
+        CPF: string | null,
         readonly produtosPedido: Array<ItemPedidoListaPedidoOutputDTO>
-    ) {}
+    ) {
+        this._CPF = new CPFVO(CPF);
+    }
+
+    get CPF() {
+        return this._CPF.valor;
+    }
 
     get valorTotal() {
         const valorTotal = this.produtosPedido.reduce((valorSoma, item) => item.valor + valorSoma, 0);

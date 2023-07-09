@@ -18,10 +18,10 @@ export class PedidoHTTP {
             const { CPF, itemDePedido} = req.body;
             try{
                 const resultado = await this.pedidoController.registraPedido({
-                    cpf: CPF || null,
+                    cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
                     produtoPedido: itemDePedido
                 });
-                res.status(201).json(JSON.stringify(resultado));
+                res.status(201).json(resultado);
             } catch (err) {
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);
