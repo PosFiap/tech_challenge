@@ -4,9 +4,10 @@ workdir /usr/src/app
 
 copy package*.json ./
 
-run npm ci
-
 copy . .
+
+# run npm run setup
+run npm ci
 
 run npm run build
 

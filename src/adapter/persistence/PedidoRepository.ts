@@ -48,7 +48,7 @@ export class PrismaPedidoRepository implements IPedidoRepository {
         }
         const pedidos = await this.prisma.pedido.findMany(options);
         
-        return pedidos.map((pedido) => (new Pedido(
+        return pedidos.map((pedido: any) => (new Pedido(
                 pedido.cpf_cliente!,
                 pedido.status!,
                 //@ts-ignore
