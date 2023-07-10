@@ -10,6 +10,6 @@ services:
       - ID_USUARIO_MP="usuario"
       - ID_EXTERNO_CAIXA="cx01"
       - ACCESS_TOKEN_MP="asd"
-    command: sh -c "npm run setup && npm run start"
+    command: npm run start
     depends_on:
       - postgresql

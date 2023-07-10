@@ -2,13 +2,9 @@ from node as make
 
 workdir /usr/src/app
 
-copy package*.json ./
-
 copy . .
 
-# run npm run setup
 run npm ci
-
 run npm run build
 
 from node as production
@@ -17,11 +13,10 @@ env PORT 8080
 
 workdir /usr/src/app
 
-copy package*.json ./
-
-run npm ci --production
-
+copy --from=make /usr/src/app/package*.json ./
 copy --from=make /usr/src/app/dist ./dist
 
+run npm ci --omit=dev
+
 expose 8080
-cmd ["node", "dist/index.js"]
+cmd ["node", "dist/src/index.js"]

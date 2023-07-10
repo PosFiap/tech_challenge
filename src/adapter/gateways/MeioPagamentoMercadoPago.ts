@@ -1,5 +1,5 @@
 import { PedidoPagamentoDTO, IHttp, IMeioDePagamentoQR } from '../../modules/pagamento'
-import { CustomError, CustomErrorType, Either, isErro, makeErro, makeSucesso } from '../../utils'
+import { CustomError, CustomErrorType } from '../../utils'
 
 interface ItemFatura {
   sku_number: string
@@ -38,10 +38,7 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
     this._idExternoPontoDeVenda = process.env.ID_EXTERNO_CAIXA
     this._accessToken = process.env.ACCESS_TOKEN_MP
 
-    const valido = this.validaSeRecebeuOsParametros()
-    if (isErro(valido)) {
-      throw new CustomError(CustomErrorType.EntityViolation, valido.erro)
-    }
+    this.validaSeRecebeuOsParametros()
   }
 
   private mapPedidoPagamentoDTOParaFatura (pedido: PedidoPagamentoDTO): Fatura {
@@ -63,19 +60,17 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
     }
   }
 
-  private validaSeRecebeuOsParametros (): Either<string, boolean> {
+  private validaSeRecebeuOsParametros (): void {
     if (!this._http) {
-      return makeErro('Cliente http é requerido.')
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'Cliente http é requerido.')
     }
 
     if (!this._idUsuarioMercadoPago || !this._idExternoPontoDeVenda || !this._accessToken) {
-      return makeErro('Credenciais mercado pago são requeridas.')
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'Credenciais mercado pago são requeridas.')
     }
-
-    return makeSucesso(true)
   }
 
-  async checkoutQrCode (pedido: PedidoPagamentoDTO): Promise<Either<string, string>> {
+  async checkoutQrCode (pedido: PedidoPagamentoDTO): Promise<string> {
     try {
       const fatura = this.mapPedidoPagamentoDTOParaFatura(pedido)
       const response = await this._http.request<{ qr_data: string }>({
@@ -89,13 +84,13 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
       })
 
       if (response.body) {
-        return makeSucesso(response.body.qr_data)
+        return response.body.qr_data
       } else {
-        return makeErro('Resposta da requets sem conteudo de dados')
+        throw new CustomError(CustomErrorType.BusinessRuleViolation, 'Resposta da requets sem conteudo de dados')
       }
     } catch (error) {
       console.error(error)
-      throw error
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, (error as Error).message)
     }
   }
 }
