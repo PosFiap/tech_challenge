@@ -10,8 +10,6 @@ services:
       - ./src:/usr/src/app/src
       - ./nodemon.json:/usr/src/app/nodemon.json
     container_name: app-ts
-    environment:
-      PORT: 8080
     ports:
       - '8080:8080'
     depends_on:
