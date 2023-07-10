@@ -1,5 +1,5 @@
-import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO } from "../dto";
+import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO } from '../dto'
 
 export interface IAtualizaStatusPedidoUseCase {
-    atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO>;
+  atualizaStatus(data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO>
 }

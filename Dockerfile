@@ -14,6 +14,7 @@ run npm run build
 from node:slim as production
 
 env NODE_ENV production
+env PORT 8080
 
 workdir /usr/src/app
 

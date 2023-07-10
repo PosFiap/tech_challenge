@@ -1,5 +1,4 @@
 export enum EErrorRepository {
-    MesmosValores = -1,
-    NadaEncontrado = -2
-  }
-  
+  MesmosValores = -1,
+  NadaEncontrado = -2
+}

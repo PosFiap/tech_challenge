@@ -1,5 +1,5 @@
-import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
+import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from '../dto/RegistraProdutoDTO'
 
 export interface IRegistraProdutoUseCase {
-    registraProduto(data: RegistraProdutoDTO): Promise<RegistraProdutoOutputDTO>;
+  registraProduto(data: RegistraProdutoDTO): Promise<RegistraProdutoOutputDTO>
 }

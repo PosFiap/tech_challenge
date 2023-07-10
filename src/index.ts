@@ -1,5 +1,5 @@
-import { App } from './app';
-const PORT = process.env.PORT || 3000;
-import { router } from "./config/express/express"
+import { App } from './app'
+import { router } from './config/express/express'
+const PORT = process.env.PORT ?? 3000
 
-new App(router).listen(PORT);
+new App(router).listen(PORT)

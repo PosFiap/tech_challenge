@@ -1,0 +1,25 @@
+{
+    "extends": "standard-with-typescript",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+      "@typescript-eslint/method-signature-style": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/no-throw-literal": "off",
+      "@typescript-eslint/consistent-type-imports": "off",
+      "@typescript-eslint/return-await": "off",
+      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "promise/param-names": "off",
+      "no-case-declarations": "off",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          "checksVoidReturn": false
+        }
+      ]
+    }
+}

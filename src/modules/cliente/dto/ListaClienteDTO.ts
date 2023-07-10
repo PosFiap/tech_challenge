@@ -1,46 +1,46 @@
-import { CustomError, CustomErrorType } from "../../../utils/customError";
-import { CommonDTO } from "../../common/dto/CommonDTO";
-import { CPF as CPFVO } from "../../common/value-objects/CPF";
+import { CustomError, CustomErrorType } from '../../../utils/customError'
+import { CommonDTO } from '../../common/dto/CommonDTO'
+import { CPF as CPFVO } from '../../common/value-objects/CPF'
 
 export class ListaClienteDTO extends CommonDTO {
-    private readonly _CPF: CPFVO;
-    constructor(
-        CPF: string,
-    ){
-        super();
-        this._CPF = new CPFVO(CPF);
-        this.validaDTO();
-    }
+  private readonly _CPF: CPFVO
+  constructor (
+    CPF: string
+  ) {
+    super()
+    this._CPF = new CPFVO(CPF)
+    this.validaDTO()
+  }
 
-    public get CPF() {
-        return this._CPF.valor;
-    }
+  public get CPF (): string {
+    return this._CPF.valor
+  }
 
-    protected validaDTO(): void {
-        if (!this.CPF) {
-            throw new CustomError(CustomErrorType.InvalidInput, "CPF deve ser passado")
-        }
+  protected validaDTO (): void {
+    if (!this.CPF) {
+      throw new CustomError(CustomErrorType.InvalidInput, 'CPF deve ser passado')
     }
+  }
 }
 
 export class ItemListaCliente {
-    constructor(
-        readonly cpf: string,
-        readonly email: string,
-        readonly nome: string
-    ){}
+  constructor (
+    readonly cpf: string,
+    readonly email: string,
+    readonly nome: string
+  ) {}
 }
 
 export class ListaClienteOutputDTO {
-    constructor(
-        readonly cliente: ItemListaCliente
-    ) {}
+  constructor (
+    readonly cliente: ItemListaCliente
+  ) {}
 
-    public toJSON = () : any => {
-        return {
-            cpf: this.cliente.cpf,
-            nome: this.cliente.nome,
-            email: this.cliente.email
-        }
+  public toJSON = (): Record<string, any> => {
+    return {
+      cpf: this.cliente.cpf,
+      nome: this.cliente.nome,
+      email: this.cliente.email
     }
+  }
 }
