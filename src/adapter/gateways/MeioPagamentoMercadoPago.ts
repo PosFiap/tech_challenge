@@ -40,7 +40,7 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
 
     const valido = this.validaSeRecebeuOsParametros()
     if (isErro(valido)) {
-      throw new CustomError(CustomErrorType.InstantiatingError, valido.erro)
+      throw new CustomError(CustomErrorType.EntityViolation, valido.erro)
     }
   }
 
