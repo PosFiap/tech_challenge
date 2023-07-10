@@ -120,28 +120,4 @@ export class PrismaProdutoRepository implements IProdutoRepository {
 
         return produtoInserido;
     }
-    /*
-
-    async deletaProduto(id: number): Promise<Produto> {
-
-        const existe = this.buscaProdutoPorCodigo(id);
-
-        if (!existe) {
-            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
-        }
-
-        const deletado = await this.prisma.produto.delete({
-            where: {codigo: id!}
-        })
-
-        return deletado;
-
-
-    }
-
-    compareProducts(a: ProdutoDTO, b: Produto) {
-        return a.nome === b.nome && a.descricao === b.descricao && a.categoria_codigo === b.categoria_codigo && a.valor === b.valor;
-
-    }
-*/
 }

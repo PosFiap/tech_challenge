@@ -122,29 +122,4 @@ export class ProdutoService implements IProdutoService {
             produtoInserido.categoria_codigo
         )
     }
-
-    /*
-    async buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Promise<Produto[]> {
-    }
-
-    async buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO> {
-
-        const produto = await repository.buscaProdutoPorCodigo(id);
-
-        return produto;
-    }
-
-    
-
-    async atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<Produto> {
-        const produtoAtualizado = await repository.atualizaProduto(id, produto);
-
-        return produtoAtualizado;        
-    }
-
-    async deletaProduto(id: number, repository: IProdutoRepository): Promise<Produto> {
-        return await repository.deletaProduto(id);
-        
-    }*/
-
 }
