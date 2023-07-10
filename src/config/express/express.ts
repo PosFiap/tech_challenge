@@ -5,6 +5,8 @@ import { ClienteController } from '../../adapter/controller/ClienteController'
 import { ClienteHTTP } from '../../adapter/http/cliente'
 import { ProdutoHTTP } from '../../adapter/http/produto'
 import { ProdutoController } from '../../adapter/controller/ProdutoController'
+import { PagamentoHttp } from '../../adapter/http/pagamento'
+import { PagamentoQrCodeController } from '../../adapter/controller/PagamentoQrCodeController'
 
 const router: Router = Router()
 
@@ -20,9 +22,14 @@ const produtoHTTP = new ProdutoHTTP(
   ProdutoController.create()
 )
 
+const pagamentoHttp = new PagamentoHttp(
+  PagamentoQrCodeController.create()
+)
+
 router.use('/health', (_req, res) => res.sendStatus(200))
 router.use('/cliente', clienteHTTP.getRouter())
 router.use('/pedido', pedidoHTTP.getRouter())
 router.use('/produto', produtoHTTP.getRouter())
+router.use('/pagamento', pagamentoHttp.getRouter())
 
 export { router }

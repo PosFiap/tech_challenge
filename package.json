@@ -11,7 +11,7 @@
     "lint": "eslint 'src/**'",
     "test": "jest --silent",
     "test:watch": "jest -o --watch",
-    "test:staged": "jest -o",
+    "test:staged": "jest -o --passWithNoTests",
     "prepare": "husky install",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
