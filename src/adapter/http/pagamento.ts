@@ -34,6 +34,6 @@ export class PagamentoHttp implements IHttpRoute {
   }
 
   getRouter (): Router {
-    throw new Error('Method not implemented.')
+    return this.router
   }
 }
