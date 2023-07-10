@@ -1,1 +1,1 @@
-export { type ClienteDTO, ClienteOuputDTO as ClienteRepositoryDTO } from './ClienteDTO'
+export type { ClienteRegistryDTO, ErrorDTO } from './ClienteDTO'

@@ -1,10 +1,19 @@
 import { CustomError, CustomErrorType } from '../../../utils/customError'
+import { CPF as CPFVO } from '../../common/value-objects/CPF'
 
 export class InserePedidoDTO {
+  private readonly _CPF: CPFVO | null
   constructor (
-    readonly CPF: string | null,
+    CPF: string | null,
     readonly produtosPedidoCodigo: Array<{ codigo: number }>
-  ) {}
+  ) {
+    this._CPF = CPF ? new CPFVO(CPF) : null
+    this.validaDTO()
+  }
+
+  public get CPF (): string | null {
+    return this._CPF?.valor ?? null
+  }
 
   private validaItemDePedido (): boolean {
     if (!this.produtosPedidoCodigo) return false
@@ -19,7 +28,7 @@ export class InserePedidoDTO {
     const erros: String[] = []
     if (!this.validaItemDePedido()) erros.push('Um ou mais itens do pedido é inválido')
     if (erros.length > 0) {
-      throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join('\n'))
+      throw new CustomError(CustomErrorType.InvalidInput, erros.join('\n'))
     }
   }
 }

@@ -1,9 +1,12 @@
+import logger from './LoggerFactory'
+
 export enum CustomErrorType {
-  'InvalidInputDTO',
+  'InvalidInput',
   'BusinessRuleViolation',
   'RepositoryUnknownError',
   'RepositoryDataNotFound',
-  'InstantiatingError'
+  'DuplicatedItem',
+  'EntityViolation'
 }
 
 export class CustomError extends Error {
@@ -11,6 +14,7 @@ export class CustomError extends Error {
     super(message)
 
     if (Error.captureStackTrace) {
+      logger.error(`Error type: ${CustomErrorType[type]} - message: ${message}`)
       Error.captureStackTrace(this, CustomError)
     }
   }

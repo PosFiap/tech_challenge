@@ -3,9 +3,9 @@ import { AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO
 export interface IPedidoController {
   pedidoService: IPedidoService
 
-  atualizaStatusPedido(data: { codigoPedido: number, codigoStatus: number }): Promise<AtualizaStatusPedidoOutputDTO>
-
+  moveStatusEmPreparacao(data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO>
+  moveStatusPronto(data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO>
+  moveStatusFinalizado(data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO>
   listaPedidos(): Promise<ItemListaPedidoOutputDTO[]>
-
   registraPedido(data: { cpf: string | null, produtoPedido: Array<{ codigo: number }> }): Promise<InserePedidoOutputDTO>
 }

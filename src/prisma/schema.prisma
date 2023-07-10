@@ -7,13 +7,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DB_HOST")
 }
 
 model Cliente {
   cpf    String   @id @unique
-  email  String?
-  nome   String?
+  email  String
+  nome   String
   Pedido Pedido[]
 }
 

@@ -24,7 +24,7 @@ export class AtualizaStatusPedidoDTO {
     if (!this.validaCodigoPedido()) erros.push('Código de pedido inválido')
     if (!this.validaCodigoStatus()) erros.push('Código de status inválido')
     if (erros.length > 0) {
-      throw new CustomError(CustomErrorType.InvalidInputDTO, erros.join('\n'))
+      throw new CustomError(CustomErrorType.InvalidInput, erros.join('\n'))
     }
   }
 }

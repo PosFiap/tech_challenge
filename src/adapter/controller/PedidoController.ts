@@ -2,6 +2,7 @@ import { InserePedidoOutputDTO } from '../../modules/pedido/dto/InserePedidoOutp
 import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, IPedidoService, ItemListaPedidoOutputDTO, InserePedidoDTO, PedidoService } from '../../modules/pedido'
 import { IPedidoController } from './IPedidoController'
 import { PrismaPedidoRepository } from '../persistence/PedidoRepository'
+import { EStatus } from '../../modules/common/value-objects/EStatus'
 
 export class PedidoController implements IPedidoController {
   private constructor (
@@ -17,11 +18,39 @@ export class PedidoController implements IPedidoController {
     throw new Error('Invalid Configuration Setup')
   }
 
-  async atualizaStatusPedido (data: { codigoPedido: number, codigoStatus: number }): Promise<AtualizaStatusPedidoOutputDTO> {
+  async moveStatusEmPreparacao (data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO> {
     try {
       const inputDTO = new AtualizaStatusPedidoDTO(
         data.codigoPedido,
-        data.codigoStatus
+        EStatus['Em preparação']
+      )
+      const result = await this.pedidoService.atualizaStatus(inputDTO)
+      return result
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
+
+  async moveStatusPronto (data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO> {
+    try {
+      const inputDTO = new AtualizaStatusPedidoDTO(
+        data.codigoPedido,
+        EStatus.Pronto
+      )
+      const result = await this.pedidoService.atualizaStatus(inputDTO)
+      return result
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
+
+  async moveStatusFinalizado (data: { codigoPedido: number }): Promise<AtualizaStatusPedidoOutputDTO> {
+    try {
+      const inputDTO = new AtualizaStatusPedidoDTO(
+        data.codigoPedido,
+        EStatus.Finalizado
       )
       const result = await this.pedidoService.atualizaStatus(inputDTO)
       return result

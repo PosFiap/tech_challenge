@@ -11,13 +11,12 @@ export class PrismaPedidoRepository implements IPedidoRepository {
   }
 
   async registraPedido (pedido: Pedido): Promise<Pedido> {
-    console.log(pedido)
-
     const pedidoInserido = await this.prisma.pedido.create({
       data: {
         status: pedido.status,
         cpf_cliente: pedido.CPF,
         ProdutoPedido: {
+          // @ts-expect-error
           createMany: {
             data: pedido.produtosPedido.map((produto) => ({
               valor_produto: produto.valor,
@@ -28,7 +27,12 @@ export class PrismaPedidoRepository implements IPedidoRepository {
         }
       }
     })
-    return new Pedido(pedidoInserido.cpf_cliente, pedidoInserido.status, [], pedidoInserido.codigo)
+
+    return new Pedido(
+      pedidoInserido.cpf_cliente,
+      pedidoInserido.status,
+      pedido.produtosPedido,
+      pedidoInserido.codigo)
   }
 
   async listaPedidos (config: { vinculaProdutos: boolean }): Promise<Pedido[]> {
@@ -44,10 +48,9 @@ export class PrismaPedidoRepository implements IPedidoRepository {
     }
     const pedidos = await this.prisma.pedido.findMany(options)
 
-    return pedidos.map((pedido) => (new Pedido(
-      pedido.cpf_cliente,
+    return pedidos.map((pedido: any) => (new Pedido(
+      pedido.cpf_cliente!,
       pedido.status!,
-      // @ts-expect-error
       pedido.ProdutoPedido.map((produtoPedido: { Produto: Produto, valor: number }) => {
         const { Produto: produto } = produtoPedido
         return new Produto(

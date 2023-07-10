@@ -6,4 +6,5 @@ jspm_packages
 .env.example
 
 coverage
+src/prisma/**
 

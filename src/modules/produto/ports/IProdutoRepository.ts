@@ -1,5 +1,10 @@
-import { Produto } from '../../pedido/model/Produto'
+import { ECategoria } from '../../common/value-objects/ECategoria'
+import { IProdutoEntity } from '../entity/IProdutoEntity'
 
 export interface IProdutoRepository {
-  buscaProdutoPorCodigo(codigo: number): Promise<Produto>
+  // deletaProduto(id: number): Promise<Produto>
+  buscaProdutoPorCategoria(categoriaCodigo: ECategoria): Promise<IProdutoEntity[]>
+  // buscaProdutoPorCodigo(codigo: number): Promise<Produto>
+  registraProduto(produto: IProdutoEntity): Promise<IProdutoEntity>
+  alteraProduto(produto: IProdutoEntity): Promise<IProdutoEntity>
 }

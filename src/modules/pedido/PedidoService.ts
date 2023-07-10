@@ -62,11 +62,10 @@ export class PedidoService implements IPedidoService {
   }
 
   async registraPedido (data: InserePedidoDTO): Promise<InserePedidoOutputDTO> {
-    data.validaDTO()
-
     let pedidoInserido: Pedido
 
     try {
+      // busca o produto para ter a informação de valor
       const itensDePedidoCompletos = await Promise.all(
         data.produtosPedidoCodigo.map(async ({ codigo }) => {
           const produto: Produto = await this.pedidoRepository.buscaProdutoPorCodigo(codigo)
@@ -86,10 +85,12 @@ export class PedidoService implements IPedidoService {
       throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message)
     }
 
+    console.log(pedidoInserido)
+
     return new InserePedidoOutputDTO(
       EStatus[pedidoInserido.status],
       pedidoInserido.codigo!,
-      pedidoInserido.produtosPedido.reduce((soma, item) => soma + item.valor, 0)
+      pedidoInserido.valorTotal
     )
   }
 }
