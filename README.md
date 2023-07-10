@@ -100,6 +100,18 @@ Buscar na url o ```codigo_categoria``` passando a categoria cadastrada
 
 ![](https://i.imgur.com/dhyA9Kk.gif)
 
+### Buscar produto por ID *
+
+Buscar na url o ```id``` passando código do produto
+
+![](https://i.imgur.com/iGAXjHl.gif)
+
+### Deletar produto por ID *
+
+Buscar na url o ```id``` passando código do produto
+
+![](https://i.imgur.com/7Fwutv7.gif)
+
 
 ### Atualizar produto *
 
@@ -120,9 +132,36 @@ Enviamos um array de códigos dos pedidos, como no exemplo o código 5 se referi
 
 ![](https://i.imgur.com/ydB9egq.gif)
 
+## Atualiza Status do Pedido para Em Preparação
+
+Endpoint responsável para atualizar o status do pedido de _Recebido_ para _Em preparação_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/FGt9SDT.gif)
+
+
+## Atualiza Status do Pedido para Pronto
+
+Endpoint responsável para atualizar o status do pedido de _Em preparação_ para _Pronto_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/FFEinzc.gif)
+
+
+## Atualiza Status do Pedido para Finalizado
+
+Endpoint responsável para atualizar o status do pedido de _Pronto_ para _Finalizado_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/qj2HSm5.gif)
+
 
 # Pagamento
 
-Enviamos o código do pedido
+Enviamos o código do pedido e retornaria o QRcode para o pagamento
+E o status do pedido muda para "Recebido"
 
-![](https://imgur.com/qFptW11.gif)
+![](https://i.imgur.com/bG8Efc7.gif)
