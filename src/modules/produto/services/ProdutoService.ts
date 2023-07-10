@@ -1,6 +1,8 @@
+import { CustomError, CustomErrorType } from "../../../utils/customError";
 import { validaCategoria } from "../../common/value-objects/ECategoria";
 import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from "../dto/AlteraProdutoDTO";
 import { BuscarProdutoDTO, BuscarProdutoOutputDTO } from "../dto/BuscarProdutoDTO";
+import { DeletaProdutoDTO, DeletaProdutoOutputDTO } from "../dto/DeletaProdutoDTO";
 import { ItemListaProdutoCategoriaDTO, ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../dto/ListaProdutoCategoriaDTO";
 import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
 import { IProdutoEntity } from "../entity/IProdutoEntity";
@@ -13,6 +15,25 @@ export class ProdutoService implements IProdutoService {
     constructor(
         readonly produtoRepository: IProdutoRepository
     ){}
+
+    async deletaProduto(data: DeletaProdutoDTO): Promise<DeletaProdutoOutputDTO> {
+        const codigoProduto = data.codigo;
+
+        const produto = await this.produtoRepository.deletaProduto(codigoProduto);
+
+        if(!produto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "Produto não existe"
+        )
+
+        return new DeletaProdutoOutputDTO(
+            produto.codigo!,
+            produto.nome,
+            produto.descricao,
+            produto.valor,
+            produto.categoria_codigo
+        )
+    }
 
     async buscaProduto(data: BuscarProdutoDTO): Promise<BuscarProdutoOutputDTO> {
         const codigoProduto = data.codigo;

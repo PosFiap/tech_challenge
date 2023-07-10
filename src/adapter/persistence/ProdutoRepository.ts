@@ -10,6 +10,36 @@ export class PrismaProdutoRepository implements IProdutoRepository {
     constructor(){
         this.prisma = new PrismaClient();
     }
+
+    async deletaProduto(codigo: number): Promise<IProdutoEntity> {
+        const existeProduto = !!(await this.prisma.produto.findUnique({
+            where: {
+                codigo
+            }
+        }));
+        
+        if(!existeProduto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "Produto não encontrado"
+        )
+
+        let produtoDeletado;
+        try{
+            produtoDeletado = await this.prisma.produto.delete({
+                where: {codigo: codigo!}
+            })
+        } catch (err) {
+            //@ts-ignore
+            if(err.code && err.code === "P2003")
+                throw new CustomError(
+                    CustomErrorType.EntityForeignKey,
+                    "Produto já vinculado a pedidos, impossível excluir"
+                );
+            throw err;
+        }
+
+        return produtoDeletado;
+    }
     
     async buscaProdutoPorCodigo(codigo: number): Promise<IProdutoEntity> {
         const produto = await this.prisma.produto.findUnique({
@@ -91,57 +121,6 @@ export class PrismaProdutoRepository implements IProdutoRepository {
         return produtoInserido;
     }
     /*
-    async atualizaProduto(id: number, produto: ProdutoDTO): Promise<Produto> {
-        
-        const produtoParaComparar = await this.buscaProdutoPorCodigo(id);
-
-        if (this.compareProducts(produto, produtoParaComparar)) {
-            throw new CustomError(CustomErrorType.DuplicatedItem, "Mesmos Valores Inseridos, por favor tente novamente.");
-        }
-
-        const product = await this.prisma.produto.update({
-            data: {
-                nome: produto.nome,
-                descricao: produto.descricao,
-                valor: produto.valor,
-                categoria_codigo: produto.categoria_codigo
-            },
-            where: {
-                codigo : id!
-            }
-        })
-        
-        return product;
-       
-    }
-
-    async buscaProdutoPorCodigo(codigo: number):  Promise<Produto> {
-
-        const produto = await this.prisma.produto.findUnique({
-            where: {
-                codigo: codigo
-            }
-        });
-
-        if (produto) {
-            return new Produto(produto.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
-        } else {
-            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
-        }
-
-        
-    }
-
-    async buscaProdutoPorCategoria(categoria: ECategoria): Promise<Produto[]> {
-
-        const produto = await this.prisma.produto.findMany({
-            where: {
-                categoria_codigo: categoria
-            }
-        });
-        
-        return produto;
-    }
 
     async deletaProduto(id: number): Promise<Produto> {
 

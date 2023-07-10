@@ -101,30 +101,29 @@ export class ProdutoHTTP {
             }
         });
 
-        /*
-        this.router.get('/:id', async (req, res) => {
-            const produtoId = req.params.id;
-            const resultado = await this.produtoController.buscaProdutoPorId(+produtoId);
+        this.router.delete('/:codigo', async(req, res) => {
         
-            let statusCode = 200;
-            if (resultado instanceof GenericOutputErrorDTO) statusCode = 404;
+            try{
+                const codigoProduto = parseInt(req.params.codigo, 10);
+            
+                const produtoDeletado = await this.produtoController.deletaProduto({
+                    codigoProduto
+                });
+                res.status(200).send(produtoDeletado);
+
+            } catch (err) {
+                console.error(err);
+                if( err instanceof CustomError) {
+                    customErrorToResponse(err, res);
+                    return;
+                }
+                res.status(500).json({
+                    mensagem: 'Falha ao deletar o produto'
+                });
+            }
         
-            res.status(statusCode).json(resultado);
         
         });
-        
-        this.router.delete('/:id', async(req, res) => {
-        
-            const idProduto = req.params.id;
-        
-            const resultado = await this.produtoController.deletaProduto(+idProduto);
-        
-            let statusCode = 200;
-            if (resultado instanceof GenericOutputErrorDTO) {
-                    statusCode = 500;
-            }
-            res.status(statusCode).json(resultado);
-        });*/
     }
 
     getRouter() {

@@ -6,7 +6,8 @@ export enum CustomErrorType {
     "RepositoryUnknownError",
     "RepositoryDataNotFound",
     "DuplicatedItem",
-    "EntityViolation"
+    "EntityViolation",
+    "EntityForeignKey"
 }
 
 export class CustomError extends Error {

@@ -23,6 +23,11 @@ export const customErrorToResponse = (err: CustomError, res: Response) => {
                 mensagem: err.message
             };
             break;
+        case CustomErrorType.EntityForeignKey:
+            statusCode = 423;
+            body = {
+                mensagem: err.message
+            }
         case CustomErrorType.RepositoryUnknownError:
             statusCode = 500;
             body = {
