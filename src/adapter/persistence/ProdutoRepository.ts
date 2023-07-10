@@ -1,85 +1,81 @@
-import { IProdutoRepository } from '../../modules/produto/ports/IProdutoRepository'
-import { PrismaClient } from '@prisma/client'
-import { IProdutoEntity } from '../../modules/produto/entity/IProdutoEntity'
-import { CustomError, CustomErrorType } from '../../utils/customError'
-import { ECategoria } from '../../modules/common/value-objects/ECategoria'
+import { IProdutoRepository } from "../../modules/produto/ports/IProdutoRepository";
+import { PrismaClient } from "@prisma/client";
+import { IProdutoEntity } from "../../modules/produto/entity/IProdutoEntity";
+import { CustomError, CustomErrorType } from "../../utils/customError";
+import { ECategoria } from "../../modules/common/value-objects/ECategoria";
 
 export class PrismaProdutoRepository implements IProdutoRepository {
-  private readonly prisma: PrismaClient
+    private prisma: PrismaClient;
 
-  constructor () {
-    this.prisma = new PrismaClient()
-  }
-
-  async alteraProduto (produto: IProdutoEntity): Promise<IProdutoEntity> {
-    const existeProduto = !!(await this.prisma.produto.findUnique({
-      where: {
-        codigo: produto.codigo
-      }
-    }))
-
-    if (!existeProduto) {
-      throw new CustomError(
-        CustomErrorType.RepositoryDataNotFound,
-        'O produto não existe'
-      )
+    constructor(){
+        this.prisma = new PrismaClient();
     }
 
-    const produtoAtualizado = await this.prisma.produto.update({
-      data: {
-        nome: produto.nome,
-        descricao: produto.descricao,
-        valor: produto.valor,
-        categoria_codigo: produto.categoria_codigo
-      },
-      where: {
-        codigo: produto.codigo!
-      }
-    })
+    async deletaProduto(codigo: number): Promise<IProdutoEntity> {
+        const existeProduto = !!(await this.prisma.produto.findUnique({
+            where: {
+                codigo
+            }
+        }));
+        
+        if(!existeProduto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "Produto não encontrado"
+        )
 
-    return produtoAtualizado
-  }
-
-  async buscaProdutoPorCategoria (categoriaCodigo: ECategoria): Promise<IProdutoEntity[]> {
-    const produtos = this.prisma.produto.findMany({
-      where: {
-        categoria_codigo: categoriaCodigo
-      }
-    })
-
-    return produtos
-  }
-
-  async registraProduto (produto: IProdutoEntity): Promise<IProdutoEntity> {
-    const produtoJaExiste = (await this.prisma.produto.count({
-      where: {
-        nome: produto.nome
-      }
-    })) > 0
-
-    if (produtoJaExiste) {
-      throw new CustomError(
-        CustomErrorType.DuplicatedItem,
-        'Um produto cadastrado com esse nome já existe'
-      )
-    }
-
-    const produtoInserido = await this.prisma.produto.create({
-      data: produto
-    })
-
-    return produtoInserido
-  }
-  /*
-    async atualizaProduto(id: number, produto: ProdutoDTO): Promise<Produto> {
-
-        const produtoParaComparar = await this.buscaProdutoPorCodigo(id);
-
-        if (this.compareProducts(produto, produtoParaComparar)) {
-            throw new CustomError(CustomErrorType.DuplicatedItem, "Mesmos Valores Inseridos, por favor tente novamente.");
+        let produtoDeletado;
+        try{
+            produtoDeletado = await this.prisma.produto.delete({
+                where: {codigo: codigo!}
+            })
+        } catch (err) {
+            //@ts-ignore
+            if(err.code && err.code === "P2003")
+                throw new CustomError(
+                    CustomErrorType.EntityForeignKey,
+                    "Produto já vinculado a pedidos, impossível excluir"
+                );
+            throw err;
         }
 
-        const product = await this.prisma.produto.update({
+        return produtoDeletado;
+    }
+    
+    async buscaProdutoPorCodigo(codigo: number): Promise<IProdutoEntity> {
+        const produto = await this.prisma.produto.findUnique({
+            where: {
+                codigo
+            }
+        });
+        
+        if(!produto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "Produto não encontrado"
+        )
+
+        return {
+            categoria_codigo: produto.categoria_codigo,
+            descricao: produto.descricao,
+            nome: produto.nome,
+            valor: produto.valor,
+            codigo: produto.codigo
+        }
+    }
+
+    async alteraProduto(produto: IProdutoEntity): Promise<IProdutoEntity> {
+        
+        const existeProduto = !!(await this.prisma.produto.findUnique({
+            where: {
+                codigo: produto.codigo
+            }
+        }));
+        
+        if(!existeProduto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "O produto não existe"
+        );
+
+        const produtoAtualizado = await this.prisma.produto.update({
             data: {
                 nome: produto.nome,
                 descricao: produto.descricao,
@@ -87,60 +83,41 @@ export class PrismaProdutoRepository implements IProdutoRepository {
                 categoria_codigo: produto.categoria_codigo
             },
             where: {
-                codigo : id!
+                codigo : produto.codigo!
             }
         })
-
-        return product;
+        
+        return produtoAtualizado;
 
     }
 
-    async buscaProdutoPorCodigo(codigo: number):  Promise<Produto> {
-
-        const produto = await this.prisma.produto.findUnique({
+    buscaProdutoPorCategoria(categoriaCodigo: ECategoria): Promise<IProdutoEntity[]> {
+        const produtos = this.prisma.produto.findMany({
             where: {
-                codigo: codigo
+                categoria_codigo: categoriaCodigo
             }
         });
 
-        if (produto) {
-            return new Produto(produto.codigo, produto.nome, produto.descricao, produto.valor, produto.categoria_codigo);
-        } else {
-            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
-        }
-
+        return produtos;
     }
 
-    async buscaProdutoPorCategoria(categoria: ECategoria): Promise<Produto[]> {
+    async registraProduto(produto: IProdutoEntity): Promise<IProdutoEntity> {
 
-        const produto = await this.prisma.produto.findMany({
+        const produtoJaExiste = (await this.prisma.produto.count({
             where: {
-                categoria_codigo: categoria
+                nome: produto.nome
             }
+        })) > 0;
+
+        if(produtoJaExiste) throw new CustomError(
+            CustomErrorType.DuplicatedItem,
+            "Um produto cadastrado com esse nome já existe"
+        );
+        
+        const produtoInserido = await this.prisma.produto.create({
+            data: produto
         });
 
-        return produto;
+        return produtoInserido;
     }
-
-    async deletaProduto(id: number): Promise<Produto> {
-
-        const existe = this.buscaProdutoPorCodigo(id);
-
-        if (!existe) {
-            throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Dados não encontrados, tente novamente");
-        }
-
-        const deletado = await this.prisma.produto.delete({
-            where: {codigo: id!}
-        })
-
-        return deletado;
-
-    }
-
-    compareProducts(a: ProdutoDTO, b: Produto) {
-        return a.nome === b.nome && a.descricao === b.descricao && a.categoria_codigo === b.categoria_codigo && a.valor === b.valor;
-
-    }
-*/
 }

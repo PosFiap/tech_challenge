@@ -1,17 +1,18 @@
 import { IClienteRepository } from './IClienteRepository'
 import {
-  IAtualizaClienteUseCase,
-  IRegistraClienteUseCase,
-  IListaClientesUseCase,
-  IListaClienteCPFUseCase,
-  IDeletaClienteUseCase
-} from './IRegistraClienteUseCase'
+    IAtualizaClienteUseCase,
+    IRegistraClienteUseCase,
+    IDeletaClienteUseCase,
+    IBuscaClienteCPFUseCase,
+    IListaClientesUseCase
+} from "./IRegistraClienteUseCase";
 
-export interface IClienteService extends
-  IRegistraClienteUseCase,
-  IAtualizaClienteUseCase,
-  IListaClientesUseCase,
-  IListaClienteCPFUseCase,
-  IDeletaClienteUseCase {
-  clienteRepository: IClienteRepository
+export interface IClienteService extends 
+    IRegistraClienteUseCase, 
+    IAtualizaClienteUseCase,
+    IBuscaClienteCPFUseCase,
+    IListaClientesUseCase,
+    IDeletaClienteUseCase
+{
+    clienteRepository: IClienteRepository;
 }

@@ -1,108 +1,125 @@
-import { validaCategoria } from '../../common/value-objects/ECategoria'
-import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from '../dto/AlteraProdutoDTO'
-import { ItemListaProdutoCategoriaDTO, ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from '../dto/ListaProdutoCategoriaDTO'
-import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from '../dto/RegistraProdutoDTO'
-import { IProdutoEntity } from '../entity/IProdutoEntity'
-import { Produto } from '../model/Produto'
-import { IProdutoRepository } from '../ports/IProdutoRepository'
-import { IProdutoService } from '../ports/IProdutoService'
+import { CustomError, CustomErrorType } from "../../../utils/customError";
+import { validaCategoria } from "../../common/value-objects/ECategoria";
+import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from "../dto/AlteraProdutoDTO";
+import { BuscarProdutoDTO, BuscarProdutoOutputDTO } from "../dto/BuscarProdutoDTO";
+import { DeletaProdutoDTO, DeletaProdutoOutputDTO } from "../dto/DeletaProdutoDTO";
+import { ItemListaProdutoCategoriaDTO, ListaProdutoCategoriaDTO, ListaProdutoCategoriaOutputDTO } from "../dto/ListaProdutoCategoriaDTO";
+import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
+import { IProdutoEntity } from "../entity/IProdutoEntity";
+import { Produto } from "../model/Produto";
+import { IProdutoRepository } from "../ports/IProdutoRepository";
+import { IProdutoService } from "../ports/IProdutoService";
 
 export class ProdutoService implements IProdutoService {
-  constructor (
-    readonly produtoRepository: IProdutoRepository
-  ) {}
 
-  async alteraProduto (data: AlteraProdutoDTO): Promise<AlteraProdutoOutputDTO> {
-    const produto = new Produto(
-      data.codigo,
-      data.nome,
-      data.descricao,
-      data.valor,
-      data.categoriaCodigo
-    )
+    constructor(
+        readonly produtoRepository: IProdutoRepository
+    ){}
 
-    const produtoEntity: IProdutoEntity = {
-      categoria_codigo: produto.categoria_codigo,
-      descricao: produto.descricao,
-      nome: produto.nome,
-      valor: produto.valor,
-      codigo: produto.codigo!
-    }
+    async deletaProduto(data: DeletaProdutoDTO): Promise<DeletaProdutoOutputDTO> {
+        const codigoProduto = data.codigo;
 
-    const produtoInserido = await this.produtoRepository.alteraProduto(produtoEntity)
+        const produto = await this.produtoRepository.deletaProduto(codigoProduto);
 
-    return new AlteraProdutoOutputDTO(
-      produtoInserido.codigo!,
-      produtoInserido.nome,
-      produtoInserido.descricao,
-      produtoInserido.valor,
-      produtoInserido.categoria_codigo
-    )
-  }
-
-  async buscaProdutoPorCategoria (data: ListaProdutoCategoriaDTO): Promise<ListaProdutoCategoriaOutputDTO> {
-    const { codigoCategoria } = data
-    validaCategoria(codigoCategoria)
-    const produtos = await this.produtoRepository.buscaProdutoPorCategoria(codigoCategoria)
-    return new ListaProdutoCategoriaOutputDTO(
-      produtos.map((produto) => {
-        return new ItemListaProdutoCategoriaDTO(
-          produto.codigo!,
-          produto.nome,
-          produto.descricao,
-          produto.valor,
-          produto.categoria_codigo
+        if(!produto) throw new CustomError(
+            CustomErrorType.RepositoryDataNotFound,
+            "Produto não existe"
         )
-      })
-    )
-  }
 
-  async registraProduto (data: RegistraProdutoDTO): Promise<RegistraProdutoOutputDTO> {
-    const produto = new Produto(
-      null,
-      data.nome,
-      data.descricao,
-      data.valor,
-      data.categoriaCodigo
-    )
-
-    const produtoEntity: IProdutoEntity = {
-      categoria_codigo: produto.categoria_codigo,
-      descricao: produto.descricao,
-      nome: produto.nome,
-      valor: produto.valor
+        return new DeletaProdutoOutputDTO(
+            produto.codigo!,
+            produto.nome,
+            produto.descricao,
+            produto.valor,
+            produto.categoria_codigo
+        )
     }
 
-    const produtoInserido = await this.produtoRepository.registraProduto(produtoEntity)
+    async buscaProduto(data: BuscarProdutoDTO): Promise<BuscarProdutoOutputDTO> {
+        const codigoProduto = data.codigo;
 
-    return new RegistraProdutoOutputDTO(
-      produtoInserido.codigo!,
-      produtoInserido.nome,
-      produtoInserido.descricao,
-      produtoInserido.valor,
-      produtoInserido.categoria_codigo
-    )
-  }
+        const produto = await this.produtoRepository.buscaProdutoPorCodigo(codigoProduto);
 
-  /*
-    async buscaProdutoPorCategoria(categoria: ECategoria, repository: IProdutoRepository): Promise<Produto[]> {
+        return new BuscarProdutoOutputDTO(
+            produto.codigo!,
+            produto.nome,
+            produto.descricao,
+            produto.valor,
+            produto.categoria_codigo
+        )
+
     }
 
-    async buscaProdutoPorId(id: number, repository: IProdutoRepository): Promise<ProdutoDTO> {
+    async alteraProduto(data: AlteraProdutoDTO): Promise<AlteraProdutoOutputDTO> {
+        const produto = new Produto(
+            data.codigo,
+            data.nome,
+            data.descricao,
+            data.valor,
+            data.categoriaCodigo
+        );
 
-        const produto = await repository.buscaProdutoPorCodigo(id);
+        const produtoEntity: IProdutoEntity = {
+            categoria_codigo: produto.categoria_codigo,
+            descricao: produto.descricao,
+            nome: produto.nome,
+            valor: produto.valor,
+            codigo: produto.codigo!
+        }
+        
+        const produtoInserido = await this.produtoRepository.alteraProduto(produtoEntity);
 
-        return produto;
+        return new AlteraProdutoOutputDTO(
+            produtoInserido.codigo!,
+            produtoInserido.nome,
+            produtoInserido.descricao,
+            produtoInserido.valor,
+            produtoInserido.categoria_codigo
+        )
     }
 
-    async atualizaProduto(id: number, produto: ProdutoDTO, repository: IProdutoRepository): Promise<Produto> {
-        const produtoAtualizado = await repository.atualizaProduto(id, produto);
-
-        return produtoAtualizado;
+    async buscaProdutoPorCategoria(data: ListaProdutoCategoriaDTO): Promise<ListaProdutoCategoriaOutputDTO> {
+        const { codigoCategoria } = data;
+        validaCategoria(codigoCategoria);
+        const produtos = await this.produtoRepository.buscaProdutoPorCategoria(codigoCategoria);
+        return new ListaProdutoCategoriaOutputDTO(
+            produtos.map((produto) => {
+                return new ItemListaProdutoCategoriaDTO(
+                    produto.codigo!,
+                    produto.nome,
+                    produto.descricao,
+                    produto.valor,
+                    produto.categoria_codigo
+                )
+            })
+        );
     }
 
-    async deletaProduto(id: number, repository: IProdutoRepository): Promise<Produto> {
-        return await repository.deletaProduto(id);
+    async registraProduto(data: RegistraProdutoDTO): Promise<RegistraProdutoOutputDTO> {
 
-    } */
+        const produto = new Produto(
+            null,
+            data.nome,
+            data.descricao,
+            data.valor,
+            data.categoriaCodigo
+        );
+
+        const produtoEntity: IProdutoEntity = {
+            categoria_codigo: produto.categoria_codigo,
+            descricao: produto.descricao,
+            nome: produto.nome,
+            valor: produto.valor
+        }
+        
+        const produtoInserido = await this.produtoRepository.registraProduto(produtoEntity);
+
+        return new RegistraProdutoOutputDTO(
+            produtoInserido.codigo!,
+            produtoInserido.nome,
+            produtoInserido.descricao,
+            produtoInserido.valor,
+            produtoInserido.categoria_codigo
+        )
+    }
 }

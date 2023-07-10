@@ -2,22 +2,27 @@ import { CustomError, CustomErrorType } from '../../../utils/customError'
 import { ECategoria } from '../../common/value-objects/ECategoria'
 
 export class AlteraProdutoDTO {
-  constructor (
-    readonly codigo: number,
-    readonly nome: string,
-    readonly descricao: string,
-    readonly valor: number,
-    readonly categoriaCodigo: ECategoria
-  ) {
-    this.validaCodigoCategoria()
-    this.validaDescricao()
-    this.validaNome()
-    this.validaValor()
-  }
+    constructor(
+        readonly codigo: number,
+        readonly nome: string,
+        readonly descricao: string,
+        readonly valor: number,
+        readonly categoriaCodigo: ECategoria,
+    ){
+        this.validaCodigo();
+        this.validaCodigoCategoria();
+        this.validaDescricao();
+        this.validaNome();
+        this.validaValor();
+    }
 
-  validaDescricao (): void {
-    if (!this.descricao) throw new CustomError(CustomErrorType.InvalidInput, 'Descrição inválida')
-  }
+    validaCodigo() {
+        if(!this.codigo || isNaN(this.codigo)) throw new CustomError(CustomErrorType.InvalidInput, "Código inválido");
+    }
+
+    validaDescricao() {
+        if(!this.descricao) throw new CustomError(CustomErrorType.InvalidInput, "Descrição inválida");
+    }
 
   validaNome (): void {
     if (!this.nome) throw new CustomError(CustomErrorType.InvalidInput, 'Nome inválido')

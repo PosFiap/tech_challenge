@@ -1,5 +1,3 @@
-import { Either } from '../../utils'
-
 export interface IPagamentoQrCodeController {
-  gerarPagamentoQrCode (codigoPedido: number): Promise<Either<string, string>>
+  gerarPagamentoQrCode (codigoPedido: number): Promise<string>
 }

@@ -1,5 +1,4 @@
-import { ICheckoutService, type CheckoutService } from '../../../modules/pagamento'
-import { Either, makeSucesso } from '../../../utils'
+import { ICheckoutService } from '../../../modules/pagamento'
 import { IPagamentoQrCodeController } from '../IPagamentoQrCodeController'
 import { PagamentoQrCodeController } from '../PagamentoQrCodeController'
 
@@ -8,13 +7,12 @@ interface SutTypes {
   checkoutService: ICheckoutService<string>
 }
 
-// @ts-expect-error apenas implementando um mock sem todas propriedades
-class CheckotServiceMock<S> implements CheckoutService<S> {
-  async atualizaStatusPedidoPago (_codigo: number): Promise<Either<string, boolean>> {
+class CheckotServiceMock<S> implements ICheckoutService<S> {
+  async atualizaStatusPedidoPago (_codigo: number): Promise<boolean> {
     throw new Error('Method not implemented.')
   }
 
-  async checkoutQrCode (_codigoPedido: number): Promise<Either<string, S>> {
+  async checkoutQrCode (_codigoPedido: number): Promise<S> {
     throw new Error('Method not implemented.')
   }
 }
@@ -38,11 +36,12 @@ describe('PagamentoQeCodeAdapter', () => {
     it('Espero receber string para gerar qrcode do pagamento', async () => {
       const { sut, checkoutService } = makeSut()
       const checkoutSpy = jest.spyOn(checkoutService, 'checkoutQrCode')
-        .mockResolvedValueOnce(makeSucesso('valor para gerar QrCode'))
+        .mockResolvedValueOnce('valor para gerar QrCode')
       const result = await sut.gerarPagamentoQrCode(0)
+      console.log(result)
       expect(checkoutSpy).toBeCalledTimes(1)
       expect(checkoutSpy).toBeCalledWith(0)
-      expect(result.sucesso).toBe('valor para gerar QrCode')
+      expect(result).toBe('valor para gerar QrCode')
     })
   })
 })

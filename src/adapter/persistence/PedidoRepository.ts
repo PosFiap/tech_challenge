@@ -16,7 +16,6 @@ export class PrismaPedidoRepository implements IPedidoRepository {
         status: pedido.status,
         cpf_cliente: pedido.CPF,
         ProdutoPedido: {
-          // @ts-expect-error
           createMany: {
             data: pedido.produtosPedido.map((produto) => ({
               valor_produto: produto.valor,

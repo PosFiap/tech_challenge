@@ -1,17 +1,16 @@
-
 import { CustomError, CustomErrorType } from '../../../utils/customError'
 import { CommonDTO } from '../../common/dto/CommonDTO'
 import { CPF as CPFVO } from '../../common/value-objects/CPF'
 
-export class DeletaClienteDTO extends CommonDTO {
-  private readonly _CPF: CPFVO
-  constructor (
-    CPF: string
-  ) {
-    super()
-    this._CPF = new CPFVO(CPF)
-    this.validaDTO()
-  }
+export class BuscaClienteDTO extends CommonDTO {
+    private readonly _CPF: CPFVO;
+    constructor(
+        CPF: string,
+    ){
+        super();
+        this._CPF = new CPFVO(CPF);
+        this.validaDTO();
+    }
 
   public get CPF (): string {
     return this._CPF.valor
@@ -24,19 +23,19 @@ export class DeletaClienteDTO extends CommonDTO {
   }
 }
 
-export class DeletaClienteOutputDTO {
-  private readonly _CPF: CPFVO
-  constructor (
-    CPF: string,
-    readonly email: string,
-    readonly nome: string
-  ) {
-    this._CPF = new CPFVO(CPF)
-  }
+export class BuscaClienteOutputDTO {
+    private _CPF: CPFVO;
+    constructor(
+        CPF: string,
+        readonly email: string,
+        readonly nome: string
+    ) {
+        this._CPF = new CPFVO(CPF);
+    }
 
-  public get CPF (): string {
-    return this._CPF.valor
-  }
+    public get CPF() {
+        return this._CPF.valor;
+    }
 
     public toJSON = () : any => {
         return {
@@ -44,5 +43,5 @@ export class DeletaClienteOutputDTO {
             nome: this.nome,
             email: this.email
         };
+    }
   }
-}

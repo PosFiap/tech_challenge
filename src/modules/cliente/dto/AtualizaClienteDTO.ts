@@ -40,11 +40,11 @@ export class AtualizaClienteOutputDTO {
     return this._CPF.valor
   }
 
-  public toJSON = (): any => {
-    return {
-      cpf: this.CPF,
-      nome: this.nome,
-      email: this.email
-    }
+    public toJSON = () : any => {
+        return {
+            CPF: this.CPF,
+            nome: this.nome,
+            email: this.email
+        };
   }
 }

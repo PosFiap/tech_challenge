@@ -1,28 +1,29 @@
-from node as make
+from node:lts-slim as make
 
 workdir /usr/src/app
 
-copy package*.json ./
+run apt update
+run apt install openssl -y
 
 copy . .
 
-# run npm run setup
 run npm ci
-
 run npm run build
 
-from node:slim as production
+from node:lts-slim as production
+
+run apt update
+run apt install openssl -y
 
 env NODE_ENV production
 env PORT 8080
 
 workdir /usr/src/app
 
-copy package*.json ./
-
-run npm ci --production
-
+copy --from=make /usr/src/app/package*.json ./
 copy --from=make /usr/src/app/dist ./dist
 
+run npm ci --omit=dev
+
 expose 8080
-cmd ["node", "dist/index.js"]
+cmd ["node", "dist/src/index.js"]

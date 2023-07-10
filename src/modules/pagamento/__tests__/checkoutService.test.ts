@@ -1,12 +1,12 @@
 import { EStatus } from '../../common/value-objects/EStatus'
 import { CheckoutService } from '../CheckoutService'
 import { PedidoPagamentoDTO } from '../dto'
-import { ICheckoutService, IMeioDePagamentoQR, IPagamentoPedidoRegistry } from '../ports'
+import { ICheckoutService, IMeioDePagamentoQR, IPagamentoPedidoRepository } from '../ports'
 
 interface SutTypes {
   sut: ICheckoutService<any>
   meioDePagamento: IMeioDePagamentoQR<any, any>
-  pagamentoPedidoRepository: IPagamentoPedidoRegistry
+  pagamentoPedidoRepository: IPagamentoPedidoRepository
 }
 
 class MeioDePagamentoMock implements IMeioDePagamentoQR<any, any> {
@@ -15,7 +15,7 @@ class MeioDePagamentoMock implements IMeioDePagamentoQR<any, any> {
   }
 }
 
-class PedidoPagamentoRepository implements IPagamentoPedidoRegistry {
+class PedidoPagamentoRepository implements IPagamentoPedidoRepository {
   async obterPedidoPeloCodigo (_codigo: number): Promise<PedidoPagamentoDTO> {
     throw new Error('Method not implemented.')
   }
@@ -52,7 +52,7 @@ describe('CheckoutService', () => {
       const pedidoSpy = jest.spyOn(pagamentoPedidoRepository, 'obterPedidoPeloCodigo')
         .mockResolvedValueOnce({ codigo: 0, status: 0, itensDePedido: [] })
       const res = await sut.checkoutQrCode(1)
-      expect(res.sucesso).toBe(true)
+      expect(res).toBe(true)
       expect(pedidoSpy).toBeCalledTimes(1)
       expect(pedidoSpy).toBeCalledWith(1)
       expect(meioDePagamentoSpy).toBeCalledWith({ codigo: 0, status: 0, itensDePedido: [] })
