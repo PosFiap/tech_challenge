@@ -60,3 +60,127 @@ Testes unitários utilizando o [Jest](https://jestjs.io/pt-BR/). Esses testes po
 ```bash
 $ npm run test
 ```
+
+## 🚀 API's
+Essas são as requisições exemplificada no POSTMAN
+
+Segue a collection para baixar [Tech Challenge](./Tech%20Challenge.postman_collection.json)
+
+Utilizamos a variável ```{{host_docker}} = http://localhost:8080``` que se refere a porta em que o docker está rodando
+
+segue os exemplos:
+
+(o github não permite colocar gifs acima de 5MB, então coloquei os gifs no meu drive e vou colocar o link deles aqui [Gifs](https://drive.google.com/drive/folders/119A9ZyNVMpX50Ja6MZUExgr8KJIQQTVS?usp=sharing))
+
+## Cliente
+### Cadastrar cliente
+![](https://i.imgur.com/8olwswZ.gif)
+<a href="https://i.imgur.com/8olwswZ.gif" target="_blank">cadastrar-cliente.gif</a>
+
+### Buscar clientes
+![](https://i.imgur.com/Ija8VQq.gif)
+<a href="https://i.imgur.com/Ija8VQq.gif" target="_blank">buscar-clientes.gif</a>
+
+### Buscar cliente por CPF
+passamos o CPF pela URL
+
+![](https://i.imgur.com/6uX7tm3.gif)
+<a href="https://i.imgur.com/6uX7tm3.gif" target="_blank">buscar-cliente-por-cpf.gif</a>
+
+### Atualizar cliente
+![](https://i.imgur.com/oMjOePo.gif)
+<a href="https://i.imgur.com/oMjOePo.gif" target="_blank">atualizar-cliente.gif</a>
+
+### Deletar cliente
+passamos o CPF pela URL
+
+![](https://i.imgur.com/OBh9IOC.gif)
+<a href="https://i.imgur.com/OBh9IOC.gif" target="_blank">deletar-cliente.gif</a>
+
+## Produto
+
+### Criar produto
+
+![](https://i.imgur.com/tlIQdN3.gif)
+<a href="https://i.imgur.com/tlIQdN3.gif" target="_blank">criar-produto.gif</a>
+
+### Buscar produto por categoria
+
+Buscar na url o ```codigo_categoria``` passando a categoria cadastrada
+
+![](https://i.imgur.com/dhyA9Kk.gif)
+<a href="https://i.imgur.com/dhyA9Kk.gif" target="_blank">buscar-produto-por-categoria.gif</a>
+
+### Buscar produto por ID
+
+Buscar na url o ```id``` passando código do produto
+
+![](https://i.imgur.com/iGAXjHl.gif)
+<a href="https://i.imgur.com/iGAXjHl.gif" target="_blank">buscar-produto-por-id.gif</a>
+
+### Deletar produto por ID
+
+Buscar na url o ```id``` passando código do produto
+
+![](https://i.imgur.com/7Fwutv7.gif)
+<a href="https://i.imgur.com/7Fwutv7.gif" target="_blank">deletar-produto-por-id.gif</a>
+
+
+### Atualizar produto
+
+![](https://i.imgur.com/5uyiAuW.gif)
+<a href="https://i.imgur.com/5uyiAuW.gif" target="_blank">atualizar-produto.gif</a>
+
+
+## Pedido
+
+### Criar pedido
+
+Caso informe um CPF, é necessário informar um que já exista, por isso buscamos pela lista de clientes.
+
+Enviamos um array de códigos dos pedidos, como no exemplo o código 5 se referia a Batata Fritae o código 6 a coca cola (informação buscada no endpoint "Busca Produto por categoria" passando o código de categoria 2)
+
+![](https://i.imgur.com/qFptW11.gif)
+<a href="https://i.imgur.com/qFptW11.gif" target="_blank">criar-pedido.gif</a>
+
+### Lista pedidos
+
+![](https://i.imgur.com/ydB9egq.gif)
+<a href="https://i.imgur.com/ydB9egq.gif" target="_blank">lista-pedidos.gif</a>
+
+## Atualiza Status do Pedido para Em Preparação
+
+Endpoint responsável para atualizar o status do pedido de _Recebido_ para _Em preparação_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/FGt9SDT.gif)
+<a href="https://i.imgur.com/FGt9SDT.gif" target="_blank">atualiza-status-do-pedido-para-em-preparacao.gif</a>
+
+
+## Atualiza Status do Pedido para Pronto
+
+Endpoint responsável para atualizar o status do pedido de _Em preparação_ para _Pronto_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/FFEinzc.gif)
+<a href="https://i.imgur.com/FFEinzc.gif" target="_blank">atualiza-status-do-pedido-para-pronto.gif</a>
+
+
+## Atualiza Status do Pedido para Finalizado
+
+Endpoint responsável para atualizar o status do pedido de _Pronto_ para _Finalizado_
+
+envia na url o ```codigoPedido``` passando código do pedido
+
+![](https://i.imgur.com/qj2HSm5.gif)
+<a href="https://i.imgur.com/qj2HSm5.gif" target="_blank">atualiza-status-do-pedido-para-finalizado.gif</a>
+
+
+# Pagamento
+
+Enviamos o código do pedido e retornaria o QRcode para o pagamento
+E o status do pedido muda para "Recebido"
+
+<a href="https://i.imgur.com/bG8Efc7.gif" target="_blank">pagamento.gif</a>
