@@ -11,8 +11,7 @@ run npm ci
 
 run npm run build
 
-from node:slim as production
-
+from node as production
 env NODE_ENV production
 env PORT 8080
 

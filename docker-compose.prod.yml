@@ -9,4 +9,7 @@ services:
       - PORT=8080
       - ID_USUARIO_MP="usuario"
       - ID_EXTERNO_CAIXA="cx01"
-    command: node dist/index.js
+      - ACCESS_TOKEN_MP="asd"
+    command: sh -c "npm run setup && npm run start"
+    depends_on:
+      - postgresql
