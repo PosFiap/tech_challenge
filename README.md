@@ -64,6 +64,8 @@ $ npm run test
 ## 🚀 API's
 Essas são as requisições exemplificada no POSTMAN
 
+Link para baixar a collection do postman [Tech Challenge](Tech Challenge.postman_collection.json)
+
 Utilizamos a variável ```{{host_docker}} = http://localhost:8080``` que se refere a porta em que o docker está rodando
 
 segue os exemplos:
