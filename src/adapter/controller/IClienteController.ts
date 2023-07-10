@@ -6,7 +6,7 @@ import { IClienteService } from "../../modules/cliente/ports/IClienteService";
 import { BuscaClienteOutputDTO } from "../../modules/cliente/dto/BuscaClienteDTO";
 
 export interface IClienteController {
-    clienteService: IClienteService;
+  clienteService: IClienteService
 
     registraCliente(data: {CPF: string, nome: string, email: string}): Promise<RegistraClienteOutputDTO>;
     atualizaCliente(data: {CPF: string, nome: string, email: string}): Promise<AtualizaClienteOutputDTO>;

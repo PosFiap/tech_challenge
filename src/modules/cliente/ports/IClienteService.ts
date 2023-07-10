@@ -1,4 +1,4 @@
-import { IClienteRepository } from "./IClienteRepository";
+import { IClienteRepository } from './IClienteRepository'
 import {
     IAtualizaClienteUseCase,
     IRegistraClienteUseCase,

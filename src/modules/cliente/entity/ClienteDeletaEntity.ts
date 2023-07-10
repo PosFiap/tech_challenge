@@ -1,5 +1,5 @@
 export interface ClienteDeletaEntity {
-    cpf: string,
-    nome: string,
-    email: string
+  cpf: string
+  nome: string
+  email: string
 }

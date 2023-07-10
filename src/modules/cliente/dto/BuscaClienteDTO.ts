@@ -1,6 +1,6 @@
-import { CustomError, CustomErrorType } from "../../../utils/customError";
-import { CommonDTO } from "../../common/dto/CommonDTO";
-import { CPF as CPFVO } from "../../common/value-objects/CPF";
+import { CustomError, CustomErrorType } from '../../../utils/customError'
+import { CommonDTO } from '../../common/dto/CommonDTO'
+import { CPF as CPFVO } from '../../common/value-objects/CPF'
 
 export class BuscaClienteDTO extends CommonDTO {
     private readonly _CPF: CPFVO;
@@ -12,15 +12,15 @@ export class BuscaClienteDTO extends CommonDTO {
         this.validaDTO();
     }
 
-    public get CPF() {
-        return this._CPF.valor;
-    }
+  public get CPF (): string {
+    return this._CPF.valor
+  }
 
-    protected validaDTO(): void {
-        if (!this.CPF) {
-            throw new CustomError(CustomErrorType.InvalidInput, "CPF deve ser passado")
-        }
+  protected validaDTO (): void {
+    if (!this.CPF) {
+      throw new CustomError(CustomErrorType.InvalidInput, 'CPF deve ser passado')
     }
+  }
 }
 
 export class BuscaClienteOutputDTO {
@@ -44,4 +44,4 @@ export class BuscaClienteOutputDTO {
             email: this.email
         };
     }
-}
+  }

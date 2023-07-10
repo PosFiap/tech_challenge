@@ -1,6 +1,5 @@
-import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from "../dto/AlteraProdutoDTO";
-import { RegistraProdutoDTO, RegistraProdutoOutputDTO } from "../dto/RegistraProdutoDTO";
+import { AlteraProdutoDTO, AlteraProdutoOutputDTO } from '../dto/AlteraProdutoDTO'
 
 export interface IAlteraProdutoUseCase {
-    alteraProduto(data: AlteraProdutoDTO): Promise<AlteraProdutoOutputDTO>;
+  alteraProduto(data: AlteraProdutoDTO): Promise<AlteraProdutoOutputDTO>
 }

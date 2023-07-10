@@ -1,5 +1,5 @@
-import { CustomError, CustomErrorType } from "../../../utils/customError";
-import { ECategoria } from "../../common/value-objects/ECategoria";
+import { CustomError, CustomErrorType } from '../../../utils/customError'
+import { ECategoria } from '../../common/value-objects/ECategoria'
 
 export class AlteraProdutoDTO {
     constructor(
@@ -24,40 +24,40 @@ export class AlteraProdutoDTO {
         if(!this.descricao) throw new CustomError(CustomErrorType.InvalidInput, "Descrição inválida");
     }
 
-    validaNome() {
-        if(!this.nome) throw new CustomError(CustomErrorType.InvalidInput, "Nome inválido");
-    }
+  validaNome (): void {
+    if (!this.nome) throw new CustomError(CustomErrorType.InvalidInput, 'Nome inválido')
+  }
 
-    validaValor() {
-        if(this.valor == null || isNaN(this.valor)) {
-            throw new CustomError(CustomErrorType.InvalidInput, "Valor inválido");
-        }
+  validaValor (): void {
+    if (this.valor == null || isNaN(this.valor)) {
+      throw new CustomError(CustomErrorType.InvalidInput, 'Valor inválido')
     }
+  }
 
-    validaCodigoCategoria() {
-        if(this.categoriaCodigo == null || isNaN(this.categoriaCodigo)) {
-            throw new CustomError(CustomErrorType.InvalidInput, "Código de categoria inválido");
-        }
+  validaCodigoCategoria (): void {
+    if (this.categoriaCodigo == null || isNaN(this.categoriaCodigo)) {
+      throw new CustomError(CustomErrorType.InvalidInput, 'Código de categoria inválido')
     }
+  }
 }
 
 export class AlteraProdutoOutputDTO {
-    constructor(
-        readonly codigo: number,
-        readonly nome: string,
-        readonly descricao: string,
-        readonly valor: number,
-        readonly categoriaCodigo: ECategoria,
-   ){}
+  constructor (
+    readonly codigo: number,
+    readonly nome: string,
+    readonly descricao: string,
+    readonly valor: number,
+    readonly categoriaCodigo: ECategoria
+  ) {}
 
-   toJSON() {
-        return {
-            codigo: this.codigo,
-            nome: this.nome,
-            descricao: this.descricao,
-            valor: this.valor,
-            categoria_codigo: this.categoriaCodigo,
-            categoria: ECategoria[this.categoriaCodigo]
-        }
-   }
+  toJSON (): Record<string, any> {
+    return {
+      codigo: this.codigo,
+      nome: this.nome,
+      descricao: this.descricao,
+      valor: this.valor,
+      categoria_codigo: this.categoriaCodigo,
+      categoria: ECategoria[this.categoriaCodigo]
+    }
+  }
 }

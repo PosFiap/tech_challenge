@@ -1,3 +1,3 @@
 export abstract class CommonDTO {
-    protected abstract validaDTO(): void;
+  protected abstract validaDTO (): void
 }

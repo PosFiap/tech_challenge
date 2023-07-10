@@ -1,11 +1,11 @@
-import { Response } from "express";
-import { CustomError, CustomErrorType } from "../../utils/customError"
+import { Response } from 'express'
+import { CustomError, CustomErrorType } from '../../utils/customError'
 
-export const customErrorToResponse = (err: CustomError, res: Response) => {
-    let statusCode = 500;
-    let body = {
-        mensagem: 'Erro desconhecido'
-    };
+export const customErrorToResponse = (err: CustomError, res: Response): void => {
+  let statusCode = 500
+  let body = {
+    mensagem: 'Erro desconhecido'
+  }
 
     switch(err.type) {
         case CustomErrorType.EntityViolation:
@@ -36,5 +36,5 @@ export const customErrorToResponse = (err: CustomError, res: Response) => {
             break;
     }
 
-    res.status(statusCode).json(body);
+  res.status(statusCode).json(body)
 }

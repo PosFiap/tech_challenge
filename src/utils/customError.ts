@@ -1,4 +1,4 @@
-import logger from "./LoggerFactory";
+import logger from './LoggerFactory'
 
 export enum CustomErrorType {
     "InvalidInput",
@@ -11,13 +11,12 @@ export enum CustomErrorType {
 }
 
 export class CustomError extends Error {
-  
-    constructor(readonly type: CustomErrorType, message: string) {
-      super(message);
-  
-      if (Error.captureStackTrace) {
-        logger.error(`Error type: ${CustomErrorType[type]} - message: ${message}`);
-        Error.captureStackTrace(this, CustomError)
-      }
+  constructor (readonly type: CustomErrorType, message: string) {
+    super(message)
+
+    if (Error.captureStackTrace) {
+      logger.error(`Error type: ${CustomErrorType[type]} - message: ${message}`)
+      Error.captureStackTrace(this, CustomError)
     }
   }
+}

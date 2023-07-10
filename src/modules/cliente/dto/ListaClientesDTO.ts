@@ -32,9 +32,9 @@ export class ItemListaCliente {
 }
 
 export class ListaClientesOutputDTO {
-    constructor(
-        readonly itemListaCliente: Array<ItemListaCliente>
-    ) {}
+  constructor (
+    readonly itemListaCliente: ItemListaCliente[]
+  ) {}
 
     public toJSON = () : any => {
         return {

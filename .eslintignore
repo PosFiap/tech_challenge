@@ -1,0 +1,10 @@
+
+node_modules
+jspm_packages
+
+.env
+.env.example
+
+coverage
+src/prisma/**
+
