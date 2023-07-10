@@ -1,13 +1,20 @@
-from node as make
+from node:lts-slim as make
 
 workdir /usr/src/app
+
+run apt update
+run apt install openssl -y
 
 copy . .
 
 run npm ci
 run npm run build
 
-from node as production
+from node:lts-slim as production
+
+run apt update
+run apt install openssl -y
+
 env NODE_ENV production
 env PORT 8080
 
