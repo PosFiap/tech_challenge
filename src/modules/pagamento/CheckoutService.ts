@@ -1,49 +1,44 @@
-import { CustomError, CustomErrorType, Either, isErro, makeErro, makeSucesso } from '../../utils'
+import { CustomError, CustomErrorType } from '../../utils'
 import { EStatus } from '../common/value-objects/EStatus'
 import { PedidoPagamentoDTO } from './dto'
-import { IMeioDePagamentoQR, IPagamentoPedidoRegistry } from './ports'
+import { IMeioDePagamentoQR, IPagamentoPedidoRepository } from './ports'
 import { ICheckoutService } from './ports/ICheckoutService'
 
 export class CheckoutService<S> implements ICheckoutService<S> {
   constructor (
     private readonly meioDePagamento: IMeioDePagamentoQR<PedidoPagamentoDTO, S>,
-    private readonly pedidoPagamentoRepository: IPagamentoPedidoRegistry
+    private readonly pedidoPagamentoRepository: IPagamentoPedidoRepository
   ) {
-    const valido = this.validaSeRecebeuOsParametros()
-    if (isErro(valido)) {
-      throw new CustomError(CustomErrorType.EntityViolation, valido.erro)
-    }
+    this.validaSeRecebeuOsParametros()
   }
 
-  private validaSeRecebeuOsParametros (): Either<string, boolean> {
+  private validaSeRecebeuOsParametros (): void {
     if (!this.meioDePagamento) {
-      return makeErro('meioDePagamento é requerido.')
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'meioDePagamento é requerido.')
     }
 
     if (!this.pedidoPagamentoRepository) {
-      return makeErro('pedidoPagamentoRepository é requerido.')
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'pedidoPagamentoRepository é requerido.')
     }
-
-    return makeSucesso(true)
   }
 
-  async atualizaStatusPedidoPago (codigo: number): Promise<Either<string, boolean>> {
+  async atualizaStatusPedidoPago (codigo: number): Promise<boolean> {
     try {
       await this.pedidoPagamentoRepository.atualizarStatusPedidoPago(codigo, EStatus.Recebido)
-      return makeSucesso(true)
+      return true
     } catch (error) {
-      return makeErro('Erro ao atulizar status do pedido como pago')
+      throw new CustomError(CustomErrorType.RepositoryUnknownError, (error as Error).message)
     }
   }
 
-  async checkoutQrCode (codigoPedido: number): Promise<Either<string, S>> {
-    try {
-      const pedido = await this.pedidoPagamentoRepository.obterPedidoPeloCodigo(codigoPedido)
-      const checkoutResult = await this.meioDePagamento.checkoutQrCode(pedido)
-      return makeSucesso(checkoutResult as S)
-    } catch (error) {
-      console.error(error)
-      return makeErro('Erro ao efetuar checkout')
+  async checkoutQrCode (codigoPedido: number): Promise<S> {
+    const pedido = await this.pedidoPagamentoRepository.obterPedidoPeloCodigo(codigoPedido)
+
+    if (pedido.status >= EStatus.Recebido) {
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'O pedido já passou da etapa de pagamento!')
     }
+
+    const result = await this.meioDePagamento.checkoutQrCode(pedido)
+    return result
   }
 }

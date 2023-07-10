@@ -1,5 +1,4 @@
 import { CheckoutService, ICheckoutService } from '../../modules/pagamento'
-import { Either } from '../../utils/either'
 import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
 import { HttpClientMock } from '../infra/HttpsMock'
 import { PagamentoPedidoRepository } from '../persistence/PagamendoPedidoRepository'
@@ -17,7 +16,8 @@ export class PagamentoQrCodeController implements IPagamentoQrCodeController {
     return new PagamentoQrCodeController(checkoutService)
   }
 
-  async gerarPagamentoQrCode (codigoPedido: number): Promise<Either<string, string>> {
-    return await this.checkoutService.checkoutQrCode(codigoPedido)
+  async gerarPagamentoQrCode (codigoPedido: number): Promise<string> {
+    const result = await this.checkoutService.checkoutQrCode(codigoPedido)
+    return result
   }
 }

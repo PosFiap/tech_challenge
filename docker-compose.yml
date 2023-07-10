@@ -14,7 +14,7 @@ services:
       - '8080:8080'
     depends_on:
       - postgresql
-    command: sh -c "npm run setup && npm run dev"
+    command: npm run dev
     environment:
       - DB_HOST=postgresql://posfiap:posfiap2@postgresql:5432/posfiap
       - PORT=8080

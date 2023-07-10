@@ -1,7 +1,5 @@
-import { Either } from '../../../utils'
-
 export interface ICheckoutService<S> {
-  atualizaStatusPedidoPago (codigo: number): Promise<Either<string, boolean>>
+  atualizaStatusPedidoPago (codigo: number): Promise<boolean>
 
-  checkoutQrCode (codigoPedido: number): Promise<Either<string, S>>
+  checkoutQrCode (codigoPedido: number): Promise<S>
 }
