@@ -2,7 +2,7 @@ import { CustomError, CustomErrorType } from "../../../utils/customError";
 import { CommonDTO } from "../../common/dto/CommonDTO";
 import { CPF as CPFVO } from "../../common/value-objects/CPF";
 
-export class ListaClienteDTO extends CommonDTO {
+export class BuscaClienteDTO extends CommonDTO {
     private readonly _CPF: CPFVO;
     constructor(
         CPF: string,
@@ -23,24 +23,25 @@ export class ListaClienteDTO extends CommonDTO {
     }
 }
 
-export class ItemListaCliente {
+export class BuscaClienteOutputDTO {
+    private _CPF: CPFVO;
     constructor(
-        readonly cpf: string,
+        CPF: string,
         readonly email: string,
         readonly nome: string
-    ){}
-}
+    ) {
+        this._CPF = new CPFVO(CPF);
+    }
 
-export class ListaClienteOutputDTO {
-    constructor(
-        readonly cliente: ItemListaCliente
-    ) {}
+    public get CPF() {
+        return this._CPF.valor;
+    }
 
     public toJSON = () : any => {
         return {
-            cpf: this.cliente.cpf,
-            nome: this.cliente.nome,
-            email: this.cliente.email
-        }
+            CPF: this.CPF,
+            nome: this.nome,
+            email: this.email
+        };
     }
 }

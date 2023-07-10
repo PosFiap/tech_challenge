@@ -5,9 +5,9 @@ import { ClienteAtualizaEntity } from "./entity/ClienteAtualizaEntity"
 import { Cliente } from "./model/Cliente";
 import { IClienteRepository } from "./ports/IClienteRepository";
 import { IClienteService } from "./ports/IClienteService";
-import { ListaClientesOutputDTO } from "./dto/ListaClientesDTO";
-import { ListaClienteDTO, ListaClienteOutputDTO } from "./dto/ListaClienteDTO";
+import { ItemListaCliente, ListaClienteDTO, ListaClientesOutputDTO } from "./dto/ListaClientesDTO";
 import { DeletaClienteDTO, DeletaClienteOutputDTO } from './dto/DeletaClienteDTO'
+import { BuscaClienteDTO, BuscaClienteOutputDTO } from "./dto/BuscaClienteDTO";
 
 export class ClienteService implements IClienteService {
   
@@ -46,13 +46,15 @@ export class ClienteService implements IClienteService {
         return new AtualizaClienteOutputDTO(result.cpf, result.email, result.nome);
     }
     async listaCliente(): Promise<ListaClientesOutputDTO> {
-        const result = await this.clienteRepository.listaCliente()        
-        return new ListaClientesOutputDTO(result)
+        const clientes = await this.clienteRepository.listaCliente()        
+        return new ListaClientesOutputDTO(
+            clientes.map((cliente) => new ItemListaCliente(cliente.cpf, cliente.email, cliente.nome))
+        )
     }
 
-    async listaClienteCPF(data: ListaClienteDTO): Promise<ListaClienteOutputDTO> {
-        const result = await this.clienteRepository.listaClienteCPF(data.CPF)
-        return new ListaClienteOutputDTO(result)
+    async buscaClienteCPF(data: BuscaClienteDTO): Promise<BuscaClienteOutputDTO> {
+        const cliente = await this.clienteRepository.listaClienteCPF(data.CPF)
+        return new BuscaClienteOutputDTO(cliente.cpf, cliente.email, cliente.nome);
     }
 
     async deletaCliente(data: DeletaClienteDTO): Promise<DeletaClienteOutputDTO> {//DTO-DELETE        

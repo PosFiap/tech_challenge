@@ -2,13 +2,13 @@ import { ClienteService } from "../../modules/cliente";
 
 import { AtualizaClienteDTO, AtualizaClienteOutputDTO } from "../../modules/cliente/dto/AtualizaClienteDTO";
 import { RegistraClienteDTO, RegistraClienteOutputDTO } from "../../modules/cliente/dto/RegistraClienteDTO";
-import { ListaClientesOutputDTO } from "../../modules/cliente/dto/ListaClientesDTO";
-import { ListaClienteDTO, ListaClienteOutputDTO } from "../../modules/cliente/dto/ListaClienteDTO";
+import { ListaClienteDTO, ListaClientesOutputDTO } from "../../modules/cliente/dto/ListaClientesDTO";
 import { DeletaClienteDTO, DeletaClienteOutputDTO } from "../../modules/cliente/dto/DeletaClienteDTO";
 
 import { IClienteService } from "../../modules/cliente/ports/IClienteService";
 import { PrismaClienteRepository } from "../persistence/ClienteRepository";
 import { IClienteController } from "./IClienteController";
+import { BuscaClienteDTO, BuscaClienteOutputDTO } from "../../modules/cliente/dto/BuscaClienteDTO";
 
 export class ClienteController implements IClienteController {
     private constructor(
@@ -57,10 +57,10 @@ export class ClienteController implements IClienteController {
         }
     }
     
-    async listaClienteCPF(cpf: string): Promise<ListaClienteOutputDTO> {
+    async buscaClienteCPF(cpf: string): Promise<BuscaClienteOutputDTO> {
        try {
-            const cliente = new ListaClienteDTO(cpf)
-            const result = await this.clienteService.listaClienteCPF(cliente);        
+            const cliente = new BuscaClienteDTO(cpf)
+            const result = await this.clienteService.buscaClienteCPF(cliente);        
             return result;
        } catch (err) {
             console.error(err)

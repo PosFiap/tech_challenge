@@ -42,7 +42,7 @@ export class AtualizaClienteOutputDTO {
 
     public toJSON = () : any => {
         return {
-            cpf: this.CPF,
+            CPF: this.CPF,
             nome: this.nome,
             email: this.email
         };

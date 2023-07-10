@@ -75,7 +75,7 @@ export class PedidoHTTP {
                         status: pedido.status,
                         valorTotal: pedido.valorTotal,
                         quantidadeItens: pedido.quantidadeProdutosPedido,
-                        itens: pedido.produtosPedido
+                        produtos: pedido.produtosPedido
                     }
                 }));
             } catch (err) {

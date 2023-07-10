@@ -53,7 +53,7 @@ export class ClienteHTTP {
       this.router.get('/:cpf', async (req, res) => {
         const { cpf } = req.params;
         try {
-          const resultado = await this.clienteController.listaClienteCPF(cpf);
+          const resultado = await this.clienteController.buscaClienteCPF(cpf);
           res.status(200).json(resultado);
           
         } catch (err) {
