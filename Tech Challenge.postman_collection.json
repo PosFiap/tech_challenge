@@ -1,0 +1,600 @@
+{
+	"info": {
+		"_postman_id": "63ba9395-8dc2-4d10-bb97-128ba77dc4ba",
+		"name": "Tech Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14064799"
+	},
+	"item": [
+		{
+			"name": "cliente",
+			"item": [
+				{
+					"name": "Cadastro do Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"CPF\": \"40239591038\", \n    \"email\": \"carlos@email.com\",\n    \"nome\": \"Carlos\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/cliente",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"cliente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/cliente",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"cliente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente por CPF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/cliente/40239591038",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"cliente",
+								"40239591038"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/cliente/40239591038",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"cliente",
+								"40239591038"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"CPF\": \"40239591038\",\r\n    \"nome\": \"fabio@email.com\",\r\n    \"email\": \"Fabio\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/cliente/",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"cliente",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "produto",
+			"item": [
+				{
+					"name": "Criar Novo Produto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Banana Frita\",\n    \"descricao\": \"banana frita salgada\",\n    \"valor\": 12.99,\n    \"categoria_codigo\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/produto",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"produto"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Salva um Novo Produto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nome\": \"Batata Palha\",\n    \"descricao\": \"\",\n    \"valor\": \"150\",\n    \"categoria_codigo\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/produto",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"produto"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "59"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b-xtlO0rl8FDNy9IBevfsTN1NgT+I\""
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 06 Jul 2023 23:03:11 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 201,\n    \"message\": \"Novo Produto inserido com sucesso!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar Produto por Categoria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/produto?codigo_categoria=2",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"produto"
+							],
+							"query": [
+								{
+									"key": "codigo_categoria",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Buscar Produto por Categoria",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/produto?categoria=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"produto"
+									],
+									"query": [
+										{
+											"key": "categoria",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "165"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"a5-3OaLzMmkVXECSqffd9qEzULhdxk\""
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 06 Jul 2023 22:58:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"codigo\": 0,\n        \"nome\": \"x-salsicha\",\n        \"descricao\": \"\",\n        \"valor\": 12.9,\n        \"categoria_codigo\": 0\n    },\n    {\n        \"codigo\": 1,\n        \"nome\": \"x-picanha\",\n        \"descricao\": \"\",\n        \"valor\": 32.99,\n        \"categoria_codigo\": 0\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Atualiza um Produto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Coca Cola zero\",\n    \"descricao\": \"coca cola com gelo zero\",\n    \"valor\": 4.99,\n    \"categoria_codigo\": 2,\n    \"categoria\": \"Bebida\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/produto/3",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"produto",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/produto/1",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"produto",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Buscar Produto por Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/produto/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"produto",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "89"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"59-amtaJmTiykOJm8eJenMXnXdmtSM\""
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 06 Jul 2023 20:23:21 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"codigo\": 1,\n    \"nome\": \"sorvete de pistache\",\n    \"descricao\": \"\",\n    \"valor\": 5.1,\n    \"categoria_codigo\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Deletar Produto por Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/produto/1",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"produto",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pedido",
+			"item": [
+				{
+					"name": "Criar Novo Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"CPF\": \"40239591038\",\n    \"itemDePedido\": [\n        {\n            \"codigo\": 5\n        },\n        {\n            \"codigo\": 3\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/pedido",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Pedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/pedido",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Status do Pedido para Em Preparação",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{host_docker}}/pedido/2/em-preparacao",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pedido",
+								"2",
+								"em-preparacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Status do Pedido para Pronto",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/pedido/2/pronto",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pedido",
+								"2",
+								"pronto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Status do Pedido para Finalizado",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/pedido/2/finalizado",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pedido",
+								"2",
+								"finalizado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Status do Pedido Inválido",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/pedido/5/invalido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"pedido",
+								"5",
+								"invalido"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagamento",
+			"item": [
+				{
+					"name": "Pagar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pedidoId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_docker}}/pagamento",
+							"host": [
+								"{{host_docker}}"
+							],
+							"path": [
+								"pagamento"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
