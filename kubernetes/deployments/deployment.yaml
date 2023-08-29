@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenge-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: challenge
+  template:
+    metadata:
+      labels:
+        app: challenge
+    spec:
+      # restartPolicy: Always 
+      containers:
+        - name: challenge-container
+          image: encortondo/fiap-tech-challenge:0.0.4
+          ports:
+            - containerPort: 8080  
+          command: ["npm", "run", "start"]
+          env:
+            - name: DB_HOST
+              value: "postgresql://posfiap:posfiap2@postgres-service:5432/posfiap"
+            - name: PORT
+              value: "8080"
+            - name: ID_USUARIO_MP
+              value: "usuario"
+            - name: ID_EXTERNO_CAIXA
+              value: "cx01"
+            - name: ACCESS_TOKEN_MP
+              value: "asd"
+      
+
