@@ -15,11 +15,9 @@ spec:
       containers:
         - name: postgres-container
           image: postgres
-          env:
-            - name: POSTGRES_USER
-              value: "posfiap"
-            - name: POSTGRES_PASSWORD
-              value: "posfiap2"
+          envFrom:
+            - configMapRef:
+                name: deployment-configmap
           ports:
             - containerPort: 5432
 

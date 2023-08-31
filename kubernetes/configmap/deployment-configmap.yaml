@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: deployment-configmap
+data:
+  DB_HOST: postgresql://posfiap:posfiap2@postgres-service:5432/posfiap
+  PORT: 8080
+  ID_USUARIO_MP: usuario
+  ID_EXTERNO_CAIXA: cx01
+  ACCESS_TOKEN_MP: asd
