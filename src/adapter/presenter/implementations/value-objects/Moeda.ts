@@ -1,7 +1,7 @@
-import { CustomError, CustomErrorType } from "../../../utils";
+import { CustomError, CustomErrorType } from "../../../../utils";
 
 export abstract class Moeda {
-    constructor (private readonly valor: number) {
+    constructor (readonly valor: number) {
         if(!Moeda.validaValor(valor))
             throw new CustomError(CustomErrorType.InvalidInput, 'Valor monetário inválido');
     }

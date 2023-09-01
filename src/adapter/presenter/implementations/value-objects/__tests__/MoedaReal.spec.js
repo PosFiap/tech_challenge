@@ -1,4 +1,4 @@
-const { MoedaReal } = require("./../")
+const { MoedaReal } = require("../../../../../modules/common/value-objects")
 
 describe("Testa o Objeto de Valor MoedaReal", () =>{
 
