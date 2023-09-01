@@ -3,6 +3,8 @@ import { CustomError, CustomErrorType } from "../../utils/customError";
 import { customErrorToResponse } from "./error-parser";
 import { IPedidoController } from "../controller/IPedidoController";
 import { AtualizaStatusPedidoOutputDTO } from "../../modules/pedido";
+import { PedidoDetalhadoPresenter } from "../presenter/implementations/PedidoDetalhadoPresenter";
+import { PedidoDetalhadoPresenterFactory } from "../presenter/implementations/PedidoDetalhadoPresenterFactory";
 
 export class PedidoHTTP {
     private router: Router;
@@ -20,8 +22,10 @@ export class PedidoHTTP {
             try{
                 const resultado = await this.pedidoController.registraPedido({
                     cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
-                    produtoPedido: itemDePedido
-                });
+                    produtoPedido: itemDePedido,
+                },
+                    PedidoDetalhadoPresenterFactory
+                );
                 res.status(201).json(resultado);
             } catch (err) {
                 if( err instanceof CustomError) {

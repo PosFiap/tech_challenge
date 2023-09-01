@@ -63,10 +63,11 @@ export class PedidoService implements IPedidoService {
 
   async registraPedido (data: InserePedidoDTO): Promise<InserePedidoOutputDTO> {
     let pedidoInserido: Pedido
+    let itensDePedidoCompletos = [];
 
     try {
       // busca o produto para ter a informação de valor
-      const itensDePedidoCompletos = await Promise.all(
+      itensDePedidoCompletos = await Promise.all(
         data.produtosPedidoCodigo.map(async ({ codigo }) => {
           const produto: Produto = await this.pedidoRepository.buscaProdutoPorCodigo(codigo)
           if (!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado')
@@ -88,9 +89,10 @@ export class PedidoService implements IPedidoService {
     console.log(pedidoInserido)
 
     return new InserePedidoOutputDTO(
-      EStatus[pedidoInserido.status],
+      pedidoInserido.status,
       pedidoInserido.codigo!,
-      pedidoInserido.valorTotal
+      pedidoInserido.valorTotal,
+      itensDePedidoCompletos
     )
   }
 }
