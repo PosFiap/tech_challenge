@@ -1,6 +1,23 @@
-const { MoedaReal } = require("../../../../../modules/common/value-objects")
+const { CustomError } = require("../../../../../utils");
+const { MoedaReal } = require("./../MoedaReal");
 
 describe("Testa o Objeto de Valor MoedaReal", () =>{
+
+    it("o valor nulo deve retornar erro", () => {
+        try {
+            new MoedaReal();
+        } catch (err) {
+            expect(err).toBeInstanceOf(CustomError);
+        }
+    });
+
+    it("o valor < 0 deve retornar erro", () => {
+        try {
+            new MoedaReal(-1);
+        } catch (err) {
+            expect(err).toBeInstanceOf(CustomError);
+        }
+    });
 
     it("o valor 0 deve retornar R$ 0,00", () => {
         const moeda = new MoedaReal(0);
