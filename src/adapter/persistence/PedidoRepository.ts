@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
-import { IPedidoRepository } from '../../modules/pedido'
+import { IPedidoRepositoryGateway } from '../../modules/pedido'
 import { Pedido } from '../../modules/pedido/model/Pedido'
 import { Produto } from '../../modules/pedido/model/Produto'
 
-export class PrismaPedidoRepository implements IPedidoRepository {
+export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
   private readonly prisma: PrismaClient
 
   constructor () {

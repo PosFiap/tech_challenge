@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 import { EStatus } from '../../modules/common/value-objects/EStatus'
 import { PedidoPagamentoDTO } from '../../modules/pagamento/dto/PedidoPagamentoDTO'
-import { IPagamentoPedidoRepository } from '../../modules/pagamento/ports/IPedidoRegistry'
+import { IPagamentoRepositoryGateway } from '../../modules/pagamento/ports/IPagamentoRegistryGateway'
 import { CustomError, CustomErrorType } from '../../utils'
+import { IFaturaPedido } from '../../modules/pagamento/ports/IFaturaPedido'
 
-export class PagamentoPedidoRepository implements IPagamentoPedidoRepository {
+export class PrismaPagamentoPedidoRepositoryGateway implements IPagamentoRepositoryGateway {
   private readonly prisma: PrismaClient
 
   constructor () {
@@ -59,5 +60,23 @@ export class PagamentoPedidoRepository implements IPagamentoPedidoRepository {
         }
       })
     }
+  }
+
+  async obterPedidoPelaFatura (fatura_id: number): Promise<IFaturaPedido> {
+    const fatura: any = await this.prisma.faturaPedido.findUnique({
+      where: {
+        fatura_id: fatura_id
+      },
+      include: {
+        Pedido: true
+      }
+    } as any)
+
+    if (!fatura) throw new CustomError(
+      CustomErrorType.RepositoryDataNotFound,
+      'Fatura não encontrada'
+    )
+
+    return fatura;
   }
 }

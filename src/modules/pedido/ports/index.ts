@@ -1,2 +1,2 @@
 export * from './IPedidoRepository'
-export * from './IPedidoService'
+export * from './IPedidoUseCases'

@@ -8,21 +8,21 @@ import { Pedido } from './model/Pedido'
 import { AtualizaStatusPedidoDTO } from './dto'
 import { CustomError, CustomErrorType } from '../../utils/customError'
 import { Produto } from './model/Produto'
-import { IPedidoRepository, IPedidoService } from './ports'
+import { IPedidoRepositoryGateway, IPedidoUseCases } from './ports'
 
-export class PedidoService implements IPedidoService {
-  constructor (readonly pedidoRepository: IPedidoRepository) {}
+export class PedidoUseCases implements IPedidoUseCases {
+  // constructor (readonly pedidoRepository: IPedidoRepositoryGateway) {}
 
-  async atualizaStatus (data: AtualizaStatusPedidoDTO): Promise<AtualizaStatusPedidoOutputDTO> {
+  async atualizaStatus (data: AtualizaStatusPedidoDTO, pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<AtualizaStatusPedidoOutputDTO> {
     data.validaDTO()
 
     const { codigoPedido, codigoStatus } = data
     let pedidoAtualizado
 
     try {
-      const pedido = await this.pedidoRepository.obtemPedido(codigoPedido)
+      const pedido = await pedidoRepositoryGateway.obtemPedido(codigoPedido)
       pedido.atualizaStatus(codigoStatus)
-      pedidoAtualizado = await this.pedidoRepository.atualizaPedido(pedido)
+      pedidoAtualizado = await pedidoRepositoryGateway.atualizaPedido(pedido)
     } catch (err) {
       if (err instanceof CustomError) throw err
       throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message)
@@ -35,8 +35,8 @@ export class PedidoService implements IPedidoService {
     )
   }
 
-  async listaPedidos (): Promise<ItemListaPedidoOutputDTO[]> {
-    const pedidosArmazenados = await this.pedidoRepository.listaPedidos({
+  async listaPedidos (pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<ItemListaPedidoOutputDTO[]> {
+    const pedidosArmazenados = await pedidoRepositoryGateway.listaPedidos({
       vinculaProdutos: true
     })
 
@@ -61,7 +61,7 @@ export class PedidoService implements IPedidoService {
     return listaPedidos
   }
 
-  async registraPedido (data: InserePedidoDTO): Promise<InserePedidoOutputDTO> {
+  async registraPedido (data: InserePedidoDTO, pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<InserePedidoOutputDTO> {
     let pedidoInserido: Pedido
     let itensDePedidoCompletos = [];
 
@@ -69,13 +69,13 @@ export class PedidoService implements IPedidoService {
       // busca o produto para ter a informação de valor
       itensDePedidoCompletos = await Promise.all(
         data.produtosPedidoCodigo.map(async ({ codigo }) => {
-          const produto: Produto = await this.pedidoRepository.buscaProdutoPorCodigo(codigo)
+          const produto: Produto = await pedidoRepositoryGateway.buscaProdutoPorCodigo(codigo)
           if (!produto) throw new CustomError(CustomErrorType.RepositoryDataNotFound, 'Item de pedido não encontrado')
           return produto
         })
       )
 
-      pedidoInserido = await this.pedidoRepository.registraPedido(new Pedido(
+      pedidoInserido = await pedidoRepositoryGateway.registraPedido(new Pedido(
         data.CPF,
         EStatus['Aguardando Pagamento'],
         itensDePedidoCompletos,

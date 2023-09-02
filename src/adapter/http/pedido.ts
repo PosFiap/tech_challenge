@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 import { customErrorToResponse } from "./error-parser";
-import { IPedidoController } from "../controller/IPedidoController";
-import { AtualizaStatusPedidoOutputDTO } from "../../modules/pedido";
-import { PedidoDetalhadoPresenter } from "../presenter/implementations/PedidoDetalhadoPresenter";
+import { IPedidoController } from "../controller/interfaces/IPedidoController";
+import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway } from "../../modules/pedido";
 import { PedidoDetalhadoPresenterFactory } from "../presenter/implementations/PedidoDetalhadoPresenterFactory";
 
 export class PedidoHTTP {
     private router: Router;
 
     constructor(
-        private readonly pedidoController: IPedidoController
+        private readonly pedidoController: IPedidoController,
+        private readonly defaultPedidoRepositoryGateway: IPedidoRepositoryGateway
     ){
         this.router = Router();
         this.setRoutes();
@@ -20,11 +20,14 @@ export class PedidoHTTP {
         this.router.post('/', async (req, res) => { 
             const { CPF, itemDePedido} = req.body;
             try{
-                const resultado = await this.pedidoController.registraPedido({
+                const registraPedidoInput = {
                     cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
                     produtoPedido: itemDePedido,
-                },
-                    PedidoDetalhadoPresenterFactory
+                };
+                const resultado = await this.pedidoController.registraPedido(
+                    registraPedidoInput,
+                    PedidoDetalhadoPresenterFactory,
+                    this.defaultPedidoRepositoryGateway
                 );
                 res.status(201).json(resultado);
             } catch (err) {
@@ -44,11 +47,11 @@ export class PedidoHTTP {
             const moveStatus = (codigoPedido:number, status: string): Promise<AtualizaStatusPedidoOutputDTO> => {
                 switch(status){
                     case "em-preparacao":
-                        return this.pedidoController.moveStatusEmPreparacao({codigoPedido})
+                        return this.pedidoController.moveStatusEmPreparacao({codigoPedido}, this.defaultPedidoRepositoryGateway)
                     case "pronto":
-                        return this.pedidoController.moveStatusPronto({codigoPedido})
+                        return this.pedidoController.moveStatusPronto({codigoPedido}, this.defaultPedidoRepositoryGateway)
                     case "finalizado":
-                        return this.pedidoController.moveStatusFinalizado({codigoPedido})
+                        return this.pedidoController.moveStatusFinalizado({codigoPedido}, this.defaultPedidoRepositoryGateway)
                 }
                 throw new CustomError(CustomErrorType.BusinessRuleViolation, "Status inválido");
             }
@@ -71,7 +74,7 @@ export class PedidoHTTP {
         
         this.router.get('/', async (req, res) => {
             try{
-                const listaPedidos = await this.pedidoController.listaPedidos();
+                const listaPedidos = await this.pedidoController.listaPedidos(this.defaultPedidoRepositoryGateway);
                 res.status(200).json(listaPedidos.map((pedido) => {
                     return {
                         CPF: pedido.CPF,
