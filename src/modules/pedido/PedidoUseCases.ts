@@ -9,6 +9,7 @@ import { AtualizaStatusPedidoDTO } from './dto'
 import { CustomError, CustomErrorType } from '../../utils/customError'
 import { Produto } from './model/Produto'
 import { IPedidoRepositoryGateway, IPedidoUseCases } from './ports'
+import { CPF } from '../common/value-objects'
 
 export class PedidoUseCases implements IPedidoUseCases {
   
@@ -98,19 +99,21 @@ export class PedidoUseCases implements IPedidoUseCases {
         data.CPF,
         EStatus['Aguardando Pagamento'],
         itensDePedidoCompletos,
+        null,
         null
-      ))
+      ));
+
     } catch (err) {
       if (err instanceof CustomError) throw err
       throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message)
     }
 
-    console.log(pedidoInserido)
-
     return new InserePedidoOutputDTO(
       pedidoInserido.status,
       pedidoInserido.codigo!,
       pedidoInserido.valorTotal,
+      pedidoInserido.CPF ? new CPF(pedidoInserido.CPF) : null,
+      pedidoInserido.dataPedido!,
       itensDePedidoCompletos
     )
   }

@@ -1,5 +1,5 @@
 import { AtualizaStatusPedidoDTO, AtualizaStatusPedidoOutputDTO, IPedidoUseCases, ItemListaPedidoOutputDTO, InserePedidoDTO, PedidoUseCases, IPedidoRepositoryGateway } from '../../modules/pedido'
-import { IPedidoController } from './interfaces/IPedidoController'
+import { IPedidoController, RegistraPedidoOutput } from './interfaces/IPedidoController'
 import { PrismaPedidoRepositoryGateway } from '../persistence/PedidoRepository'
 import { EStatus } from '../../modules/common/value-objects/EStatus'
 import { IPedidoDetalhadoPresenterJSONFormat } from '../presenter/interfaces/IPedidoDetalhadoPresenter'
@@ -62,20 +62,19 @@ export class PedidoController implements IPedidoController {
 
   async registraPedido(
       data: { cpf: string | null; produtoPedido: { codigo: number }[] },
-      pedidoDetalhadoPresenterFactory: IPedidoDetalhadoPresenterFactory,
       pedidoRepositoryGateway: IPedidoRepositoryGateway
-    ): Promise<Object> {
+    ): Promise<RegistraPedidoOutput> {
     try {
       const inputDTO = new InserePedidoDTO(data.cpf, data.produtoPedido)
       const pedidoCompleto = await this.pedidoService.registraPedido(inputDTO, pedidoRepositoryGateway);
-
-      const pedidoDetalhado = pedidoDetalhadoPresenterFactory.create(
-        pedidoCompleto.status,
+      return new RegistraPedidoOutput(
         pedidoCompleto.codigo,
+        pedidoCompleto.status,
+        pedidoCompleto.CPF,
+        pedidoCompleto.dataPedido,
         pedidoCompleto.itensPedido
       );
 
-      return pedidoDetalhado.format();
 
     } catch (err) {
       console.error(err)

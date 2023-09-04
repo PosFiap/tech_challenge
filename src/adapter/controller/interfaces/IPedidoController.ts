@@ -1,6 +1,16 @@
+import { CPF, EStatus } from '../../../modules/common/value-objects'
 import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway, IPedidoUseCases, ItemListaPedidoOutputDTO } from '../../../modules/pedido'
-import { IPedidoDetalhadoPresenterJSONFormat } from '../../presenter/interfaces/IPedidoDetalhadoPresenter'
-import { IPedidoDetalhadoPresenterFactory } from '../../presenter/interfaces/IPedidoDetalhadoPresenterFactory'
+import { Produto } from '../../../modules/pedido/model/Produto'
+
+export class RegistraPedidoOutput {
+  constructor(
+    readonly codigoPedido: number,
+    readonly status: EStatus,
+    readonly cpf: CPF | null,
+    readonly dataPedido: Date,
+    readonly produtos: Array<Produto>
+  ){}
+}
 
 export interface IPedidoController {
 
@@ -22,7 +32,6 @@ export interface IPedidoController {
 
   registraPedido(
     data: { cpf: string | null, produtoPedido: Array<{ codigo: number }> },
-    pedidoDetalhadoPresenterFactory: IPedidoDetalhadoPresenterFactory,
     pedidoRepositoryGateway: IPedidoRepositoryGateway
-  ): Promise<Object>
+  ): Promise<RegistraPedidoOutput>
 }

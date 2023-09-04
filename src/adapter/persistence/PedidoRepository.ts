@@ -31,7 +31,9 @@ export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
       pedidoInserido.cpf_cliente,
       pedidoInserido.status,
       pedido.produtosPedido,
-      pedidoInserido.codigo)
+      pedidoInserido.codigo,
+      (pedidoInserido as any).data_criacao
+    )
   }
 
   async listaPedidos (config: { vinculaProdutos: boolean }): Promise<Pedido[]> {

@@ -24,12 +24,20 @@ export class PedidoHTTP {
                     cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
                     produtoPedido: itemDePedido,
                 };
-                const resultado = await this.pedidoController.registraPedido(
+                const pedido = await this.pedidoController.registraPedido(
                     registraPedidoInput,
-                    PedidoDetalhadoPresenterFactory,
                     this.defaultPedidoRepositoryGateway
                 );
-                res.status(201).json(resultado);
+
+                const pedidoDetalhado = PedidoDetalhadoPresenterFactory.create(
+                    pedido.status,
+                    pedido.codigoPedido,
+                    pedido.produtos,
+                    pedido.dataPedido,
+                    pedido.cpf?.valor
+                  ).format();
+
+                res.status(201).json(pedidoDetalhado);
             } catch (err) {
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);

@@ -30,6 +30,8 @@ model Pedido {
   codigo        Int             @id @default(autoincrement())
   status        Int             @default(0)
   cpf_cliente   String?
+  data_criacao DateTime @default(now())
+  data_atualizacao DateTime @updatedAt @default(now())
   Cliente       Cliente?        @relation(fields: [cpf_cliente], references: [cpf])
   ProdutoPedido ProdutoPedido[]
   Fatura Fatura[]
