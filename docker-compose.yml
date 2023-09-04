@@ -18,9 +18,10 @@ services:
     environment:
       - DB_HOST=postgresql://posfiap:posfiap2@postgresql:5432/posfiap
       - PORT=8080
-      - ID_USUARIO_MP="usuario"
-      - ID_EXTERNO_CAIXA="cx01"
-      - ACCESS_TOKEN_MP="asd"
+      - ID_USUARIO_MP=216003967
+      - ID_EXTERNO_CAIXA=POS001
+      - ACCESS_TOKEN_MP=TEST-3863552458711300-062021-356aadeb2786f647d2cfeea6a6a3ab6a-216003967
+      - URL_NOTIFICATION=https://lovely-loops-beg.tunnelapp.dev/pagamento/webhook
   postgresql:
     image: postgres
     environment:
