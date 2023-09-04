@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { IPedidoRepositoryGateway } from '../../modules/pedido'
 import { Pedido } from '../../modules/pedido/model/Pedido'
 import { Produto } from '../../modules/pedido/model/Produto'
+import { EStatus } from '../../modules/common/value-objects'
 
 export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
   private readonly prisma: PrismaClient
@@ -37,7 +38,30 @@ export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
   }
 
   async listaPedidos (config: { vinculaProdutos: boolean }): Promise<Pedido[]> {
-    const options = { include: {} }
+    const options = {
+      where: {
+        OR: [
+          {
+            status: EStatus.Pronto
+          },
+          {
+            status: EStatus['Em preparação']
+          },
+          {
+            status: EStatus.Recebido
+          }
+        ]
+      },
+      orderBy: [
+        {
+          status: 'desc',
+        },
+        {
+          data_criacao: 'asc',
+        },
+      ],
+      include: {} 
+    }
     if (config.vinculaProdutos) {
       options.include = {
         ProdutoPedido: {
@@ -47,6 +71,7 @@ export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
         }
       }
     }
+    //@ts-ignore
     const pedidos = await this.prisma.pedido.findMany(options)
 
     return pedidos.map((pedido: any) => (new Pedido(
@@ -63,7 +88,8 @@ export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
           produto.categoria_codigo
         )
       }),
-      pedido.codigo
+      pedido.codigo,
+      pedido.data_criacao
     )))
   }
 

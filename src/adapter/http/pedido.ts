@@ -82,18 +82,21 @@ export class PedidoHTTP {
         
         this.router.get('/', async (req, res) => {
             try{
-                const listaPedidos = await this.pedidoController.listaPedidos(this.defaultPedidoRepositoryGateway);
-                res.status(200).json(listaPedidos.map((pedido) => {
-                    return {
-                        CPF: pedido.CPF,
-                        codigo: pedido.codigo,
-                        status: pedido.status,
-                        valorTotal: pedido.valorTotal,
-                        quantidadeItens: pedido.quantidadeProdutosPedido,
-                        produtos: pedido.produtosPedido
-                    }
-                }));
+                const listaPedidos = (await this.pedidoController.listaPedidosAndamento(this.defaultPedidoRepositoryGateway)).pedidos;
+
+                const pedidoDetalhados = listaPedidos.map((pedido) => {
+                    return PedidoDetalhadoPresenterFactory.create(
+                        pedido.status,
+                        pedido.codigoPedido,
+                        pedido.produtos,
+                        pedido.dataPedido,
+                        pedido.cpf?.valor
+                      ).format();
+                });
+
+                res.status(200).json(pedidoDetalhados);
             } catch (err) {
+                console.error(err);
                 res.status(500).json({
                     mensagem: 'Falha ao recuperar os pedidos'
                 });

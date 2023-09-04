@@ -1,5 +1,5 @@
-import { CPF, EStatus } from '../../../modules/common/value-objects'
-import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway, IPedidoUseCases, ItemListaPedidoOutputDTO } from '../../../modules/pedido'
+import { CPF, ECategoria, EStatus } from '../../../modules/common/value-objects'
+import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway, IPedidoUseCases, ItemListaPedidoAndamentoOutputDTO } from '../../../modules/pedido'
 import { Produto } from '../../../modules/pedido/model/Produto'
 
 export class RegistraPedidoOutput {
@@ -12,9 +12,30 @@ export class RegistraPedidoOutput {
   ){}
 }
 
+export class ListaPedidosAndamentoOutput {
+  constructor( readonly pedidos: ItemListaPedidosAndamentoOutput[] ) {}
+}
+
+export class ItemListaPedidosAndamentoOutput {
+    constructor(
+      readonly codigoPedido: number,
+      readonly status: EStatus,
+      readonly cpf: CPF | null,
+      readonly dataPedido: Date,
+      readonly produtos: Array<ItemListaPedidosAndamentoProdutoOutput>
+    ){}
+}
+
+export class ItemListaPedidosAndamentoProdutoOutput {
+  constructor(
+    readonly nome: string,
+    readonly valor: number,
+  ){}
+}
+
 export interface IPedidoController {
 
-  pedidoService: IPedidoUseCases
+  pedidoUseCase: IPedidoUseCases
 
   moveStatusEmPreparacao(
     data: { codigoPedido: number },
@@ -25,10 +46,11 @@ export interface IPedidoController {
   ): Promise<AtualizaStatusPedidoOutputDTO>
   moveStatusFinalizado(data: { codigoPedido: number },
     pedidoRepositoryGateway: IPedidoRepositoryGateway
-  ): Promise<AtualizaStatusPedidoOutputDTO>
-  listaPedidos(
+  ): Promise<AtualizaStatusPedidoOutputDTO>;
+
+  listaPedidosAndamento(
     pedidoRepositoryGateway: IPedidoRepositoryGateway
-  ): Promise<ItemListaPedidoOutputDTO[]>
+  ): Promise<ListaPedidosAndamentoOutput>;
 
   registraPedido(
     data: { cpf: string | null, produtoPedido: Array<{ codigo: number }> },

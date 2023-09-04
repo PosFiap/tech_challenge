@@ -1,5 +1,5 @@
 import { AtualizaStatusPedidoOutputDTO } from './dto/AtualizaStatusPedidoOutputDTO'
-import { ItemListaPedidoOutputDTO, ItemPedidoListaPedidoOutputDTO } from './dto/ListaPedidoOutputDTO'
+import { ItemListaPedidoAndamentoOutputDTO, ItemProdutoListaPedidoAndamentoOutputDTO } from './dto/ListaPedidoOutputDTO'
 import { InserePedidoDTO } from './dto/InserePedidoDTO'
 import { InserePedidoOutputDTO } from './dto/InserePedidoOutputDTO'
 import { ECategoria } from '../common/value-objects/ECategoria'
@@ -55,30 +55,32 @@ export class PedidoUseCases implements IPedidoUseCases {
     )
   }
 
-  async listaPedidos (pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<ItemListaPedidoOutputDTO[]> {
+  async listaPedidosAndamento (pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<ItemListaPedidoAndamentoOutputDTO[]> {
     const pedidosArmazenados = await pedidoRepositoryGateway.listaPedidos({
       vinculaProdutos: true
     })
 
-    const listaPedidos: ItemListaPedidoOutputDTO[] =
+    const listaPedidos: ItemListaPedidoAndamentoOutputDTO[] =
             pedidosArmazenados.map((pedido: Pedido) => {
-              const produtosPedido: ItemPedidoListaPedidoOutputDTO[] =
+              const produtosPedido: ItemProdutoListaPedidoAndamentoOutputDTO[] =
                     pedido.produtosPedido.map(produtosPedido => {
-                      return new ItemPedidoListaPedidoOutputDTO(
+                      return new ItemProdutoListaPedidoAndamentoOutputDTO(
                         produtosPedido.nome,
                         produtosPedido.valor,
                         ECategoria[produtosPedido.categoria_codigo]
                       )
                     })
 
-              return new ItemListaPedidoOutputDTO(
-                EStatus[pedido.status],
+              return new ItemListaPedidoAndamentoOutputDTO(
+                pedido.status,
                 pedido.codigo!,
                 pedido.CPF,
+                pedido.dataPedido!,
                 produtosPedido
               )
-            })
-    return listaPedidos
+            });
+
+    return listaPedidos;
   }
 
   async registraPedido (data: InserePedidoDTO, pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<InserePedidoOutputDTO> {
