@@ -8,28 +8,25 @@ export abstract class PagamentoDetalhadoPresenterFactory implements IPagamentoDe
     
     // Criada apenas por limitação da linguagem que não reconhece classes estáticas e pede implementação
     create(
-        codigoPagamento: number,
         codigoPedido: number,
         codigoFatura: string,
         situacao: EStatusPagamento,
         dataCriacao: Date,
         dataAtualizacao: Date,
-        CPFCliente?: string
+        CPFCliente: string | null
     ): IPagamentoDetalhadoPresenter {
         throw new Error("Method not implemented.");
     }
     
     static create(
-        codigoPagamento: number,
         codigoPedido: number,
         codigoFatura: string,
         situacao: EStatusPagamento,
         dataCriacao: Date,
         dataAtualizacao: Date,
-        CPFCliente?: string
+        CPFCliente: string | null
     ): IPagamentoDetalhadoPresenter {
         return new PagamentoDetalhadoPresenterJSON(
-            codigoPagamento,
             codigoPedido,
             codigoFatura,
             situacao,

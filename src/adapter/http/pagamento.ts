@@ -5,13 +5,16 @@ import { CustomError } from '../../utils'
 import { customErrorToResponse } from './error-parser'
 import { IPagamentoRepositoryGateway } from '../../modules/pagamento'
 import { PagamentoDetalhadoPresenterFactory } from '../presenter/implementations/PagamentoDetalhadoPresenterFactory'
+import { PrismaPedidoRepositoryGateway } from '../persistence/PedidoRepository'
+import { PedidoController } from '../controller/PedidoController'
+import { PedidoUseCases } from '../../modules/pedido'
 
 export class PagamentoHttp implements IHttpRoute {
   private readonly router: Router
 
   constructor (
     private readonly pagamentoController: IPagamentoQrCodeController,
-    private readonly defaultPagamentoPedidoRepositoryGateway: IPagamentoRepositoryGateway
+    private readonly defaultPagamentoRepositoryGateway: IPagamentoRepositoryGateway
   ) {
     this.router = Router()
     this.setRoutes()
@@ -28,10 +31,24 @@ export class PagamentoHttp implements IHttpRoute {
           return;
         }
 
-        const retornoPagamento = await this.pagamentoController.atualizaSituacaoPagamentoAceito(
+        const pedidoRepositoryGateway = new PrismaPedidoRepositoryGateway();
+        const pedidoUseCases = new PedidoUseCases();
+
+        const fatura = await this.pagamentoController.confirmaPagamentoEEnviaPedido(
           id_fatura,
-          PagamentoDetalhadoPresenterFactory
+          this.defaultPagamentoRepositoryGateway,
+          pedidoRepositoryGateway,
+          pedidoUseCases,
         );
+
+        const retornoPagamento = PagamentoDetalhadoPresenterFactory.create(
+          fatura.pedido_codigo,
+          fatura.fatura_id,
+          fatura.situacao,
+          fatura.data_criacao,
+          fatura.data_atualizacao,
+          fatura.pedido_cpf
+        ).format();
 
         res.status(200).json(retornoPagamento)
 
@@ -56,9 +73,9 @@ export class PagamentoHttp implements IHttpRoute {
           return;
         }
 
-        const retornoPagamento = await this.pagamentoController.atualizaSituacaoPagamentoRejeitado(
+        const retornoPagamento = await this.pagamentoController.rejeitaPagamento(
           id_fatura,
-          PagamentoDetalhadoPresenterFactory
+          this.defaultPagamentoRepositoryGateway
         );
 
         res.status(200).json(retornoPagamento)
@@ -84,7 +101,7 @@ export class PagamentoHttp implements IHttpRoute {
           return
         }
 
-        const result = await this.pagamentoController.gerarPagamentoQrCode(pedidoId, this.defaultPagamentoPedidoRepositoryGateway)
+        const result = await this.pagamentoController.gerarPagamentoQrCode(pedidoId, this.defaultPagamentoRepositoryGateway)
 
         res.status(200).json({ qrcode: result })
       } catch (err) {

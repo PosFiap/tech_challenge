@@ -184,3 +184,30 @@ Enviamos o código do pedido e retornaria o QRcode para o pagamento
 E o status do pedido muda para "Recebido"
 
 <a href="https://i.imgur.com/bG8Efc7.gif" target="_blank">pagamento.gif</a>
+
+# Casos de Uso
+
+## Módulo Pagamento
+
+### Confirmar Pagamento de Fatura
+Ação: Uma fatura que esteja com o status de pagamento como `Aguardando Pagamento` deve ter seu status de pagamento atualizado para `Pago`.
+
+Entrada: Código identificador da fatura.
+
+Saída: Um objeto contendo os dados da fatura e do pedido associado.
+
+### Rejeitar Pagamento de Fatura
+Ação: Uma fatura que esteja com o status de pagamento como `Aguardando Pagamento` deve ter seu status de pagamento atualizado para `Rejeitado`.
+
+Entrada: Código identificador da fatura.
+
+Saída: Um objeto contendo os dados da fatura e do pedido associado.
+
+## Módulo Pedido
+
+### Iniciar Preparacao do Pedido
+Ação: Um pedido que esteja com o status `Aguardando Pagamento` deve ter seu status atualizado para `Em preparação`.
+
+Entrada: Código identificador do pedido.
+
+Saída: Um objeto contendo os dados do pedido.

@@ -11,7 +11,26 @@ import { Produto } from './model/Produto'
 import { IPedidoRepositoryGateway, IPedidoUseCases } from './ports'
 
 export class PedidoUseCases implements IPedidoUseCases {
-  // constructor (readonly pedidoRepository: IPedidoRepositoryGateway) {}
+  
+  async enviaPedido(data: AtualizaStatusPedidoDTO, pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<AtualizaStatusPedidoOutputDTO> {
+    const { codigoPedido } = data;
+    let pedidoAtualizado;
+
+    try {
+      const pedido = await pedidoRepositoryGateway.obtemPedido(codigoPedido);
+      pedido.atualizaStatus(EStatus.Recebido);
+      pedidoAtualizado = await pedidoRepositoryGateway.atualizaPedido(pedido);
+    } catch (err) {
+      if (err instanceof CustomError) throw err
+      throw new CustomError(CustomErrorType.RepositoryUnknownError, (err as Error).message)
+    }
+
+    return new AtualizaStatusPedidoOutputDTO(
+      pedidoAtualizado.codigo!,
+      EStatus[pedidoAtualizado.status],
+      pedidoAtualizado.status
+    )
+  }
 
   async atualizaStatus (data: AtualizaStatusPedidoDTO, pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<AtualizaStatusPedidoOutputDTO> {
     data.validaDTO()

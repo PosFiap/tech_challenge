@@ -3,12 +3,11 @@ import { IPagamentoDetalhadoPresenter } from './IPagamentoDetalhadoPresenter';
 
 export interface IPagamentoDetalhadoPresenterFactory {
   create(
-    codigoPagamento: number,
     codigoPedido: number,
     codigoFatura: string,
     situacao: EStatusPagamento,
     dataCriacao: Date,
     dataAtualizacao: Date,
-    CPFCliente?: string
+    CPFCliente: string | null
   ): IPagamentoDetalhadoPresenter
 }

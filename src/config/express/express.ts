@@ -8,7 +8,7 @@ import { ProdutoController } from '../../adapter/controller/ProdutoController'
 import { PagamentoHttp } from '../../adapter/http/pagamento'
 import { PagamentoQrCodeController } from '../../adapter/controller/PagamentoQrCodeController'
 import { PrismaPedidoRepositoryGateway } from '../../adapter/persistence/PedidoRepository'
-import { PrismaPagamentoPedidoRepositoryGateway } from '../../adapter/persistence/PrismaPagamentoPedidoRepositoryGateway'
+import { PrismaPagamentoRepositoryGateway } from '../../adapter/gateways/repository/PrismaPagamentoRepositoryGateway'
 
 const router: Router = Router()
 
@@ -27,7 +27,7 @@ const produtoHTTP = new ProdutoHTTP(
 
 const pagamentoHttp = new PagamentoHttp(
   PagamentoQrCodeController.create(),
-  new PrismaPagamentoPedidoRepositoryGateway()
+  new PrismaPagamentoRepositoryGateway()
 )
 
 router.use('/health', (_req, res) => res.sendStatus(200))

@@ -3,13 +3,12 @@ import { IPagamentoDetalhadoPresenter } from "../interfaces/IPagamentoDetalhadoP
 
 export abstract class PagamentoDetalhadoPresenter implements IPagamentoDetalhadoPresenter {    
     constructor(
-        readonly codigoPagamento: number,
         readonly codigoPedido: number,
         readonly codigoFatura: string,
         readonly statusPagamento: EStatusPagamento,
         readonly dataCriacao: Date,
         readonly dataAtualizacao: Date,
-        readonly CPFCliente?: string,
+        readonly CPFCliente: string | null
     ){}
 
     abstract format(): Object;

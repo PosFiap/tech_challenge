@@ -1,36 +1,72 @@
 import { CustomError, CustomErrorType } from '../../utils'
 import { EStatus } from '../common/value-objects/EStatus'
 import { EStatusPagamento } from '../common/value-objects/EStatusPagamento'
-import { PedidoPagamentoDTO } from './dto'
-import { IMeioDePagamentoQR, IPagamentoRepositoryGateway } from './ports'
-import { ICheckoutService } from './ports/ICheckoutService'
-import { IFaturaPedido } from './ports/IFaturaPedido'
+import { ConfirmaPagamentoFaturaDTO, ConfirmaPagamentoFaturaOutputDTO, PedidoPagamentoDTO } from './dto'
+import { Fatura } from './model'
+import { IMeioDePagamentoQR, IPagamentoRepositoryGateway, IPagamentoUseCases } from './ports'
+import { ICheckoutService } from './ports/ICheckoutService';
 
-export class CheckoutService<S> implements ICheckoutService<S> {
+export class CheckoutService<S> implements ICheckoutService<S>, IPagamentoUseCases {
   constructor (
     private readonly meioDePagamento: IMeioDePagamentoQR<PedidoPagamentoDTO, S>,
   ) {
     this.validaSeRecebeuOsParametros()
   }
 
-  async confirmaPagamentoFatura(id_fatura: string, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<IFaturaPedido> {
-    await pagamentoRepositoryGateway.atualizarStatusFatura(id_fatura, EStatusPagamento.Pago);
-    const fatura = await pagamentoRepositoryGateway.obterPedidoPelaFatura(id_fatura);
-    return fatura;
+  async confirmaPagamentoFatura(data: ConfirmaPagamentoFaturaDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<ConfirmaPagamentoFaturaOutputDTO> {
+    const { fatura_id } = data;
+
+    let fatura: Fatura = await pagamentoRepositoryGateway.obtemFaturaPorCodigo(fatura_id);
+
+    if(!fatura) throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Não existe a fatura informada");
+    
+    if(fatura.status !== EStatusPagamento['Aguardando Pagamento'])
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, "A fatura não aguarda pagamento");
+
+    fatura = await pagamentoRepositoryGateway.atualizarStatusFatura(
+      fatura_id,
+      EStatusPagamento.Pago
+    );
+
+    return new ConfirmaPagamentoFaturaOutputDTO(
+      fatura.codigo,
+      fatura.dataCriacao,
+      fatura.dataAtualizacao,
+      fatura.status,
+      fatura.pedido.codigo,
+      fatura.pedido.CPF
+    );
   }
 
-  rejeitaPagamentoFatura(id_fatura: string, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<IFaturaPedido> {
-    throw new Error('Method not implemented.')
+  async rejeitaPagamentoFatura(data: ConfirmaPagamentoFaturaDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<ConfirmaPagamentoFaturaOutputDTO> {
+    const { fatura_id } = data;
+    
+    let fatura: Fatura = await pagamentoRepositoryGateway.obtemFaturaPorCodigo(fatura_id);
+
+    if(!fatura) throw new CustomError(CustomErrorType.RepositoryDataNotFound, "Não existe a fatura informada");
+    
+    if(fatura.status !== EStatusPagamento['Aguardando Pagamento'])
+      throw new CustomError(CustomErrorType.BusinessRuleViolation, "A fatura não aguarda pagamento");
+
+    fatura = await pagamentoRepositoryGateway.atualizarStatusFatura(
+      fatura_id,
+      EStatusPagamento.Rejeitado
+    );
+
+    return new ConfirmaPagamentoFaturaOutputDTO(
+      fatura.codigo,
+      fatura.dataCriacao,
+      fatura.dataAtualizacao,
+      fatura.status,
+      fatura.pedido.codigo,
+      fatura.pedido.CPF
+    );
   }
 
   private validaSeRecebeuOsParametros (): void {
     if (!this.meioDePagamento) {
       throw new CustomError(CustomErrorType.BusinessRuleViolation, 'meioDePagamento é requerido.')
     }
-
-    /*if (!this.pedidoPagamentoRepository) {
-      throw new CustomError(CustomErrorType.BusinessRuleViolation, 'pedidoPagamentoRepository é requerido.')
-    }*/
   }
 
   async atualizaStatusPedidoPago (codigo: number, pagamentoPedidoRepositoryGateway: IPagamentoRepositoryGateway): Promise<boolean> {

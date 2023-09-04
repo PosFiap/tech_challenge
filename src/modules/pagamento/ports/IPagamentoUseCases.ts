@@ -1,8 +1,8 @@
-import { IFaturaPedido } from "./IFaturaPedido";
+import { IPedidoRepositoryGateway } from "../../pedido";
+import { ConfirmaPagamentoFaturaOutputDTO, ConfirmaPagamentoFaturaDTO } from "../dto";
 import { IPagamentoRepositoryGateway } from "./IPagamentoRegistryGateway";
 
 export interface IPagamentoUseCases {
-    confirmaPagamentoFatura(id_fatura: string, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<IFaturaPedido>
-
-    rejeitaPagamentoFatura(id_fatura: string, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<IFaturaPedido>
+    confirmaPagamentoFatura(data: ConfirmaPagamentoFaturaDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<ConfirmaPagamentoFaturaOutputDTO>
+    rejeitaPagamentoFatura(data: ConfirmaPagamentoFaturaDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<ConfirmaPagamentoFaturaOutputDTO>
 }

@@ -1,44 +1,55 @@
-import { EStatusPagamento } from '../../modules/common/value-objects/EStatusPagamento'
-import { CheckoutService, ICheckoutService, IPagamentoRepositoryGateway } from '../../modules/pagamento'
+import { EStatus } from '../../modules/common/value-objects'
+import { CheckoutService, ConfirmaPagamentoFaturaDTO, ICheckoutService, IPagamentoRepositoryGateway } from '../../modules/pagamento'
+import { AtualizaStatusPedidoDTO, IPedidoRepositoryGateway, IPedidoUseCases } from '../../modules/pedido'
 import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
 import { HttpClientMock } from '../infra/HttpsMock'
-import { IPagamentoDetalhadoPresenterFactory } from '../presenter/interfaces/IPagamentoDetalhadoPresenterFactory'
 import { IPagamentoQrCodeController } from './IPagamentoQrCodeController'
-import { IPagamentoController } from './interfaces/IPagamentoController'
+import { ConfirmaPagamentoEEnviaPedidoOutput, IPagamentoController, RejeitaPagamentoOutput } from './interfaces/IPagamentoController'
 
 export class PagamentoQrCodeController implements IPagamentoQrCodeController, IPagamentoController {
   private constructor (private readonly checkoutService: ICheckoutService<string>) {}
   
-  atualizaSituacaoPagamentoAceito(
+  async confirmaPagamentoEEnviaPedido(
     id_fatura: string,
-    pagamentoDetalhadoPresenterFactory: IPagamentoDetalhadoPresenterFactory
-  ): Promise<Object> {
-    return Promise.resolve(
-      pagamentoDetalhadoPresenterFactory.create(
-        0,
-        0,
-        id_fatura,
-        EStatusPagamento['Aguardando Pagamento'],
-        new Date(),
-        new Date()
-      ).format()
-    )
+    pagamentoRepositoryGateway: IPagamentoRepositoryGateway,
+    pedidoRepositoryGateway: IPedidoRepositoryGateway,
+    pedidoUseCases: IPedidoUseCases
+  ): Promise<ConfirmaPagamentoEEnviaPedidoOutput> {
+
+    const confirmaPagamentoFaturaDTO = new ConfirmaPagamentoFaturaDTO(id_fatura);
+
+    const fatura = await this.checkoutService.confirmaPagamentoFatura(confirmaPagamentoFaturaDTO, pagamentoRepositoryGateway);
+
+    const atualizStatusDTO = new AtualizaStatusPedidoDTO(fatura.pedido_codigo, EStatus.Recebido);
+
+    await pedidoUseCases.enviaPedido(atualizStatusDTO, pedidoRepositoryGateway);
+
+    return new ConfirmaPagamentoEEnviaPedidoOutput(
+      fatura.fatura_id,
+      fatura.data_criacao,
+      fatura.data_atualizacao,
+      fatura.situacao,
+      fatura.pedido_codigo,
+      fatura.pedido_cpf
+    );
   }
 
-  atualizaSituacaoPagamentoRejeitado(
+  async rejeitaPagamento(
     id_fatura: string,
-    pagamentoDetalhadoPresenterFactory: IPagamentoDetalhadoPresenterFactory
-  ): Promise<Object> {
-    return Promise.resolve(
-      pagamentoDetalhadoPresenterFactory.create(
-        0,
-        0,
-        id_fatura,
-        EStatusPagamento.Rejeitado,
-        new Date(),
-        new Date()
-      ).format()
-    )
+    pagamentoRepositoryGateway: IPagamentoRepositoryGateway
+  ): Promise<RejeitaPagamentoOutput> {
+    const confirmaPagamentoFaturaDTO = new ConfirmaPagamentoFaturaDTO(id_fatura);
+    
+    const fatura = await this.checkoutService.rejeitaPagamentoFatura(confirmaPagamentoFaturaDTO, pagamentoRepositoryGateway);
+
+    return new RejeitaPagamentoOutput(
+      fatura.fatura_id,
+      fatura.data_criacao,
+      fatura.data_atualizacao,
+      fatura.situacao,
+      fatura.pedido_codigo,
+      fatura.pedido_cpf
+    );;
   }
 
   static create (checkoutService?: ICheckoutService<string>): IPagamentoQrCodeController {

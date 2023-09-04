@@ -1,13 +1,12 @@
 import { EStatusPagamento } from '../../../modules/common/value-objects/EStatusPagamento';
 
 export interface IPagamentoDetalhadoPresenter {
-  codigoPagamento: number,
   codigoPedido: number,
   codigoFatura: string,
   statusPagamento: EStatusPagamento,
   dataCriacao: Date,
   dataAtualizacao: Date,
-  CPFCliente?: string,
+  CPFCliente?: string | null,
   format(): Object
 }
 

@@ -5,7 +5,9 @@ export class AtualizaStatusPedidoDTO {
   constructor (
     readonly codigoPedido: number,
     readonly codigoStatus: number
-  ) { }
+  ) { 
+    this.validaDTO()
+  }
 
   private validaCodigoPedido (): boolean {
     if (!this.codigoPedido) return false
