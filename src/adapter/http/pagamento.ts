@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { IHttpRoute } from './IRoute'
 import { IPagamentoQrCodeController } from '../controller/IPagamentoQrCodeController'
-import { CustomError, isErro } from '../../utils'
+import { CustomError } from '../../utils'
 import { customErrorToResponse } from './error-parser'
 
 export class PagamentoHttp implements IHttpRoute {
