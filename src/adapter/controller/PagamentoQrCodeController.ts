@@ -1,6 +1,6 @@
 import { CheckoutService, ICheckoutService } from '../../modules/pagamento'
 import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
-import { HttpClientMock } from '../infra/HttpsMock'
+import { HttpClient } from '../infra/Http'
 import { PagamentoPedidoRepository } from '../persistence/PagamendoPedidoRepository'
 import { IPagamentoQrCodeController } from './IPagamentoQrCodeController'
 
@@ -9,7 +9,7 @@ export class PagamentoQrCodeController implements IPagamentoQrCodeController {
 
   static create (checkoutService?: ICheckoutService<string>): IPagamentoQrCodeController {
     if (!checkoutService) {
-      const qrCode = new MeioPagamentoMercadoPago(new HttpClientMock())
+      const qrCode = new MeioPagamentoMercadoPago(new HttpClient())
       const defauCheckoutService = new CheckoutService<string>(qrCode, new PagamentoPedidoRepository())
       return new PagamentoQrCodeController(defauCheckoutService)
     }
