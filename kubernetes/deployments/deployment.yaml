@@ -23,5 +23,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: deployment-configmap
-      
+            - secretRef:
+                name:  challenge-secrets
 

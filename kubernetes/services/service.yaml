@@ -10,4 +10,5 @@ spec:
     - protocol: TCP
       port: 80  # Porta interna do serviço (porta do container)
       targetPort: 8080  # Porta do container
+      nodePort: 30001
   type: NodePort  # Define o tipo de serviço como NodePort
