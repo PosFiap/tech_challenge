@@ -1,13 +1,28 @@
 import { EStatus } from '../../modules/common/value-objects'
-import { CheckoutService, ConfirmaPagamentoFaturaDTO, ICheckoutService, IPagamentoRepositoryGateway } from '../../modules/pagamento'
+import { CheckoutService, ConfirmaPagamentoFaturaDTO, ICheckoutService, IPagamentoRepositoryGateway, ObtemSituacaoPagamentoFaturaDTO } from '../../modules/pagamento'
 import { AtualizaStatusPedidoDTO, IPedidoRepositoryGateway, IPedidoUseCases } from '../../modules/pedido'
 import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
 import { HttpClientMock } from '../infra/HttpsMock'
 import { IPagamentoQrCodeController } from './IPagamentoQrCodeController'
-import { ConfirmaPagamentoEEnviaPedidoOutput, IPagamentoController, RejeitaPagamentoOutput } from './interfaces/IPagamentoController'
+import { ConfirmaPagamentoEEnviaPedidoOutput, IPagamentoController, RejeitaPagamentoOutput, VerificaSituacaoPagamentoOutput } from './interfaces/IPagamentoController'
 
 export class PagamentoQrCodeController implements IPagamentoQrCodeController, IPagamentoController {
   private constructor (private readonly checkoutService: ICheckoutService<string>) {}
+  
+  async verificaSituacaoPagamento(id_fatura: string, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<VerificaSituacaoPagamentoOutput> {
+    const obtemSituacaoPagamentoFaturaDTO = new ObtemSituacaoPagamentoFaturaDTO(id_fatura);
+
+    const fatura = await this.checkoutService.obtemSituacaoPagamentoFatura(obtemSituacaoPagamentoFaturaDTO, pagamentoRepositoryGateway);
+
+    return new VerificaSituacaoPagamentoOutput(
+      fatura.fatura_id,
+      fatura.data_criacao,
+      fatura.data_atualizacao,
+      fatura.situacao,
+      fatura.pedido_codigo,
+      fatura.pedido_cpf
+    );
+  }
   
   async confirmaPagamentoEEnviaPedido(
     id_fatura: string,

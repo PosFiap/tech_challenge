@@ -1,6 +1,6 @@
 import { FaturaIdentificadorVO } from "../model/value-objects/FaturaIdentificador";
 
-export class ConfirmaPagamentoFaturaDTO {
+export class RejeitaPagamentoFaturaDTO {
     private _fatura_id: FaturaIdentificadorVO;
     constructor(
         fatura_id: string
