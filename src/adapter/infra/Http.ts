@@ -15,7 +15,7 @@ export class HttpClient implements IHttp {
         response.on('data', (d) => {
           resolve({
             statusCode: response.statusCode as HttpStatusCode,
-            body: d
+            body: JSON.parse(d.toString('utf-8'))
           })
         })
       })
