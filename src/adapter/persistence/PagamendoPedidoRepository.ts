@@ -1,8 +1,17 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Produto } from '@prisma/client'
 import { EStatus } from '../../modules/common/value-objects/EStatus'
 import { PedidoPagamentoDTO } from '../../modules/pagamento/dto/PedidoPagamentoDTO'
 import { IPagamentoPedidoRepository } from '../../modules/pagamento/ports/IPedidoRegistry'
 import { CustomError, CustomErrorType } from '../../utils'
+
+interface ProdutoPedido {
+  codigo: number
+  observacoes: string
+  produto_codigo: number
+  pedido_codigo: number
+  valor_produto: number
+  Produto: Produto
+}
 
 export class PagamentoPedidoRepository implements IPagamentoPedidoRepository {
   private readonly prisma: PrismaClient
@@ -40,21 +49,23 @@ export class PagamentoPedidoRepository implements IPagamentoPedidoRepository {
       }
     } as any)
 
-    if (!pedido) throw new CustomError(
-      CustomErrorType.RepositoryDataNotFound,
-      'Pedido não encontrado'
-    )
+    if (!pedido) {
+      throw new CustomError(
+        CustomErrorType.RepositoryDataNotFound,
+        'Pedido não encontrado'
+      )
+    }
 
     return {
       codigo: pedido.codigo,
       status: pedido.status,
-      itensDePedido: pedido.ProdutoPedido.map((produtoPedido: { Produto: any, valor: number }) => {
+      itensDePedido: pedido.ProdutoPedido.map((produtoPedido: ProdutoPedido) => {
         const { Produto: produto } = produtoPedido
         return {
           codigo: produto.codigo,
           nome: produto.nome,
           descricao: produto.descricao,
-          valor: produtoPedido.valor,
+          valor: produtoPedido.valor_produto,
           categoria_codigo: produto.categoria_codigo
         }
       })
