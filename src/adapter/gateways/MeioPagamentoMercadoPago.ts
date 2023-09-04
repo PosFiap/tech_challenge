@@ -14,6 +14,7 @@ interface ItemFatura {
 
 export interface Fatura {
   external_reference: string
+  notification_url: string
   title: string
   total_amount: number
   description: string
@@ -31,12 +32,14 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
   private readonly _idUsuarioMercadoPago: string | undefined
   private readonly _idExternoPontoDeVenda: string | undefined
   private readonly _accessToken: string | undefined
+  private readonly _urlNotification: string | undefined
 
   constructor (http: IHttp) {
     this._http = http
     this._idUsuarioMercadoPago = process.env.ID_USUARIO_MP
     this._idExternoPontoDeVenda = process.env.ID_EXTERNO_CAIXA
     this._accessToken = process.env.ACCESS_TOKEN_MP
+    this._urlNotification = process.env.URL_NOTIFICATION
 
     this.validaSeRecebeuOsParametros()
   }
@@ -56,7 +59,8 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
         sku_number: `${item.codigo}`
       })),
       description: 'Pedido',
-      title: 'Combo'
+      title: 'Combo',
+      notification_url: this._urlNotification!
     }
   }
 
@@ -74,7 +78,7 @@ export class MeioPagamentoMercadoPago implements IMeioDePagamentoQR<PedidoPagame
     try {
       const fatura = this.mapPedidoPagamentoDTOParaFatura(pedido)
       const response = await this._http.request<{ qr_data: string }>({
-        host: 'https://api.mercadopago.com',
+        host: 'api.mercadopago.com',
         path: `/instore/orders/qr/seller/collectors/${this._idUsuarioMercadoPago as string}/pos/${this._idExternoPontoDeVenda as string}/qrs`,
         method: 'POST',
         headers: {
