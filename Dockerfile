@@ -8,6 +8,7 @@ run apt install openssl -y
 copy . .
 
 run npm i
+# run npm run setup
 run npm run build
 
 from node:lts-slim as production

@@ -16,7 +16,7 @@ spec:
       # restartPolicy: Always 
       containers:
         - name: challenge-container
-          image: encortondo/fiap-tech-challenge:0.0.4
+          image: encortondo/fiap-tech-challenge:0.0.5
           ports:
             - containerPort: 8080  
           command: ["npm", "run", "start"]

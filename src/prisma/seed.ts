@@ -116,7 +116,7 @@ const geraProdutos = () => {
   return produtos;
 };
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
 
   if(!(await checkDataBaseEmptiness())) return;
 
@@ -161,11 +161,11 @@ const main = async (): Promise<void> => {
   }
 }
 
-main()
-  .then(() => {
-    console.log('Seed concluido')
-  })
-  .catch(err => {
-    console.error(err)
-    process.exit(1)
-  })
+// main()
+//   .then(() => {
+//     console.log('Seed concluido')
+//   })
+//   .catch(err => {
+//     console.error(err)
+//     process.exit(1)
+//   })
