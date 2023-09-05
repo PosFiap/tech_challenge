@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: challenge-service
+  # namespace: challenge
+spec:
+  selector:
+    app: challenge
+  ports:
+    - protocol: TCP
+      port: 80  # Porta interna do serviço (porta do container)
+      targetPort: 8080  # Porta do container
+  type: LoadBalancer
