@@ -1,5 +1,8 @@
-export interface ICheckoutService<S> {
-  atualizaStatusPedidoPago (codigo: number): Promise<boolean>
+import { IPagamentoRepositoryGateway } from "./IPagamentoRegistryGateway"
+import { IPagamentoUseCases } from "./IPagamentoUseCases"
 
-  checkoutQrCode (codigoPedido: number): Promise<S>
+export interface ICheckoutService<S> extends IPagamentoUseCases {
+  atualizaStatusPedidoPago (codigo: number, pagamentoPedidoRepositoryGateway: IPagamentoRepositoryGateway): Promise<boolean>
+
+  checkoutQrCode (codigoPedido: number, pagamentoPedidoRepositoryGateway: IPagamentoRepositoryGateway): Promise<S>
 }

@@ -1,14 +1,19 @@
 import { Router } from "express";
 import { CustomError, CustomErrorType } from "../../utils/customError";
 import { customErrorToResponse } from "./error-parser";
-import { IPedidoController } from "../controller/IPedidoController";
-import { AtualizaStatusPedidoOutputDTO } from "../../modules/pedido";
+import { IPedidoController } from "../controller/interfaces/IPedidoController";
+import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway } from "../../modules/pedido";
+import { PedidoDetalhadoPresenterFactory } from "../presenter/implementations/PedidoDetalhadoPresenterFactory";
+import { PrismaPagamentoRepositoryGateway } from "../gateways/repository/PrismaPagamentoRepositoryGateway";
+import { PagamentoUseCases } from "../../modules/pagamento/PagamentoUseCases";
+import { ServicoPagamentoGatewayGenerico } from "../gateways/servicos-pagamento/implementacoes/ServicoPagamentoGenerico";
 
 export class PedidoHTTP {
     private router: Router;
 
     constructor(
-        private readonly pedidoController: IPedidoController
+        private readonly pedidoController: IPedidoController,
+        private readonly defaultPedidoRepositoryGateway: IPedidoRepositoryGateway
     ){
         this.router = Router();
         this.setRoutes();
@@ -18,11 +23,28 @@ export class PedidoHTTP {
         this.router.post('/', async (req, res) => { 
             const { CPF, itemDePedido} = req.body;
             try{
-                const resultado = await this.pedidoController.registraPedido({
+                const registraPedidoInput = {
                     cpf: (typeof CPF === 'number' ? CPF.toString() : CPF) || null,
-                    produtoPedido: itemDePedido
-                });
-                res.status(201).json(resultado);
+                    produtoPedido: itemDePedido,
+                };
+                const pedido = await this.pedidoController.registraPedido(
+                    registraPedidoInput,
+                    this.defaultPedidoRepositoryGateway,
+                    new PrismaPagamentoRepositoryGateway(),
+                    new PagamentoUseCases(),
+                    new ServicoPagamentoGatewayGenerico()
+                );
+
+                const pedidoDetalhado = PedidoDetalhadoPresenterFactory.create(
+                    pedido.status,
+                    pedido.codigoPedido,
+                    pedido.produtos,
+                    pedido.dataPedido,
+                    pedido.cpf?.valor,
+                    pedido.codigoFatura
+                  ).format();
+
+                res.status(201).json(pedidoDetalhado);
             } catch (err) {
                 if( err instanceof CustomError) {
                     customErrorToResponse(err, res);
@@ -40,11 +62,11 @@ export class PedidoHTTP {
             const moveStatus = (codigoPedido:number, status: string): Promise<AtualizaStatusPedidoOutputDTO> => {
                 switch(status){
                     case "em-preparacao":
-                        return this.pedidoController.moveStatusEmPreparacao({codigoPedido})
+                        return this.pedidoController.moveStatusEmPreparacao({codigoPedido}, this.defaultPedidoRepositoryGateway)
                     case "pronto":
-                        return this.pedidoController.moveStatusPronto({codigoPedido})
+                        return this.pedidoController.moveStatusPronto({codigoPedido}, this.defaultPedidoRepositoryGateway)
                     case "finalizado":
-                        return this.pedidoController.moveStatusFinalizado({codigoPedido})
+                        return this.pedidoController.moveStatusFinalizado({codigoPedido}, this.defaultPedidoRepositoryGateway)
                 }
                 throw new CustomError(CustomErrorType.BusinessRuleViolation, "Status inválido");
             }
@@ -67,18 +89,21 @@ export class PedidoHTTP {
         
         this.router.get('/', async (req, res) => {
             try{
-                const listaPedidos = await this.pedidoController.listaPedidos();
-                res.status(200).json(listaPedidos.map((pedido) => {
-                    return {
-                        CPF: pedido.CPF,
-                        codigo: pedido.codigo,
-                        status: pedido.status,
-                        valorTotal: pedido.valorTotal,
-                        quantidadeItens: pedido.quantidadeProdutosPedido,
-                        produtos: pedido.produtosPedido
-                    }
-                }));
+                const listaPedidos = (await this.pedidoController.listaPedidosAndamento(this.defaultPedidoRepositoryGateway)).pedidos;
+
+                const pedidoDetalhados = listaPedidos.map((pedido) => {
+                    return PedidoDetalhadoPresenterFactory.create(
+                        pedido.status,
+                        pedido.codigoPedido,
+                        pedido.produtos,
+                        pedido.dataPedido,
+                        pedido.cpf?.valor
+                      ).format();
+                });
+
+                res.status(200).json(pedidoDetalhados);
             } catch (err) {
+                console.error(err);
                 res.status(500).json({
                     mensagem: 'Falha ao recuperar os pedidos'
                 });

@@ -1,13 +1,15 @@
+import { EStatus } from '../../common/value-objects'
 import { CPF as CPFVO } from '../../common/value-objects/CPF'
 
-export class ItemListaPedidoOutputDTO {
+export class ItemListaPedidoAndamentoOutputDTO {
   private readonly _CPF: CPFVO | null
 
   constructor (
-    readonly status: string,
+    readonly status: EStatus,
     readonly codigo: number,
     CPF: string | null,
-    readonly produtosPedido: ItemPedidoListaPedidoOutputDTO[]
+    readonly dataPedido: Date,
+    readonly produtosPedido: ItemProdutoListaPedidoAndamentoOutputDTO[]
   ) {
     this._CPF = CPF ? new CPFVO(CPF) : null
   }
@@ -26,7 +28,7 @@ export class ItemListaPedidoOutputDTO {
   }
 }
 
-export class ItemPedidoListaPedidoOutputDTO {
+export class ItemProdutoListaPedidoAndamentoOutputDTO {
   constructor (
     readonly nome: string,
     readonly valor: number,

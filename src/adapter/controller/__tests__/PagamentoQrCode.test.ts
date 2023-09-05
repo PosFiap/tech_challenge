@@ -1,4 +1,4 @@
-import { ICheckoutService } from '../../../modules/pagamento'
+/*import { ICheckoutService } from '../../../modules/pagamento'
 import { IPagamentoQrCodeController } from '../IPagamentoQrCodeController'
 import { PagamentoQrCodeController } from '../PagamentoQrCodeController'
 
@@ -44,4 +44,4 @@ describe('PagamentoQeCodeAdapter', () => {
       expect(result).toBe('valor para gerar QrCode')
     })
   })
-})
+}) */

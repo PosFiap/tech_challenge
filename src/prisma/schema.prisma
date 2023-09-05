@@ -30,8 +30,12 @@ model Pedido {
   codigo        Int             @id @default(autoincrement())
   status        Int             @default(0)
   cpf_cliente   String?
+  data_criacao DateTime @default(now())
+  data_atualizacao DateTime @updatedAt @default(now())
   Cliente       Cliente?        @relation(fields: [cpf_cliente], references: [cpf])
   ProdutoPedido ProdutoPedido[]
+  Fatura Fatura[]
+
 }
 
 model Categoria {
@@ -47,4 +51,13 @@ model ProdutoPedido {
   valor_produto  Float
   Produto        Produto @relation(fields: [produto_codigo], references: [codigo])
   Pedido         Pedido  @relation(fields: [pedido_codigo], references: [codigo])
+}
+
+model Fatura {
+    codigo String @id
+    data_criacao DateTime @default(now())
+    data_atualizacao DateTime @updatedAt
+    situacao Int
+    pedido_codigo  Int     
+    Pedido         Pedido  @relation(fields: [pedido_codigo], references: [codigo])
 }

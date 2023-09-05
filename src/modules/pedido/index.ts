@@ -1,3 +1,3 @@
 export * from './ports'
 export * from './dto'
-export * from './PedidoService'
+export * from './PedidoUseCases'

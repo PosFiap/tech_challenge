@@ -1,6 +1,4 @@
-export enum EStatus {
-  'Pedido em preparação'
-}
+import { EStatus } from "../../common/value-objects/EStatus"
 
 interface ItemDePedido {
   codigo: number

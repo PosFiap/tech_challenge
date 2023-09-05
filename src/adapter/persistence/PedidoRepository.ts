@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client'
-import { IPedidoRepository } from '../../modules/pedido'
+import { IPedidoRepositoryGateway } from '../../modules/pedido'
 import { Pedido } from '../../modules/pedido/model/Pedido'
 import { Produto } from '../../modules/pedido/model/Produto'
+import { EStatus } from '../../modules/common/value-objects'
 
-export class PrismaPedidoRepository implements IPedidoRepository {
+export class PrismaPedidoRepositoryGateway implements IPedidoRepositoryGateway {
   private readonly prisma: PrismaClient
 
   constructor () {
@@ -31,11 +32,36 @@ export class PrismaPedidoRepository implements IPedidoRepository {
       pedidoInserido.cpf_cliente,
       pedidoInserido.status,
       pedido.produtosPedido,
-      pedidoInserido.codigo)
+      pedidoInserido.codigo,
+      (pedidoInserido as any).data_criacao
+    )
   }
 
   async listaPedidos (config: { vinculaProdutos: boolean }): Promise<Pedido[]> {
-    const options = { include: {} }
+    const options = {
+      where: {
+        OR: [
+          {
+            status: EStatus.Pronto
+          },
+          {
+            status: EStatus['Em preparação']
+          },
+          {
+            status: EStatus.Recebido
+          }
+        ]
+      },
+      orderBy: [
+        {
+          status: 'desc',
+        },
+        {
+          data_criacao: 'asc',
+        },
+      ],
+      include: {} 
+    }
     if (config.vinculaProdutos) {
       options.include = {
         ProdutoPedido: {
@@ -45,6 +71,7 @@ export class PrismaPedidoRepository implements IPedidoRepository {
         }
       }
     }
+    //@ts-ignore
     const pedidos = await this.prisma.pedido.findMany(options)
 
     return pedidos.map((pedido: any) => (new Pedido(
@@ -61,7 +88,8 @@ export class PrismaPedidoRepository implements IPedidoRepository {
           produto.categoria_codigo
         )
       }),
-      pedido.codigo
+      pedido.codigo,
+      pedido.data_criacao
     )))
   }
 

@@ -1,5 +1,6 @@
-import { ItemListaPedidoOutputDTO } from '../dto/ListaPedidoOutputDTO'
+import { ItemListaPedidoAndamentoOutputDTO } from '../dto/ListaPedidoOutputDTO'
+import { IPedidoRepositoryGateway } from './IPedidoRepository'
 
 export interface IListaPedidosUseCase {
-  listaPedidos(): Promise<ItemListaPedidoOutputDTO[]>
+  listaPedidosAndamento(pedidoRepositoryGateway: IPedidoRepositoryGateway): Promise<ItemListaPedidoAndamentoOutputDTO[]>
 }

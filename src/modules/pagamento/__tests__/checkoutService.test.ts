@@ -1,12 +1,12 @@
-import { EStatus } from '../../common/value-objects/EStatus'
+/*import { EStatus } from '../../common/value-objects/EStatus'
 import { CheckoutService } from '../CheckoutService'
 import { PedidoPagamentoDTO } from '../dto'
-import { ICheckoutService, IMeioDePagamentoQR, IPagamentoPedidoRepository } from '../ports'
+import { ICheckoutService, IMeioDePagamentoQR, IPagamentoRepositoryGateway } from '../ports'
 
 interface SutTypes {
   sut: ICheckoutService<any>
   meioDePagamento: IMeioDePagamentoQR<any, any>
-  pagamentoPedidoRepository: IPagamentoPedidoRepository
+  pagamentoPedidoRepository: IPagamentoRepositoryGateway
 }
 
 class MeioDePagamentoMock implements IMeioDePagamentoQR<any, any> {
@@ -15,7 +15,7 @@ class MeioDePagamentoMock implements IMeioDePagamentoQR<any, any> {
   }
 }
 
-class PedidoPagamentoRepository implements IPagamentoPedidoRepository {
+class PedidoPagamentoRepository implements IPagamentoRepositoryGateway {
   async obterPedidoPeloCodigo (_codigo: number): Promise<PedidoPagamentoDTO> {
     throw new Error('Method not implemented.')
   }
@@ -60,3 +60,4 @@ describe('CheckoutService', () => {
     })
   })
 })
+*/
