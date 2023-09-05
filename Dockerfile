@@ -7,7 +7,7 @@ run apt install openssl -y
 
 copy . .
 
-run npm ci
+run npm i
 run npm run build
 
 from node:lts-slim as production
@@ -20,10 +20,12 @@ env PORT 8080
 
 workdir /usr/src/app
 
+copy ./src ./src
+
 copy --from=make /usr/src/app/package*.json ./
 copy --from=make /usr/src/app/dist ./dist
 
-run npm ci --omit=dev
+run npm i --omit=dev
 
 expose 8080
 cmd ["node", "dist/src/index.js"]

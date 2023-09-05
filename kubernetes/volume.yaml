@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-vol
+  # # namespace: postgres
+  labels:
+    app: postgres-vol
+spec:
+  storageClassName: csi-hostpath-sc
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi

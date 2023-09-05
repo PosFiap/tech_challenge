@@ -19,7 +19,7 @@ model Cliente {
 
 model Produto {
   codigo           Int             @id @default(autoincrement())
-  nome             String          @unique
+  nome             String          
   descricao        String
   valor            Float
   categoria_codigo Int

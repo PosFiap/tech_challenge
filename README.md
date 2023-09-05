@@ -20,7 +20,7 @@ Para desenvolvimento é necessário:
 * Docker Compose
 * NodeJs 18
 
-## 🔥 Instalação e execução
+## 🔥 Instalação e execução -- DOCKER
 Os comandos para instalar e rodar local o projeto, basta utilizar o script disponibilizado no projeto com os comandos abaixo:
 ```bash
 # modo de desenvolvimento com live reload
@@ -32,6 +32,31 @@ $ ./run.sh production
 # encerrar o projeto
 $ ./run.sh stop
 ```
+
+## 🔥 Instalação e execução -- KUBERNETES
+Os comandos para instalar e rodar local o projeto, basta utilizar o script disponibilizado no projeto com os comandos abaixo:
+```bash
+# inicia o banco de dados
+$ ./run-kube.sh db
+
+# inicia a aplicação em modo produção
+$ ./run.sh app
+
+# rodar todas as dependências
+$ ./run.sh all
+
+# encerrar o projeto
+$ ./run.sh clear
+```
+
+## Possível erro de permissão
+
+Caso ocorra algum erro basta rodar 
+
+```bash
+
+# Aplica permissões para o comando
+$ chmod +x ./run-kube.sh 
 
 Para desenvolvimento, para obter facilidades como autocomplete das ferramentas de código é necessário se utilizar dos comandos abaixo:
 ```bash
