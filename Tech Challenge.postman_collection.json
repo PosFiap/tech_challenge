@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "63ba9395-8dc2-4d10-bb97-128ba77dc4ba",
+		"_postman_id": "57a0cb74-b637-4970-85f2-74e1b6c2722f",
 		"name": "Tech Challenge",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14064799"
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"CPF\": \"40239591038\", \n    \"email\": \"carlos@email.com\",\n    \"nome\": \"Carlos\"\n}",
+							"raw": "{\n    \"CPF\": \"41099837898\", \n    \"email\": \"liadias914@email.com\",\n    \"nome\": \"Lia\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,9 +24,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/cliente",
+							"raw": "{{host}}/cliente",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"cliente"
@@ -41,9 +41,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/cliente",
+							"raw": "{{host}}/cliente",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"cliente"
@@ -58,9 +58,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/cliente/40239591038",
+							"raw": "{{host}}/cliente/40239591038",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"cliente",
@@ -76,9 +76,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/cliente/40239591038",
+							"raw": "{{host}}/cliente/40239591038",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"cliente",
@@ -103,9 +103,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/cliente/",
+							"raw": "{{host}}/cliente/",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"cliente",
@@ -135,9 +135,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/produto",
+							"raw": "{{host}}/produto",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"produto"
@@ -215,9 +215,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/produto?codigo_categoria=2",
+							"raw": "{{host}}/produto?codigo_categoria=2",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"produto"
@@ -307,9 +307,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/produto/3",
+							"raw": "{{host}}/produto/3",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"produto",
@@ -325,9 +325,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/produto/1",
+							"raw": "{{host}}/produto/1",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"produto",
@@ -335,62 +335,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Buscar Produto por Id",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/produto/1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"produto",
-										"1"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "89"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"59-amtaJmTiykOJm8eJenMXnXdmtSM\""
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 06 Jul 2023 20:23:21 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"codigo\": 1,\n    \"nome\": \"sorvete de pistache\",\n    \"descricao\": \"\",\n    \"valor\": 5.1,\n    \"categoria_codigo\": 1\n}"
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "Deletar Produto por Id",
@@ -398,9 +343,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/produto/1",
+							"raw": "{{host}}/produto/1",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"produto",
@@ -422,7 +367,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"CPF\": \"40239591038\",\n    \"itemDePedido\": [\n        {\n            \"codigo\": 5\n        },\n        {\n            \"codigo\": 3\n        }\n    ]\n}",
+							"raw": "{\n    \"CPF\": \"41099837898\",\n    \"itemDePedido\": [\n        {\n            \"codigo\": 1\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -430,9 +375,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/pedido",
+							"raw": "{{host}}/pedido",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"pedido"
@@ -447,9 +392,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/pedido",
+							"raw": "{{host}}/pedido",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"pedido"
@@ -464,9 +409,9 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "{{host_docker}}/pedido/2/em-preparacao",
+							"raw": "{{host}}/pedido/2/em-preparacao",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"pedido",
@@ -492,9 +437,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/pedido/2/pronto",
+							"raw": "{{host}}/pedido/2/pronto",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"pedido",
@@ -520,9 +465,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/pedido/2/finalizado",
+							"raw": "{{host}}/pedido/2/finalizado",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
 								"pedido",
@@ -548,12 +493,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/pedido/5/invalido",
-							"protocol": "http",
+							"raw": "{{host}}/pedido/5/invalido",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3000",
 							"path": [
 								"pedido",
 								"5",
@@ -569,13 +512,19 @@
 			"name": "Pagamento",
 			"item": [
 				{
-					"name": "Pagar",
+					"name": "Webhook Confirmar Pagamento",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "c2FuZHLDo2/DqW9jYXJh",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pedidoId\": 3\r\n}",
+							"raw": "{\n    \"codigo_fatura\": \"12340.13615942591096708\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -583,18 +532,107 @@
 							}
 						},
 						"url": {
-							"raw": "{{host_docker}}/pagamento",
+							"raw": "{{host}}/pagamento/webhook/MP/confirmar",
 							"host": [
-								"{{host_docker}}"
+								"{{host}}"
 							],
 							"path": [
-								"pagamento"
+								"pagamento",
+								"webhook",
+								"MP",
+								"confirmar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Webhook Rejeitar Pagamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "c2FuZHLDo2/DqW9jYXJh",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"codigo_fatura\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/pagamento/webhook/MP/rejeitar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"pagamento",
+								"webhook",
+								"MP",
+								"rejeitar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Pagamento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/pagamento/situacao?codigo_fatura=12340.9141318752728866",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"pagamento",
+								"situacao"
+							],
+							"query": [
+								{
+									"key": "codigo_fatura",
+									"value": "12340.9141318752728866"
+								}
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:80",
+			"type": "string"
 		}
 	]
 }
