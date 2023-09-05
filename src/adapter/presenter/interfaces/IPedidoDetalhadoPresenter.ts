@@ -7,6 +7,7 @@ export interface IPedidoDetalhadoPresenter {
   CPFCliente?: string
   itensPedido: Array<IProdutoPedidoDetalhadoPresenter>,
   dataPedido: Date,
+  codigoFatura?: string,
   format(): Object
 }
 
@@ -19,6 +20,7 @@ export interface IPedidoDetalhadoPresenterJSON extends IPedidoDetalhadoPresenter
 
 export interface IPedidoDetalhadoPresenterJSONFormat {
   status: string,
+  codigo_fatura?: string,
   data: string,
   CPF_cliente?: string,
   numero_pedido: string,

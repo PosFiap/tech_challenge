@@ -1,5 +1,5 @@
-import { PedidoPagamentoDTO, IHttp, IMeioDePagamentoQR } from '../../modules/pagamento'
-import { CustomError, CustomErrorType } from '../../utils'
+import { PedidoPagamentoDTO, IHttp, IMeioDePagamentoQR } from '../../../../modules/pagamento'
+import { CustomError, CustomErrorType } from '../../../../utils'
 
 interface ItemFatura {
   sku_number: string

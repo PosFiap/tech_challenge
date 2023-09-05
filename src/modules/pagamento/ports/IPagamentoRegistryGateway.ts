@@ -6,7 +6,7 @@ import { Fatura } from '../model';
 export interface IPagamentoRepositoryGateway {
   obterPedidoPeloCodigo(codigo: number): Promise<PedidoPagamentoDTO>;
   atualizarStatusPedidoPago(codigo: number, status: EStatus): Promise<boolean>;
-  // obterPedidoPelaFatura (fatura_id: string): Promise<Fatura>;
   obtemFaturaPorCodigo(fatura_id: string): Promise<Fatura>;
   atualizarStatusFatura(fatura_id: string, statusPagamento: EStatusPagamento): Promise<Fatura>;
+  criaFatura(codigo_fatura: string, codigo_pedido: number): Promise<Fatura>;
 }

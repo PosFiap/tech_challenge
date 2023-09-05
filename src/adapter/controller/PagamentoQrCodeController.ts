@@ -1,7 +1,7 @@
 import { EStatus } from '../../modules/common/value-objects'
 import { CheckoutService, ConfirmaPagamentoFaturaDTO, ICheckoutService, IPagamentoRepositoryGateway, ObtemSituacaoPagamentoFaturaDTO } from '../../modules/pagamento'
 import { AtualizaStatusPedidoDTO, IPedidoRepositoryGateway, IPedidoUseCases } from '../../modules/pedido'
-import { MeioPagamentoMercadoPago } from '../gateways/MeioPagamentoMercadoPago'
+import { MeioPagamentoMercadoPago } from '../gateways/servicos-pagamento/implementacoes/MeioPagamentoMercadoPago'
 import { HttpClientMock } from '../infra/HttpsMock'
 import { IPagamentoQrCodeController } from './IPagamentoQrCodeController'
 import { ConfirmaPagamentoEEnviaPedidoOutput, IPagamentoController, RejeitaPagamentoOutput, VerificaSituacaoPagamentoOutput } from './interfaces/IPagamentoController'

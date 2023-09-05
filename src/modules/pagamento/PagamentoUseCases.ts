@@ -1,10 +1,27 @@
 import { CustomError, CustomErrorType } from "../../utils";
-import { EStatusPagamento } from "../common/value-objects";
+import { CPF, EStatusPagamento } from "../common/value-objects";
 import { ConfirmaPagamentoFaturaDTO, ConfirmaPagamentoFaturaOutputDTO, ObtemSituacaoPagamentoFaturaDTO, ObtemSituacaoPagamentoFaturaOutputDTO } from "./dto";
+import { CriaFaturaPagamentoDTO } from "./dto/CriaFaturaPagamentoDTO";
+import { CriaFaturaPagamentoOutputDTO } from "./dto/CriaFaturaPagamentoOutputDTO";
 import { Fatura } from "./model";
 import { IPagamentoRepositoryGateway, IPagamentoUseCases } from "./ports";
 
 export class PagamentoUseCases implements IPagamentoUseCases {
+  
+    async criaFaturaPagamento(data: CriaFaturaPagamentoDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<CriaFaturaPagamentoOutputDTO> {
+      const { codigo_pedido, codigo_fatura } = data;
+
+      const faturaCriada = await pagamentoRepositoryGateway.criaFatura( codigo_fatura, codigo_pedido );
+
+      return new CriaFaturaPagamentoOutputDTO(
+        faturaCriada.codigo,
+        faturaCriada.dataCriacao,
+        faturaCriada.dataAtualizacao,
+        faturaCriada.status,
+        faturaCriada.pedido.codigo,
+        faturaCriada.pedido.CPF ? new CPF(faturaCriada.pedido.CPF) : null,
+      );
+    }
 
     async obtemSituacaoPagamentoFatura(data: ObtemSituacaoPagamentoFaturaDTO, pagamentoRepositoryGateway: IPagamentoRepositoryGateway): Promise<ObtemSituacaoPagamentoFaturaOutputDTO> {
         const { fatura_id } = data;

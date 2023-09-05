@@ -16,14 +16,16 @@ export abstract class PedidoDetalhadoPresenterFactory implements IPedidoDetalhad
         codigoPedido: number,
         itensPedido: Array<IProdutoPedidoDetalhadoPresenter>,
         dataPedido: Date,
-        CPFCliente?: string
+        CPFCliente?: string,
+        codigoFatura?: string,
     ): IPedidoDetalhadoPresenter {
         return new PedidoDetalhadoPresenterJSON(
             status,
             codigoPedido,
             itensPedido,
             dataPedido,
-            CPFCliente
+            CPFCliente,
+            codigoFatura
         )
     }
 

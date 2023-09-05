@@ -11,6 +11,7 @@ export class PedidoDetalhadoPresenterJSON extends PedidoDetalhadoPresenter imple
         const valorTotal = this.valorTotal();
         const json: IPedidoDetalhadoPresenterJSONFormat = {
             status: EStatus[this.status],
+            codigo_fatura: this.codigoFatura,
             data: new DataHora(this.dataPedido).formataData(),
             CPF_cliente: this.CPFCliente ? new CPF(this.CPFCliente).formataCPF() : "",
             numero_pedido: this.codigoPedido.toString(),
@@ -19,6 +20,10 @@ export class PedidoDetalhadoPresenterJSON extends PedidoDetalhadoPresenter imple
                 nome: item.nome,
                 valor: (new MoedaReal(item.valor)).formataMoeda()
             }))
+        }
+
+        if(!this.codigoFatura) {
+            delete json.codigo_fatura;
         }
 
         return json;

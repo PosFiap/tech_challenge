@@ -7,6 +7,7 @@ export interface IPedidoDetalhadoPresenterFactory {
     codigoPedido: number,
     itensPedido: Array<IProdutoPedidoDetalhadoPresenter>,
     dataPedido: Date,
-    CPFCliente?: string
+    CPFCliente?: string,
+    codigoFatura?: string,
   ): IPedidoDetalhadoPresenter
 }

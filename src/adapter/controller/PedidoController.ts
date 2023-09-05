@@ -5,6 +5,9 @@ import { EStatus } from '../../modules/common/value-objects/EStatus'
 import { IPedidoDetalhadoPresenterJSONFormat } from '../presenter/interfaces/IPedidoDetalhadoPresenter'
 import { IPedidoDetalhadoPresenterFactory } from '../presenter/interfaces/IPedidoDetalhadoPresenterFactory'
 import { CPF } from '../../modules/common/value-objects'
+import { IPagamentoRepositoryGateway, IPagamentoUseCases } from '../../modules/pagamento'
+import { CriaFaturaPagamentoDTO } from '../../modules/pagamento/dto/CriaFaturaPagamentoDTO'
+import { IServicoPagamentoGateway } from '../gateways/servicos-pagamento/interfaces/IServicoPagamentoGateway'
 
 export class PedidoController implements IPedidoController {
   private constructor (
@@ -63,17 +66,25 @@ export class PedidoController implements IPedidoController {
 
   async registraPedido(
       data: { cpf: string | null; produtoPedido: { codigo: number }[] },
-      pedidoRepositoryGateway: IPedidoRepositoryGateway
+      pedidoRepositoryGateway: IPedidoRepositoryGateway,
+      pagamentoRepositoryGateway: IPagamentoRepositoryGateway,
+      pagamentoUseCases: IPagamentoUseCases,
+      servicoPagamentoGateway: IServicoPagamentoGateway
     ): Promise<RegistraPedidoOutput> {
     try {
       const inputDTO = new InserePedidoDTO(data.cpf, data.produtoPedido)
       const pedidoCompleto = await this.pedidoUseCase.registraPedido(inputDTO, pedidoRepositoryGateway);
+      const codigoFatura = await servicoPagamentoGateway.obtemFaturaPagamento(pedidoCompleto.valor);
+      const criaFaturaPagamentoDTO = new CriaFaturaPagamentoDTO(codigoFatura, pedidoCompleto.codigo);
+      const faturaCompleta = await pagamentoUseCases.criaFaturaPagamento(criaFaturaPagamentoDTO, pagamentoRepositoryGateway);
+      
       return new RegistraPedidoOutput(
         pedidoCompleto.codigo,
         pedidoCompleto.status,
         pedidoCompleto.CPF,
         pedidoCompleto.dataPedido,
-        pedidoCompleto.itensPedido
+        pedidoCompleto.itensPedido,
+        faturaCompleta.fatura_id
       );
 
 

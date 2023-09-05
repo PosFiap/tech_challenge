@@ -4,6 +4,9 @@ import { customErrorToResponse } from "./error-parser";
 import { IPedidoController } from "../controller/interfaces/IPedidoController";
 import { AtualizaStatusPedidoOutputDTO, IPedidoRepositoryGateway } from "../../modules/pedido";
 import { PedidoDetalhadoPresenterFactory } from "../presenter/implementations/PedidoDetalhadoPresenterFactory";
+import { PrismaPagamentoRepositoryGateway } from "../gateways/repository/PrismaPagamentoRepositoryGateway";
+import { PagamentoUseCases } from "../../modules/pagamento/PagamentoUseCases";
+import { ServicoPagamentoGatewayGenerico } from "../gateways/servicos-pagamento/implementacoes/ServicoPagamentoGenerico";
 
 export class PedidoHTTP {
     private router: Router;
@@ -26,7 +29,10 @@ export class PedidoHTTP {
                 };
                 const pedido = await this.pedidoController.registraPedido(
                     registraPedidoInput,
-                    this.defaultPedidoRepositoryGateway
+                    this.defaultPedidoRepositoryGateway,
+                    new PrismaPagamentoRepositoryGateway(),
+                    new PagamentoUseCases(),
+                    new ServicoPagamentoGatewayGenerico()
                 );
 
                 const pedidoDetalhado = PedidoDetalhadoPresenterFactory.create(
@@ -34,7 +40,8 @@ export class PedidoHTTP {
                     pedido.codigoPedido,
                     pedido.produtos,
                     pedido.dataPedido,
-                    pedido.cpf?.valor
+                    pedido.cpf?.valor,
+                    pedido.codigoFatura
                   ).format();
 
                 res.status(201).json(pedidoDetalhado);

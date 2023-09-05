@@ -9,6 +9,7 @@ export abstract class PedidoDetalhadoPresenter implements IPedidoDetalhadoPresen
         readonly itensPedido: Array<IProdutoPedidoDetalhadoPresenter>,
         readonly dataPedido: Date,
         readonly CPFCliente?: string,
+        readonly codigoFatura?: string,
     ){}
 
     abstract format(): Object;

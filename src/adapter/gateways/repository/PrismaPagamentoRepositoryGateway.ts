@@ -27,6 +27,37 @@ export class PrismaPagamentoRepositoryGateway implements IPagamentoRepositoryGat
     this.prisma = new PrismaClient()
   }
 
+  async criaFatura(codigo_fatura: string, codigo_pedido: number): Promise<Fatura> {
+    const faturaInserida = await this.prisma.fatura.create({
+      data: {
+        codigo: codigo_fatura,
+        situacao: EStatusPagamento['Aguardando Pagamento'],
+        pedido_codigo: codigo_pedido
+      },
+      select: {
+        codigo: true,
+        data_atualizacao: true,
+        data_criacao: true,
+        situacao: true,
+        Pedido: {
+          select: {
+            codigo: true,
+            cpf_cliente: true,
+            status: true
+          }
+        }
+      }
+    })
+
+    return new Fatura(
+      faturaInserida.codigo,
+      faturaInserida.situacao,
+      faturaInserida.data_criacao,
+      faturaInserida.data_atualizacao,
+      new Pedido(faturaInserida.Pedido.codigo, faturaInserida.Pedido.cpf_cliente)
+    )
+  }
+
   async obtemFaturaPorCodigo(fatura_id: string): Promise<Fatura> {
     const fatura = (await this.prisma.fatura.findUnique({
       where: {
