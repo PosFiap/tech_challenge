@@ -181,7 +181,7 @@ envia na url o ```codigoPedido``` passando código do pedido
 
 ![](https://i.imgur.com/FGt9SDT.gif)
 <a href="https://i.imgur.com/FGt9SDT.gif" target="_blank">atualiza-status-do-pedido-para-em-preparacao.gif</a>
-
+ 
 
 ## Atualiza Status do Pedido para Pronto
 
@@ -205,10 +205,28 @@ envia na url o ```codigoPedido``` passando código do pedido
 
 # Pagamento
 
-Enviamos o código do pedido e retornaria o QRcode para o pagamento
-E o status do pedido muda para "Recebido"
+Ao registar um novo pedido é retornado pela API um campo chamado `codigo_fatura` que é referente a fatura na instituição financeira.
 
-<a href="https://i.imgur.com/bG8Efc7.gif" target="_blank">pagamento.gif</a>
+## Verificação de Pagamento
+A verificação do pagamento de uma fatura ocorre com a indicação desse código na rota `/pagamento/situacao?codigo_fatura=<string>`
+
+## Confirmação de Pagamento 
+
+A simulação de um pagamento ocorre com a indicação desse código na rota `pagamento/webhook/MP/confirmar` indicando o corpo 
+```
+{
+    "codigo_fatura": <string>
+}
+```
+
+## Rejeição de Pagamento 
+
+A simulação de uma rejeição de pagamento ocorre com a indicação desse código na rota `pagamento/webhook/MP/rejeitar` indicando o corpo 
+```
+{
+    "codigo_fatura": <string>
+}
+```
 
 # Casos de Uso
 
