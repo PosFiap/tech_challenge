@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "npx prisma db push && npm run prisma:seed",
-    "start": "npm run build && npm run setup && node ./dist/src/index.js",
+    "setup": "npx prisma db push",
+    "start": "npm run setup && node ./dist/src/index.js",
     "dev": "sh ./load-env.sh && npx prisma db push && nodemon ./src/index.ts",
     "build": "tsc",
     "lint": "eslint 'src/**'",
