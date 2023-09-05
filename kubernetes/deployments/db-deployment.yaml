@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-deployment
-  namespace: postgres
+  # namespace: postgres
 spec:
   replicas: 1  
   selector:
@@ -24,11 +24,5 @@ spec:
           ports:
             - containerPort: 5432
           
-          volumeMounts:
-            - name: postgres-ps
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name:  postgres-ps
-          persistentVolumeClaim:
-            claimName: postgres-vol
+
 

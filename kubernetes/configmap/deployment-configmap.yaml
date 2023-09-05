@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: deployment-configmap
-  namespace: challenge
+  # namespace: challenge
 data:
   DB_HOST: postgresql://posfiap:posfiap2@postgres-service:5432/posfiap
   PORT: "8080"

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: challenge-service
-  namespace: challenge
+  # namespace: challenge
 spec:
   selector:
     app: challenge
@@ -10,5 +10,4 @@ spec:
     - protocol: TCP
       port: 80  # Porta interna do serviço (porta do container)
       targetPort: 8080  # Porta do container
-      nodePort: 30001
-  type: NodePort  # Define o tipo de serviço como NodePort
+  type: LoadBalancer
