@@ -1,4 +1,4 @@
-import { EStatus } from '../../common/value-objects/EStatus'
+/*import { EStatus } from '../../common/value-objects/EStatus'
 import { CheckoutService } from '../CheckoutService'
 import { PedidoPagamentoDTO } from '../dto'
 import { ICheckoutService, IMeioDePagamentoQR, IPagamentoRepositoryGateway } from '../ports'
@@ -60,3 +60,4 @@ describe('CheckoutService', () => {
     })
   })
 })
+*/

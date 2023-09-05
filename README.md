@@ -189,6 +189,20 @@ E o status do pedido muda para "Recebido"
 
 ## Módulo Pagamento
 
+### Gerar Fatura para Pagamento
+Ação: Cria uma nova fatura para ser paga em um fornecedor externo. Toda fatura é associada a um pedido.
+
+Entrada: Código de identificador de pedido.
+
+Saída: Um objeto contendo os dados da fatura e do pedido associado.
+
+### Verificar Pagamento de Fatura
+Ação: Verifica a situação do status de pagamento de uma fatura.
+
+Entrada: Código identificador da fatura.
+
+Saída: Um objeto contendo os dados da fatura e do pedido associado.
+
 ### Confirmar Pagamento de Fatura
 Ação: Uma fatura que esteja com o status de pagamento como `Aguardando Pagamento` deve ter seu status de pagamento atualizado para `Pago`.
 
@@ -205,9 +219,16 @@ Saída: Um objeto contendo os dados da fatura e do pedido associado.
 
 ## Módulo Pedido
 
-### Iniciar Preparacao do Pedido
+### Iniciar Preparação do Pedido
 Ação: Um pedido que esteja com o status `Aguardando Pagamento` deve ter seu status atualizado para `Em preparação`.
 
 Entrada: Código identificador do pedido.
 
 Saída: Um objeto contendo os dados do pedido.
+
+### Listar Pedidos em Andamento
+Ação: Lista pedidos em andamento, cujos quais são os com o status igual à `Pronto`, `Em Preparação` e `Recebido`. Os pedidos com o status igual à `Aguardando Pagamento` ou à `Finalizado` não são computados.
+
+Entrada: Nenhuma.
+
+Saída: Uma lista de objetos de pedidos, ordenados pelo status e por ordem de recebimento.
